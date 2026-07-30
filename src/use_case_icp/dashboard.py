@@ -535,10 +535,18 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     query.get("run", [None])[0],
                     query.get("unit", [None])[0],
                 )
-            elif len(parts) == 3 and parts[0] == "jobs" and parts[2] == "experiments":
-                self._experiments(parts[1])
-            elif len(parts) == 4 and parts[0] == "jobs" and parts[2] == "experiments":
-                self._experiment(parts[1], parts[3])
+            elif (
+                len(parts) == 3
+                and parts[0] == "jobs"
+                and parts[2] == "controlled-experiments"
+            ):
+                self._controlled_experiments(parts[1])
+            elif (
+                len(parts) == 4
+                and parts[0] == "jobs"
+                and parts[2] == "controlled-experiments"
+            ):
+                self._controlled_experiment(parts[1], parts[3])
             elif len(parts) == 3 and parts[0] == "jobs" and parts[2] == "artifact":
                 self._artifact(parts[1], parse_qs(parsed.query).get("path", [""])[0])
             else:
@@ -600,9 +608,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
         runs = sorted(root.glob("stages/*/*/runs/*"), key=lambda item: item.stat().st_mtime, reverse=True)
         lineage_link = f"<a href='/jobs/{job_id}/lineage'>latest lineage</a>" if runs else "no lineage yet"
         experiment_link = (
-            f"<a href='/jobs/{job_id}/experiments'>review comparisons</a>"
-            if (root / "experiments").exists()
-            else "no review comparisons"
+            f"<a href='/jobs/{job_id}/controlled-experiments'>controlled comparisons</a>"
+            if (root / "controlled-experiments").exists()
+            else "no controlled comparisons"
         )
         event_rows = "".join(
             f"<tr><td>{html.escape(str(item.get('sequence')))}</td><td>{html.escape(str(item.get('event_type')))}</td><td>{html.escape(str(item.get('summary')))}</td></tr>"
@@ -658,50 +666,87 @@ class DashboardHandler(BaseHTTPRequestHandler):
         )
         self._send(_page(f"Job {job_id}", body))
 
-    def _experiments(self, job_id: str) -> None:
-        root = self.store.job_dir(job_id)
-        experiment_root = root / "experiments"
-        rows: list[str] = []
-        if experiment_root.exists():
-            for path in sorted(experiment_root.iterdir(), reverse=True):
+    def _controlled_experiments(self, job_id: str) -> None:
+        root = self.store.job_dir(job_id) / "controlled-experiments"
+        rows = []
+        if root.exists():
+            for path in sorted(root.iterdir(), reverse=True):
                 result = self.store.read_json(path / "result.json", {})
-                if not result:
-                    continue
-                status = "executed" if result.get("execute") else "planned"
+                arms = result.get("arms", []) if isinstance(result, dict) else []
+                trusted = sum(bool(arm.get("judge_trusted")) for arm in arms)
                 rows.append(
                     "<tr>"
-                    f"<td><a href='/jobs/{html.escape(job_id)}/experiments/{html.escape(path.name)}'>{html.escape(path.name)}</a></td>"
-                    f"<td>{html.escape(status)}</td>"
-                    f"<td>{html.escape(str(result.get('model')))}</td>"
-                    f"<td>{html.escape(str(result.get('baseline_run_id')))}</td>"
-                    f"<td>{html.escape(str(result.get('repaired_run_id') or '—'))}</td>"
-                    f"<td>{html.escape(str(result.get('planned_or_completed_invocations') or 0))}</td>"
+                    f"<td><a href='/jobs/{html.escape(job_id)}/controlled-experiments/{html.escape(path.name)}'>{html.escape(path.name)}</a></td>"
+                    f"<td>{len(arms)}</td><td>{trusted}</td>"
+                    f"<td>{html.escape(str(result.get('cassette_hash', 'running')))}</td>"
                     "</tr>"
                 )
-        body = (
-            f"<div class='card'><h2>Review-context comparisons</h2><p><a href='/jobs/{html.escape(job_id)}'>back to job</a></p>"
-            "<table><tr><th>Experiment</th><th>Status</th><th>Model</th><th>Baseline</th><th>Repaired</th><th>Arms</th></tr>"
-            f"{''.join(rows) or '<tr><td colspan=6>No comparisons yet</td></tr>'}</table></div>"
+        self._send(
+            _page(
+                "Controlled repair comparisons",
+                f"<div class='card'><h2>Controlled repair comparisons</h2>"
+                f"<p><a href='/jobs/{html.escape(job_id)}'>back to job</a></p>"
+                "<table><tr><th>Experiment</th><th>Arms</th>"
+                "<th>Blind-judge trusted</th><th>Frozen cassette</th></tr>"
+                f"{''.join(rows) or '<tr><td colspan=4>No controlled comparisons yet</td></tr>'}"
+                "</table></div>",
+            ),
         )
-        self._send(_page(f"Comparisons {job_id}", body))
 
-    def _experiment(self, job_id: str, experiment_id: str) -> None:
+    def _controlled_experiment(self, job_id: str, experiment_id: str) -> None:
         if not experiment_id or "/" in experiment_id or ".." in experiment_id:
             raise FileNotFoundError(experiment_id)
-        result_path = (
+        result = self.store.read_json(
             self.store.job_dir(job_id)
-            / "experiments"
+            / "controlled-experiments"
             / experiment_id
             / "result.json"
         )
-        result = self.store.read_json(result_path)
         if not isinstance(result, dict):
             raise FileNotFoundError(experiment_id)
+        rows = []
+        for arm in result.get("arms", []):
+            input_tokens = arm.get("input_tokens")
+            cached_tokens = arm.get("cached_input_tokens")
+            duration = arm.get("duration_seconds")
+            targets = [
+                str(repair.get("target_function"))
+                for repair in arm.get("repairs", [])
+            ]
+            rows.append(
+                "<tr>"
+                f"<td><code>{html.escape(str(arm.get('mode')))}</code></td>"
+                f"<td>{html.escape(str(arm.get('status', 'running')))}</td>"
+                f"<td>{len(arm.get('repairs', []))}</td>"
+                f"<td>{int(arm.get('effective_repair_count') or 0)}/{int(arm.get('evaluated_repair_count') or len(arm.get('repairs', [])))}</td>"
+                f"<td>{html.escape(' → '.join(targets) or 'none')}</td>"
+                f"<td>{html.escape(str(arm.get('judge_trusted')))}</td>"
+                f"<td>{html.escape(', '.join(arm.get('judge_issue_keys', [])) or 'none')}</td>"
+                f"<td>{f'{int(input_tokens):,}' if input_tokens is not None else '—'}</td>"
+                f"<td>{f'{int(cached_tokens):,}' if cached_tokens is not None else '—'}</td>"
+                f"<td>{f'{float(duration):,.1f}s' if duration is not None else '—'}</td>"
+                f"<td>{html.escape(str(arm.get('error') or '—'))}</td>"
+                "</tr>"
+            )
+        isolation = result.get("isolation", {})
         self._send(
             _page(
-                f"Comparison {experiment_id}",
-                experiment_page_body(job_id, experiment_id, result),
-            )
+                f"Controlled comparison {experiment_id}",
+                f"<div class='card'><h2>Controlled repair comparison</h2>"
+                f"<p><a href='/jobs/{html.escape(job_id)}/controlled-experiments'>all controlled comparisons</a></p>"
+                f"<p>Frozen run: <code>{html.escape(str(result.get('frozen_run_id')))}</code> · "
+                f"cassette: <code>{html.escape(str(result.get('cassette_hash')))}</code></p>"
+                "<p class='muted'>Every invocation is an ephemeral session. Branch history is isolated; "
+                "network responses are recorded once and replayed; final outcomes use the same fresh blind "
+                "graph-selected judge with on-demand expansion. Token values are reported by Codex, not estimated.</p>"
+                "<table><tr><th>Arm</th><th>Status</th><th>Repairs</th><th>Effective</th><th>Repair targets</th><th>Blind trusted</th>"
+                "<th>Blind-judge issues</th><th>Input tokens</th><th>Cached input</th>"
+                f"<th>Time</th><th>Error</th></tr>{''.join(rows)}</table>"
+                "<p class='muted'>Repairs are accepted scoped code changes that were re-executed against the frozen corpus. "
+                "Blind-judge issues are the unresolved function boundaries in the final replay, so fewer is better.</p>"
+                f"<details><summary>Isolation receipt</summary><pre>{html.escape(json.dumps(isolation, indent=2))}</pre></details>"
+                "</div>",
+            ),
         )
 
     def _latest_run(self, root: Path, run: str | None) -> Path:
@@ -807,8 +852,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
             if (run_dir / name).exists()
         )
         comparison_link = (
-            f"<a href='/jobs/{html.escape(job_id)}/experiments'>review-context comparisons</a>"
-            if (root / "experiments").exists()
+            f"<a href='/jobs/{html.escape(job_id)}/controlled-experiments'>controlled repair comparisons</a>"
+            if (root / "controlled-experiments").exists()
             else ""
         )
         unit_by_id = {

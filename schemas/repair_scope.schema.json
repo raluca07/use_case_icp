@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["replacement_source", "change_summary"],
+  "properties": {
+    "replacement_source": {"type": "string"},
+    "change_summary": {"type": "string"}
+  }
+}

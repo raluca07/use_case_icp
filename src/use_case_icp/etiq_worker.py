@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import contextlib
+import base64
 import importlib.metadata
 import io
 import json
 import os
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +25,8 @@ def scan_source(
     bundle_dir: Path,
     entry_file: str,
     runtime_input: Any | None,
+    network_mode: str | None = None,
+    network_cassette_path: Path | None = None,
 ) -> tuple[Any, str, str]:
     entry_source = (bundle_dir / entry_file).read_text(encoding="utf-8")
     captured_stdout = io.StringIO()
@@ -30,7 +35,83 @@ def scan_source(
     old_path = list(sys.path)
     old_argv = list(sys.argv)
     old_stdin = sys.stdin
+    original_urlopen = urllib.request.urlopen
+    cassette: list[dict[str, Any]] = []
+    replay_uses: dict[tuple[str, str], int] = {}
+    if network_mode == "replay":
+        if network_cassette_path is None:
+            raise ValueError("network replay requires a cassette path")
+        cassette = json.loads(network_cassette_path.read_text(encoding="utf-8"))
+
+    def buffered_response(body: bytes, item: dict[str, Any]) -> io.BytesIO:
+        response = io.BytesIO(body)
+        response.status = int(item.get("status") or 200)  # type: ignore[attr-defined]
+        response.headers = dict(item.get("headers") or {})  # type: ignore[attr-defined]
+        response.reason = str(item.get("reason") or "")  # type: ignore[attr-defined]
+        response.url = str(item["url"])  # type: ignore[attr-defined]
+        response.geturl = lambda: response.url  # type: ignore[attr-defined]
+        response.getcode = lambda: response.status  # type: ignore[attr-defined]
+        response.info = lambda: response.headers  # type: ignore[attr-defined]
+        return response
+
+    def urlopen(request: Any, *args: Any, **kwargs: Any) -> Any:
+        url = str(getattr(request, "full_url", request))
+        method = str(
+            request.get_method() if hasattr(request, "get_method") else "GET"
+        )
+        if network_mode == "replay":
+            matching = [
+                item
+                for item in cassette
+                if item["method"] == method and item["url"] == url
+            ]
+            key = (method, url)
+            used = replay_uses.get(key, 0)
+            if not matching:
+                raise RuntimeError(f"unrecorded network request: {method} {url}")
+            if used >= len(matching):
+                raise RuntimeError(f"recorded request count exhausted: {method} {url}")
+            item = matching[used]
+            replay_uses[key] = used + 1
+            if item.get("error"):
+                raise urllib.error.URLError(str(item["error"]))
+            return buffered_response(
+                base64.b64decode(str(item["body_base64"])),
+                item,
+            )
+        try:
+            response = original_urlopen(request, *args, **kwargs)
+            body = response.read()
+            item = {
+                "method": method,
+                "url": url,
+                "status": int(getattr(response, "status", 200) or 200),
+                "reason": str(getattr(response, "reason", "") or ""),
+                "headers": {
+                    str(name): str(value)
+                    for name, value in dict(
+                        getattr(response, "headers", {}) or {}
+                    ).items()
+                    if str(name).lower()
+                    not in {"authorization", "proxy-authorization", "set-cookie"}
+                },
+                "body_base64": base64.b64encode(body).decode("ascii"),
+            }
+            cassette.append(item)
+            return buffered_response(body, item)
+        except Exception as exc:
+            cassette.append(
+                {
+                    "method": method,
+                    "url": url,
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
+            )
+            raise
+
     try:
+        if network_mode in {"record", "replay"}:
+            urllib.request.urlopen = urlopen
         os.chdir(bundle_dir)
         sys.path.insert(0, str(bundle_dir))
         sys.argv = [entry_file]
@@ -46,6 +127,12 @@ def scan_source(
         sys.path[:] = old_path
         sys.argv = old_argv
         sys.stdin = old_stdin
+        urllib.request.urlopen = original_urlopen
+        if network_mode == "record" and network_cassette_path is not None:
+            network_cassette_path.write_text(
+                json.dumps(cassette, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
     return result, captured_stdout.getvalue(), captured_stderr.getvalue()
 
 
@@ -118,6 +205,12 @@ def main(argv: list[str] | None = None) -> int:
             bundle_dir=run_dir / "pipeline",
             entry_file=str(request["entry_file"]),
             runtime_input=runtime_input,
+            network_mode=request.get("network_mode"),
+            network_cassette_path=(
+                Path(request["network_cassette_path"])
+                if request.get("network_cassette_path")
+                else None
+            ),
         )
         (run_dir / "pipeline-stdout.log").write_text(stdout, encoding="utf-8")
         (run_dir / "pipeline-stderr.log").write_text(stderr, encoding="utf-8")

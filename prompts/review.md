@@ -19,3 +19,17 @@ direct-child `func_stack` prefix in `expand_helper_prefixes`. Expand only the br
 needed for the unresolved criterion. When a result is failed or suspect, identify any
 specific faulty captured artifacts in `suspect_node_refs`; use an empty list when the
 problem can only be localized to the whole boundary.
+
+Small captured artifacts are supplied in full as `artifact_value`. Larger tables and
+documents expose their type and size while keeping the initial package bounded. When
+you need their contents, request them in `inspect_artifacts`: use `start` and `count`
+for table rows or sequence items, optional `columns` for table columns or record keys,
+and use `start` as a character offset with `count` measured in thousands of characters
+for documents. Set `query` to search within a table, document, sequence, or record;
+use an empty string for positional inspection. Inspect only artifacts needed to resolve
+an uncertain criterion. Return an empty `inspect_artifacts` list when no further
+inspection is needed.
+
+If `review_validation_errors` is present, return corrected review records using only
+the exact visible evidence identifiers. Do not preserve an invalid citation merely to
+keep the previous decision wording.

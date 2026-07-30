@@ -22,6 +22,7 @@ from .repair import repair_diff, select_repair_target, validate_repair_scope
 from .review import (
     build_review_sections,
     build_review_units,
+    inspect_artifact,
     review_node_payload,
     review_relationship_payload,
     trusted_frontier,
@@ -174,6 +175,31 @@ def repair_metrics(
             "effective_repair": "The targeted function was no longer failed or suspect in that later review.",
         },
     }
+
+
+def review_decisions(payload: Mapping[str, Any]) -> list[ReviewDecision]:
+    return [
+        ReviewDecision(
+            unit_id=str(item["unit_id"]),
+            decision=str(item["decision"]),
+            decision_reason=str(item["decision_reason"]),
+            evidence_refs=[str(value) for value in item.get("evidence_refs", [])],
+            trust_level=item.get("trust_level"),
+            criteria_outcomes=list(item.get("criteria_outcomes", [])),
+            boundary_health_acknowledged=bool(item.get("boundary_health_acknowledged")),
+            expand_helper_prefixes=[
+                [str(value) for value in prefix]
+                for prefix in item.get("expand_helper_prefixes", [])
+            ],
+            inspect_artifacts=[
+                dict(value) for value in item.get("inspect_artifacts", [])
+            ],
+            suspect_node_refs=[
+                str(value) for value in item.get("suspect_node_refs", [])
+            ],
+        )
+        for item in payload["reviews"]
+    ]
 
 
 class WorkflowRunner:
@@ -633,6 +659,14 @@ class WorkflowRunner:
                     run_id=run_id,
                 )
                 return PipelineOutcome(True, semantic, run_id, trust_context=review_context)
+            if not review_context.get("repairable", True):
+                return PipelineOutcome(
+                    False,
+                    semantic,
+                    run_id,
+                    str(review_context.get("reason") or "review could not produce a valid repair request"),
+                    trust_context=review_context,
+                )
             if repair_index >= max_repairs:
                 return PipelineOutcome(False, semantic, run_id, "review requested repair but repair budget was exhausted")
             repair_mode = str(request.limits.get("repair_scope_mode", "boundary"))
@@ -782,6 +816,9 @@ class WorkflowRunner:
             expanded: dict[str, list[list[str]]] = {
                 unit.unit_id: [] for unit in context_units
             }
+            artifact_inspections: dict[str, list[dict[str, Any]]] = {
+                unit.unit_id: [] for unit in context_units
+            }
             max_expansions = int(request.limits.get("review_expansions", 3))
             expansion_round = 0
             while True:
@@ -808,6 +845,7 @@ class WorkflowRunner:
                     "assigned_units": jsonable(assigned),
                     "context_units": jsonable(context_units),
                     "visible_evidence_by_unit": visible_by_unit,
+                    "artifact_inspections_by_unit": artifact_inspections,
                     "captured_nodes": [
                         review_node_payload(node_by_ref[ref])
                         for ref in sorted(node_refs)
@@ -881,25 +919,7 @@ class WorkflowRunner:
                     execution.run_dir / "context-accounting.json",
                     context_accounting,
                 )
-                decisions = [
-                    ReviewDecision(
-                        unit_id=str(item["unit_id"]),
-                        decision=str(item["decision"]),
-                        decision_reason=str(item["decision_reason"]),
-                        evidence_refs=[str(value) for value in item.get("evidence_refs", [])],
-                        trust_level=item.get("trust_level"),
-                        criteria_outcomes=list(item.get("criteria_outcomes", [])),
-                        boundary_health_acknowledged=bool(item.get("boundary_health_acknowledged")),
-                        expand_helper_prefixes=[
-                            [str(value) for value in prefix]
-                            for prefix in item.get("expand_helper_prefixes", [])
-                        ],
-                        suspect_node_refs=[
-                            str(value) for value in item.get("suspect_node_refs", [])
-                        ],
-                    )
-                    for item in review_result.payload["reviews"]
-                ]
+                decisions = review_decisions(review_result.payload)
                 requested = False
                 unit_by_id = {unit.unit_id: unit for unit in assigned}
                 for decision in decisions:
@@ -914,6 +934,19 @@ class WorkflowRunner:
                         if validated not in expanded[decision.unit_id]:
                             expanded[decision.unit_id].append(validated)
                             requested = True
+                    for inspection_request in decision.inspect_artifacts:
+                        node_ref = str(inspection_request.get("node_ref") or "")
+                        if node_ref not in node_refs or node_ref not in node_by_ref:
+                            raise ValueError(
+                                f"artifact inspection must target visible evidence: {node_ref}"
+                            )
+                        inspection = inspect_artifact(
+                            node_by_ref[node_ref],
+                            inspection_request,
+                        )
+                        if inspection not in artifact_inspections[decision.unit_id]:
+                            artifact_inspections[decision.unit_id].append(inspection)
+                            requested = True
                 if not requested:
                     break
                 expansion_round += 1
@@ -927,18 +960,69 @@ class WorkflowRunner:
                 section.section_id,
             )
             receipt_ref = str(receipt_path.relative_to(job_root))
-            receipt, annotations = validate_review(
-                review_job_id=job_id,
-                section=section,
-                units=units,
-                decisions=decisions,
-                allowed_evidence_refs=(
-                    set(package["evidence_refs"])
-                    | {unit.unit_id for unit in context_units}
-                    | set(node_refs)
-                    | set(relationship_refs)
-                ),
-                receipt_ref=receipt_ref,
+            receipt_attempts: list[dict[str, Any]] = []
+            max_receipt_retries = int(request.limits.get("review_receipt_retries", 2))
+            receipt_retry = 0
+            while True:
+                receipt, annotations = validate_review(
+                    review_job_id=job_id,
+                    section=section,
+                    units=units,
+                    decisions=decisions,
+                    allowed_evidence_refs=(
+                        set(package["evidence_refs"])
+                        | {unit.unit_id for unit in context_units}
+                        | set(node_refs)
+                        | set(relationship_refs)
+                    ),
+                    receipt_ref=receipt_ref,
+                    visible_node_refs_by_unit={
+                        unit_id: set(evidence["node_refs"])
+                        for unit_id, evidence in visible_by_unit.items()
+                    },
+                )
+                receipt_attempts.append(jsonable(receipt))
+                if receipt.result != "rejected":
+                    break
+                if receipt_retry >= max_receipt_retries:
+                    self.store.write_json(
+                        execution.run_dir / f"{section.section_id}-receipt-attempts.json",
+                        receipt_attempts,
+                    )
+                    self.store.write_json(receipt_path, receipt)
+                    return False, {
+                        "run_id": execution.snapshot.run_id,
+                        "reason": "review receipt validation failed after correction retries",
+                        "repairable": False,
+                        "units": jsonable(units),
+                        "receipts": [jsonable(receipt)],
+                    }
+                receipt_retry += 1
+                package["review_validation_errors"] = receipt.errors
+                section.section_input_hash = stable_hash(package)
+                package["section"] = jsonable(section)
+                correction = self._invoke(
+                    job_id=job_id,
+                    job_type="review",
+                    purpose=(
+                        f"{stage}_review_{section.section_id}_"
+                        f"receipt_retry_{receipt_retry}"
+                    ),
+                    prompt_name="review",
+                    schema_name="review",
+                    context={
+                        "stage": stage,
+                        "request": jsonable(request),
+                        "segment": jsonable(segment),
+                        "review_package": package,
+                    },
+                    caused_by_invocation_id=review_result.invocation_id,
+                )
+                review_result = correction
+                decisions = review_decisions(correction.payload)
+            self.store.write_json(
+                execution.run_dir / f"{section.section_id}-receipt-attempts.json",
+                receipt_attempts,
             )
             self.store.write_json(receipt_path, receipt)
             for annotation in annotations:
@@ -954,6 +1038,7 @@ class WorkflowRunner:
             if receipt.result != "passed":
                 return False, {
                     "run_id": execution.snapshot.run_id,
+                    "repairable": receipt.result == "blocked_for_repair",
                     "units": jsonable(units),
                     "receipts": receipt_summaries,
                     "trusted_frontier": frontier,

@@ -112,6 +112,64 @@ def value_preview(value: Any, *, max_chars: int = 2_000) -> tuple[Any, bool]:
     return {"summary": encoded[:max_chars]}, True
 
 
+def _redact_artifact(value: Any, *, depth: int = 0) -> Any:
+    if depth > 10:
+        return repr(value)[:1_000]
+    if isinstance(value, Mapping):
+        return {
+            str(key): (
+                "[REDACTED]"
+                if SENSITIVE_NAME.search(str(key))
+                else _redact_artifact(item, depth=depth + 1)
+            )
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple, set)):
+        return [_redact_artifact(item, depth=depth + 1) for item in value]
+    dump = getattr(value, "model_dump", None)
+    if callable(dump):
+        try:
+            return _redact_artifact(dump(), depth=depth + 1)
+        except Exception:
+            pass
+    return _json_safe(value, depth=depth)
+
+
+def inspectable_artifact(
+    value: Any,
+    *,
+    max_chars: int = 2_000_000,
+) -> tuple[str | None, Any | None, bool, dict[str, int] | None]:
+    if value is None:
+        return None, None, False, None
+    if hasattr(value, "shape") and hasattr(value, "columns") and hasattr(value, "to_dict"):
+        try:
+            columns = [str(item) for item in value.columns]
+            rows = _redact_artifact(value.to_dict(orient="records"))
+            content: Any = {"columns": columns, "rows": rows}
+            size = {"rows": int(value.shape[0]), "columns": int(value.shape[1])}
+            encoded = json.dumps(content, ensure_ascii=False, default=str)
+            if len(encoded) <= max_chars:
+                return "table", content, False, size
+            kept = max(1, int(len(rows) * max_chars / max(len(encoded), 1)))
+            content = {"columns": columns, "rows": rows[:kept]}
+            while kept > 1 and len(json.dumps(content, ensure_ascii=False, default=str)) > max_chars:
+                kept //= 2
+                content["rows"] = rows[:kept]
+            return "table", content, True, size
+        except Exception:
+            pass
+    if isinstance(value, str):
+        return "document", value[:max_chars], len(value) > max_chars, {"characters": len(value)}
+    content = _redact_artifact(value)
+    encoded = json.dumps(content, ensure_ascii=False, default=str)
+    if len(encoded) <= max_chars:
+        kind = "sequence" if isinstance(content, list) else "record"
+        size = {"items": len(content)} if isinstance(content, (list, dict)) else {"characters": len(encoded)}
+        return kind, content, False, size
+    return "record", None, True, {"characters": len(encoded)}
+
+
 def _redact_metadata_values(value: Any) -> Any:
     if isinstance(value, Mapping):
         return {
@@ -208,6 +266,20 @@ def _as_stack(value: Any) -> list[str]:
     return []
 
 
+def _function_mapping_key(state: Any, mapping: Any) -> tuple[Any, ...]:
+    stack = tuple(
+        frame.rsplit(",", 1)[0].strip()
+        for frame in _as_stack(getattr(state, "func_stack", None))
+    )
+    node = getattr(state, "node", None)
+    return (
+        stack,
+        str(getattr(mapping, "function_name", None) or "Anonymous"),
+        getattr(state, "line_no", None),
+        _safe_call(node, "as_string") if node is not None else None,
+    )
+
+
 def _relation_ids(value: Any) -> list[str]:
     if value is None:
         return []
@@ -271,6 +343,9 @@ def serialize_etiq_result(*, job_id: str, run_id: str, result: Any) -> EtiqEvide
         node = getattr(state, "node", None)
         value = getattr(state, "value", None)
         preview, preview_truncated = value_preview(value)
+        artifact_kind, artifact_content, artifact_truncated, artifact_size = (
+            inspectable_artifact(value)
+        )
         metadata: dict[str, Any] = {}
         for name in ("parent", "children"):
             if hasattr(state, name):
@@ -309,10 +384,15 @@ def serialize_etiq_result(*, job_id: str, run_id: str, result: Any) -> EtiqEvide
                 raw_metadata=metadata,
                 value_preview=preview,
                 preview_truncated=preview_truncated,
+                artifact_kind=artifact_kind,
+                artifact_content=artifact_content,
+                artifact_truncated=artifact_truncated,
+                artifact_size=artifact_size,
             )
         )
 
-    mapping_to_ref: dict[str, str] = {}
+    mapping_to_ref: dict[tuple[Any, ...], str] = {}
+    mapping_node_by_ref: dict[str, EtiqNodeRecord] = {}
     state_mapping_ref: dict[int, str] = {}
     for state in states:
         mapping = getattr(state, "parent_func_mapping", None)
@@ -320,34 +400,40 @@ def serialize_etiq_result(*, job_id: str, run_id: str, result: Any) -> EtiqEvide
         if mapping is None or function_id is None:
             continue
         mapping_id = str(function_id)
-        mapping_ref = mapping_to_ref.get(mapping_id)
+        mapping_key = _function_mapping_key(state, mapping)
+        mapping_ref = mapping_to_ref.get(mapping_key)
         if mapping_ref is None:
             mapping_ref = f"{run_id}:function:{len(mapping_to_ref) + 1:06d}"
-            mapping_to_ref[mapping_id] = mapping_ref
+            mapping_to_ref[mapping_key] = mapping_ref
             state_node = getattr(state, "node", None)
-            nodes.append(
-                EtiqNodeRecord(
-                    node_ref=mapping_ref,
-                    raw_id=mapping_id,
-                    names=[str(getattr(mapping, "function_name", None) or "Anonymous")],
-                    line_no=(
-                        getattr(state, "line_no", None)
-                        if isinstance(getattr(state, "line_no", None), int)
-                        else None
-                    ),
-                    state_type=type(mapping).__name__,
-                    value_type=None,
-                    func_stack=_as_stack(getattr(state, "func_stack", None)),
-                    source=_safe_call(state_node, "as_string") if state_node is not None else None,
-                    scope_type=(
-                        type(scope).__name__
-                        if state_node is not None
-                        and (scope := _safe_call(state_node, "scope")) is not None
-                        else None
-                    ),
-                    raw_metadata={"etiq_metadata": _metadata(mapping)},
-                )
+            mapping_node = EtiqNodeRecord(
+                node_ref=mapping_ref,
+                raw_id=mapping_id,
+                names=[str(getattr(mapping, "function_name", None) or "Anonymous")],
+                line_no=(
+                    getattr(state, "line_no", None)
+                    if isinstance(getattr(state, "line_no", None), int)
+                    else None
+                ),
+                state_type=type(mapping).__name__,
+                value_type=None,
+                func_stack=_as_stack(getattr(state, "func_stack", None)),
+                source=_safe_call(state_node, "as_string") if state_node is not None else None,
+                scope_type=(
+                    type(scope).__name__
+                    if state_node is not None
+                    and (scope := _safe_call(state_node, "scope")) is not None
+                    else None
+                ),
+                raw_metadata={
+                    "etiq_metadata": _metadata(mapping),
+                    "captured_invocation_count": 1,
+                },
             )
+            nodes.append(mapping_node)
+            mapping_node_by_ref[mapping_ref] = mapping_node
+        else:
+            mapping_node_by_ref[mapping_ref].raw_metadata["captured_invocation_count"] += 1
         state_mapping_ref[id(state)] = mapping_ref
 
     relationships: list[EtiqRelationshipRecord] = []

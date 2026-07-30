@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 from .codex_runner import DEFAULT_CODEX_MODEL, CodexRunner
+from .controlled_experiment import run_controlled_experiment
 from .etiq_executor import EXPECTED_ETIQ_VERSION, EtiqExecutor
 from .workflow import WorkflowRunner
 from .records import AgentRequest
@@ -103,6 +104,17 @@ def build_parser() -> argparse.ArgumentParser:
     assess.add_argument("assessment_json")
     assess.set_defaults(action="assess_review")
 
+    controlled = subparsers.add_parser(
+        "compare-control",
+        help="run isolated review-repair-replay branches against one frozen corpus",
+    )
+    controlled.add_argument("job_id")
+    controlled.add_argument("--baseline-run", required=True)
+    controlled.add_argument("--max-repairs", type=int, default=3)
+    controlled.add_argument("--model", type=_job_model, default=DEFAULT_CODEX_MODEL)
+    controlled.add_argument("--timeout", type=int, default=1800)
+    controlled.set_defaults(action="compare_control")
+
     server = subparsers.add_parser("serve", help="serve the local dashboard")
     server.add_argument("--host", default="127.0.0.1")
     server.add_argument("--port", type=int, default=8000)
@@ -187,6 +199,29 @@ def main(argv: list[str] | None = None) -> int:
             print(f"review assessment failed: {type(exc).__name__}: {exc}", file=sys.stderr)
             return 1
         print(args.experiment_id)
+        return 0
+    if args.action == "compare_control":
+        try:
+            experiment_id = run_controlled_experiment(
+                repo_root=repo_root,
+                store=store,
+                codex=CodexRunner(
+                    store,
+                    model=args.model,
+                    timeout_seconds=args.timeout,
+                ),
+                etiq=EtiqExecutor(store, timeout_seconds=args.timeout),
+                job_id=args.job_id,
+                baseline_run_id=args.baseline_run,
+                max_repairs=args.max_repairs,
+            )
+        except Exception as exc:
+            print(
+                f"controlled comparison failed: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            return 1
+        print(experiment_id)
         return 0
     if args.action == "run":
         codex = CodexRunner(

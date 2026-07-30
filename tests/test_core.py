@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import io
 import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from use_case_icp.__main__ import build_parser
 from use_case_icp.codex_runner import CodexResult, CodexRunner, extract_usage
@@ -14,7 +16,12 @@ from use_case_icp.dashboard import (
     experiment_page_body,
 )
 from use_case_icp.etiq_executor import EtiqExecutor
-from use_case_icp.etiq_graph import value_preview
+from use_case_icp.etiq_graph import (
+    inspectable_artifact,
+    serialize_etiq_result,
+    value_preview,
+)
+from use_case_icp.etiq_worker import scan_source
 from use_case_icp.repair import (
     repair_diff,
     select_repair_target,
@@ -44,6 +51,7 @@ from use_case_icp.records import (
 from use_case_icp.review import (
     build_review_sections,
     build_review_units,
+    inspect_artifact,
     retrace_node_refs,
     trusted_frontier,
     validate_expansion,
@@ -53,6 +61,7 @@ from use_case_icp.review import (
 from use_case_icp.job_store import JobStore
 from use_case_icp.review_experiment import (
     EXPERIMENT_MODES,
+    build_experiment_package,
     history_artifacts,
     summarize_experiment,
 )
@@ -213,6 +222,11 @@ class CoreTests(unittest.TestCase):
             ]
         )
         self.assertEqual(compare_with_history.history_jobs, ["job-1"])
+        controlled = build_parser().parse_args(
+            ["compare-control", "job-1", "--baseline-run", "run-1"]
+        )
+        self.assertEqual(controlled.model, "gpt-5.5")
+        self.assertEqual(controlled.max_repairs, 3)
 
     def test_generated_pipeline_rejects_escape(self) -> None:
         pipeline = GeneratedPipeline(entry_file="../pipeline.py", files=[GeneratedFile("../pipeline.py", "x=1")])
@@ -306,6 +320,32 @@ class CoreTests(unittest.TestCase):
                 self.assertEqual(receipt.result, "passed")
                 self.assertEqual([item.unit_id for item in annotations], [unit.unit_id])
 
+    def test_serializer_groups_repeated_function_invocations(self) -> None:
+        result = FakeUnstructuredResult()
+        result.states = [
+            FakeState("s1", "value", ["main", "helper,call-1"], line=7),
+            FakeState("s2", "value", ["main", "helper,call-2"], line=7),
+        ]
+
+        snapshot = serialize_etiq_result(job_id="job-1", run_id="run-1", result=result)
+        function_nodes = [
+            node for node in snapshot.nodes if node.state_type == "FakeFunctionMapping"
+        ]
+
+        self.assertEqual(len(snapshot.nodes), 3)
+        self.assertEqual(len(function_nodes), 1)
+        self.assertEqual(
+            function_nodes[0].raw_metadata["captured_invocation_count"],
+            2,
+        )
+        self.assertEqual(
+            sum(
+                relationship.relationship_type == "function_result"
+                for relationship in snapshot.relationships
+            ),
+            2,
+        )
+
     def test_nested_review_units_split_recursively_and_sections_obey_evidence_limits(self) -> None:
         def node(ref: str, stack: list[str]) -> EtiqNodeRecord:
             return EtiqNodeRecord(ref, ref, [ref], 1, "state", "dict", stack, None, None, {})
@@ -397,11 +437,123 @@ class CoreTests(unittest.TestCase):
         self.assertNotIn("helper", initial["node_refs"])
         prefix = validate_expansion(
             units[0],
-            ["main", "stage_a,a1", "helper,h1"],
+            ["main", "stage_a", "helper"],
             [],
         )
         expanded = visible_evidence(units[0], snapshot, [prefix])
         self.assertIn("helper", expanded["node_refs"])
+
+    def test_etiq_selected_experiment_package_can_expand_helper_evidence(self) -> None:
+        nodes = [
+            EtiqNodeRecord(
+                "stage", None, ["stage"], 1, "state", "dict",
+                ["main", "stage_a,a1"], None, None, {},
+            ),
+            EtiqNodeRecord(
+                "helper", None, ["helper"], 2, "state", "dict",
+                ["main", "stage_a,a1", "helper,h1"], None, None, {},
+            ),
+        ]
+        snapshot = EtiqEvidenceSnapshot("snapshot", "job", "run", nodes, [], {}, [])
+        units = build_review_units(
+            snapshot,
+            declared_boundaries=[{"function_name": "stage_a"}],
+        )
+        section = build_review_sections(units)[0]
+        with tempfile.TemporaryDirectory() as temporary:
+            store = JobStore(Path(temporary) / "jobs")
+            store.initialize_job(AgentRequest("product", "audience"), RootJobState("job"))
+            store.write_json(store.job_dir("job") / "segments.json", {"segments": []})
+            run_dir = store.stage_run_dir("job", "segment", "market_demand", "run")
+            (run_dir / "pipeline").mkdir(parents=True)
+            (run_dir / "pipeline" / "pipeline.py").write_text("result = {}\n", encoding="utf-8")
+            store.write_json(
+                run_dir / "pipeline-manifest.json",
+                {"file_hashes": {"pipeline.py": "hash"}},
+            )
+            for name, value in (
+                ("pipeline-input.json", {}),
+                ("semantic-result.json", {}),
+            ):
+                store.write_json(run_dir / name, value)
+            (run_dir / "pipeline-stdout.log").write_text("", encoding="utf-8")
+            (run_dir / "pipeline-stderr.log").write_text("", encoding="utf-8")
+            initial = build_experiment_package(
+                "etiq_selected",
+                store=store,
+                run_dir=run_dir,
+                snapshot=snapshot,
+                units=units,
+                section=section,
+            )
+            self.assertNotIn("helper", {node["node_ref"] for node in initial["captured_nodes"]})
+            self.assertEqual(initial["pipeline_source"], {})
+            expanded = build_experiment_package(
+                "etiq_selected",
+                store=store,
+                run_dir=run_dir,
+                snapshot=snapshot,
+                units=units,
+                section=section,
+                expanded_prefixes_by_unit={
+                    units[0].unit_id: [["main", "stage_a", "helper"]]
+                },
+            )
+            self.assertIn("helper", {node["node_ref"] for node in expanded["captured_nodes"]})
+
+    def test_network_cassette_replays_recorded_urls_without_live_network(self) -> None:
+        class Response(io.BytesIO):
+            status = 200
+            reason = "OK"
+            headers = {"Content-Type": "text/plain"}
+
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = Path(temporary)
+            cassette = bundle / "cassette.json"
+            source = (
+                "import urllib.request\n"
+                "print(urllib.request.urlopen('https://example.test/a').read().decode())\n"
+                "print(urllib.request.urlopen('https://example.test/b').read().decode())\n"
+            )
+            (bundle / "pipeline.py").write_text(source, encoding="utf-8")
+
+            def live(request: object, *_: object, **__: object) -> Response:
+                url = str(getattr(request, "full_url", request))
+                return Response(("A" if url.endswith("/a") else "B").encode())
+
+            with patch("urllib.request.urlopen", side_effect=live):
+                _, stdout, _ = scan_source(
+                    FakeScanner(),
+                    bundle_dir=bundle,
+                    entry_file="pipeline.py",
+                    runtime_input=None,
+                    network_mode="record",
+                    network_cassette_path=cassette,
+                )
+            self.assertEqual(stdout.splitlines(), ["A", "B"])
+
+            (bundle / "pipeline.py").write_text(
+                source.replace(
+                    "print(urllib.request.urlopen('https://example.test/a').read().decode())\n"
+                    "print(urllib.request.urlopen('https://example.test/b').read().decode())",
+                    "print(urllib.request.urlopen('https://example.test/b').read().decode())\n"
+                    "print(urllib.request.urlopen('https://example.test/a').read().decode())",
+                ),
+                encoding="utf-8",
+            )
+            with patch(
+                "urllib.request.urlopen",
+                side_effect=AssertionError("live network must not be called"),
+            ):
+                _, replay_stdout, _ = scan_source(
+                    FakeScanner(),
+                    bundle_dir=bundle,
+                    entry_file="pipeline.py",
+                    runtime_input=None,
+                    network_mode="replay",
+                    network_cassette_path=cassette,
+                )
+            self.assertEqual(replay_stdout.splitlines(), ["B", "A"])
 
     def test_repeated_capture_nodes_fit_the_declared_review_boundary(self) -> None:
         nodes = [
@@ -457,6 +609,84 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(preview["api_token"], "[REDACTED]")
         self.assertEqual(len(preview["items"]), 20)
         self.assertTrue(truncated)
+
+    def test_artifacts_are_inspectable_by_table_slice_and_document_range(self) -> None:
+        class Table:
+            shape = (3, 3)
+            columns = ["name", "api_token", "score"]
+
+            def to_dict(self, orient: str) -> list[dict[str, object]]:
+                self.assertEqual(orient, "records")
+                return [
+                    {"name": "a", "api_token": "secret-a", "score": 1},
+                    {"name": "b", "api_token": "secret-b", "score": 2},
+                    {"name": "c", "api_token": "secret-c", "score": 3},
+                ]
+
+            def assertEqual(self, left: object, right: object) -> None:
+                if left != right:
+                    raise AssertionError
+
+        kind, content, truncated, size = inspectable_artifact(Table())
+        node = EtiqNodeRecord(
+            "table-node",
+            None,
+            ["table"],
+            1,
+            "state",
+            "Table",
+            ["main", "stage,1"],
+            None,
+            None,
+            {},
+            artifact_kind=kind,
+            artifact_content=content,
+            artifact_truncated=truncated,
+            artifact_size=size,
+        )
+        table_slice = inspect_artifact(
+            node,
+            {"node_ref": "table-node", "start": 1, "count": 1, "columns": ["name", "api_token"]},
+        )
+        self.assertEqual(
+            table_slice["content"],
+            [{"name": "b", "api_token": "[REDACTED]"}],
+        )
+
+        kind, content, truncated, size = inspectable_artifact("0123456789" * 100)
+        document = EtiqNodeRecord(
+            "document-node",
+            None,
+            ["document"],
+            1,
+            "state",
+            "str",
+            ["main", "stage,1"],
+            None,
+            None,
+            {},
+            artifact_kind=kind,
+            artifact_content=content,
+            artifact_truncated=truncated,
+            artifact_size=size,
+        )
+        document_slice = inspect_artifact(
+            document,
+            {"node_ref": "document-node", "start": 10, "count": 1, "columns": []},
+        )
+        self.assertEqual(document_slice["content"], ("0123456789" * 99))
+        document_search = inspect_artifact(
+            document,
+            {
+                "node_ref": "document-node",
+                "start": 0,
+                "count": 2,
+                "columns": [],
+                "query": "7890",
+            },
+        )
+        self.assertEqual(document_search["returned"], 2)
+        self.assertEqual(document_search["content"][0]["character_offset"], 7)
 
     def test_lineage_svg_renders_captured_relationships(self) -> None:
         svg = _graph_svg(
@@ -607,6 +837,54 @@ class CoreTests(unittest.TestCase):
             frontier["non_pipeline_unit_ids"],
             [unit_by_name["helper"].unit_id],
         )
+
+    def test_review_accepts_visible_boundary_node_as_suspect(self) -> None:
+        nodes = [
+            EtiqNodeRecord("a", "a", ["a"], 1, "state", "dict", ["main", "helper,a"], None, None, {}),
+            EtiqNodeRecord("b", "b", ["b"], 2, "state", "dict", ["main", "stage,b"], None, None, {}),
+        ]
+        snapshot = EtiqEvidenceSnapshot(
+            "snapshot",
+            "job",
+            "run",
+            nodes,
+            [EtiqRelationshipRecord("ab", "a", "b", "state_parent", "flow", {})],
+            {},
+            [],
+        )
+        units = build_review_units(snapshot)
+        unit_by_name = {unit.function_name: unit for unit in units}
+        stage = unit_by_name["stage"]
+        section = ReviewSection(
+            "section-001",
+            1,
+            [stage.unit_id],
+            [stage.unit_id],
+            0,
+            0,
+            section_input_hash="hash",
+        )
+
+        receipt, _ = validate_review(
+            review_job_id="job",
+            section=section,
+            units=units,
+            decisions=[
+                ReviewDecision(
+                    stage.unit_id,
+                    "suspect",
+                    "The visible upstream handoff may be incomplete.",
+                    ["a"],
+                    suspect_node_refs=["a"],
+                )
+            ],
+            allowed_evidence_refs={"a", "b"},
+            receipt_ref="receipt.json",
+            visible_node_refs_by_unit={stage.unit_id: {"a", "b"}},
+        )
+
+        self.assertEqual(receipt.result, "blocked_for_repair")
+        self.assertEqual(receipt.errors, [])
 
     def test_review_experiment_compares_issue_overlap_and_resolution(self) -> None:
         records = []
@@ -765,6 +1043,26 @@ class CoreTests(unittest.TestCase):
             self.assertFalse(any("/run-2/" in ref for ref in visible_refs))
             self.assertFalse(any(ref.endswith("repair-diff.json") for ref in visible_refs))
 
+    def test_full_history_bounds_accumulated_content(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            store = JobStore(Path(temporary) / "jobs")
+            job_dir = store.job_dir("job-1")
+            job_dir.mkdir(parents=True)
+            store.write_json(job_dir / "request.json", {"text": "a" * 100})
+            store.write_json(job_dir / "segments.json", {"text": "b" * 100})
+
+            artifacts = history_artifacts(
+                store,
+                ["job-1"],
+                max_content_chars=50,
+            )
+
+            self.assertEqual(len(artifacts), 2)
+            self.assertTrue(artifacts[0]["content"]["truncated"])
+            self.assertEqual(len(artifacts[0]["content"]["preview"]), 50)
+            self.assertTrue(artifacts[1]["content"]["truncated"])
+            self.assertEqual(artifacts[1]["content"]["preview"], "")
+
     def test_repair_scope_accepts_only_selected_function(self) -> None:
         original = GeneratedPipeline(
             "pipeline.py",
@@ -904,6 +1202,89 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(target["function_name"], "extract")
         self.assertEqual(target["suspect_node_ref"], "node-extract")
 
+    def test_repair_target_prefers_upstream_failed_graph_boundary(self) -> None:
+        pipeline = GeneratedPipeline(
+            "pipeline.py",
+            [
+                GeneratedFile(
+                    "pipeline.py",
+                    "def discover():\n    return 1\n\ndef retrieve():\n    return 2\n",
+                )
+            ],
+            [{"function_name": "discover"}, {"function_name": "retrieve"}],
+        )
+        snapshot = EtiqEvidenceSnapshot(
+            "snapshot",
+            "job",
+            "run",
+            [
+                EtiqNodeRecord(
+                    "discover-node", None, ["discover"], 1, "function", None,
+                    ["main", "discover,1"], None, None, {},
+                ),
+                EtiqNodeRecord(
+                    "retrieve-node", None, ["retrieve"], 4, "function", None,
+                    ["main", "retrieve,1"], None, None, {},
+                ),
+            ],
+            [],
+            {},
+            [],
+        )
+        target = select_repair_target(
+            "boundary",
+            pipeline=pipeline,
+            snapshot=snapshot,
+            review_context={
+                "units": [
+                    {
+                        "unit_id": "discover-unit",
+                        "function_name": "discover",
+                        "node_refs": ["discover-node"],
+                        "upstream_unit_ids": [],
+                    },
+                    {
+                        "unit_id": "retrieve-unit",
+                        "function_name": "retrieve",
+                        "node_refs": ["retrieve-node"],
+                        "upstream_unit_ids": ["discover-unit"],
+                    },
+                ],
+                "receipts": [
+                    {
+                        "result": "blocked_for_repair",
+                        "failed_or_suspect_unit_ids": ["discover-unit", "retrieve-unit"],
+                        "suspect_node_refs": ["discover-node", "retrieve-node"],
+                    }
+                ],
+            },
+            previous_target_function_names=["discover"],
+        )
+        self.assertEqual(target["function_name"], "discover")
+        self.assertIn("graph-causal", target["selection_reason"])
+
+    def test_rejected_receipt_cannot_select_repair_target(self) -> None:
+        pipeline = GeneratedPipeline(
+            "pipeline.py",
+            [GeneratedFile("pipeline.py", "def stage():\n    return 1\n")],
+            [{"function_name": "stage"}],
+        )
+        with self.assertRaisesRegex(ValueError, "rejected review receipts"):
+            select_repair_target(
+                "boundary",
+                pipeline=pipeline,
+                snapshot=EtiqEvidenceSnapshot("snapshot", "job", "run", [], [], {}, []),
+                review_context={
+                    "units": [],
+                    "receipts": [
+                        {
+                            "result": "rejected",
+                            "failed_or_suspect_unit_ids": ["unit"],
+                        }
+                    ],
+                },
+            )
+
     def test_repair_metrics_separate_accepted_and_effective_repairs(self) -> None:
         metrics = repair_metrics(
             [
@@ -989,12 +1370,14 @@ class FakeCodex:
         *,
         coverage_sufficient: bool = True,
         fail_first_review: bool = False,
+        invalid_first_review_receipt: bool = False,
         fail_first_pipeline: bool = False,
         invalid_first_bundle: bool = False,
     ) -> None:
         self.store = store
         self.coverage_sufficient = coverage_sufficient
         self.fail_first_review = fail_first_review
+        self.invalid_first_review_receipt = invalid_first_review_receipt
         self.fail_first_pipeline = fail_first_pipeline
         self.invalid_first_bundle = invalid_first_bundle
         self.review_count = 0
@@ -1120,6 +1503,9 @@ class FakeCodex:
         elif "_review_" in purpose:
             package = context["review_package"]
             fail_review = self.fail_first_review and self.review_count == 0
+            invalid_receipt = (
+                self.invalid_first_review_receipt and self.review_count == 0
+            )
             self.review_count += 1
             reviews = []
             for index, unit in enumerate(package["assigned_units"]):
@@ -1133,7 +1519,9 @@ class FakeCodex:
                             if failed
                             else "The captured transformation meets the expected result."
                         ),
-                        "evidence_refs": package["evidence_refs"],
+                        "evidence_refs": (
+                            ["not-visible"] if invalid_receipt else package["evidence_refs"]
+                        ),
                         "trust_level": None if failed else "trusted_for_reuse",
                         "criteria_outcomes": (
                             []
@@ -1147,6 +1535,9 @@ class FakeCodex:
                             ]
                         ),
                         "boundary_health_acknowledged": True,
+                        "expand_helper_prefixes": [],
+                        "inspect_artifacts": [],
+                        "suspect_node_refs": [],
                     }
                 )
             payload = {"reviews": reviews}
@@ -1257,6 +1648,25 @@ class WorkflowTests(unittest.TestCase):
             self.assertIsNone(result["icp"])
             events = store.read_events(job_id)
             self.assertIn("coverage_insufficient", {event["event_type"] for event in events})
+
+    def test_invalid_review_receipt_is_corrected_without_pipeline_repair(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            store = JobStore(root / "outputs" / "jobs")
+            fake_codex = FakeCodex(store, invalid_first_review_receipt=True)
+            workflow = WorkflowRunner(
+                repo_root=Path(__file__).resolve().parents[1],
+                store=store,
+                codex=fake_codex,  # type: ignore[arg-type]
+                etiq=EtiqExecutor(store, scanner_factory=FakeScanner),
+            )
+            job_id = workflow.run(AgentRequest("product", "audience", max_segments=1))
+            state = store.read_json(store.job_dir(job_id) / "state.json")
+            self.assertEqual(state["status"], "completed")
+            self.assertEqual(state["repair_count"], 0)
+            self.assertTrue(
+                any("receipt_retry_1" in purpose for purpose in fake_codex.purposes)
+            )
 
     def test_failed_review_repairs_into_a_new_run(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

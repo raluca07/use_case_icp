@@ -139,6 +139,8 @@ class EtiqExecutor:
         pipeline: GeneratedPipeline,
         invocation_id: str | None = None,
         runtime_input: Any | None = None,
+        network_mode: str | None = None,
+        network_cassette_path: Path | None = None,
     ) -> EtiqExecution:
         pipeline.validate()
         run_dir = self.store.stage_run_dir(job_id, segment_id, stage, run_id)
@@ -160,6 +162,8 @@ class EtiqExecutor:
                     bundle_dir=bundle_dir,
                     entry_file=pipeline.entry_file,
                     runtime_input=runtime_input,
+                    network_mode=network_mode,
+                    network_cassette_path=network_cassette_path,
                 )
                 (run_dir / "pipeline-stdout.log").write_text(stdout, encoding="utf-8")
                 (run_dir / "pipeline-stderr.log").write_text(stderr, encoding="utf-8")
@@ -186,6 +190,12 @@ class EtiqExecutor:
                     "manifest_hash": manifest["manifest_hash"],
                     "memory_limit_mb": int(limits.get("etiq_memory_mb", 0)),
                     "cpu_limit_seconds": int(limits.get("etiq_cpu_seconds", 0)),
+                    "network_mode": network_mode,
+                    "network_cassette_path": (
+                        str(network_cassette_path.resolve())
+                        if network_cassette_path is not None
+                        else None
+                    ),
                 }
                 request_path = run_dir / "worker-request.json"
                 self.store.write_json(request_path, worker_request)

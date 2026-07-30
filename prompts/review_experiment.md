@@ -13,8 +13,12 @@ explicitly supplied earlier jobs. Do not treat repetition in that history as
 independent corroboration.
 
 When a context mode omits evidence, record `cannot_judge` rather than inventing a
-specific defect. This static comparison does not support expansion, so return an empty
-`expand_helper_prefixes` list.
+specific defect. In `etiq_selected`, request an exact direct-child prefix in
+`expand_helper_prefixes` when a collapsed helper is required. In either Etiq mode,
+request a bounded table, document, sequence, or record slice in `inspect_artifacts`
+when the node preview is insufficient. Use `start`, `count`, optional `columns`, and
+either a search `query` or an empty query for positional inspection. Non-Etiq modes
+must return both request lists empty.
 
 Every evidence reference must be an exact identifier in `allowed_evidence_refs`.
 For modes without graph nodes, use the supplied semantic/source/log references and

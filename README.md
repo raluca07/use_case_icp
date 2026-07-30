@@ -13,7 +13,8 @@ A small local workflow that runs fresh Codex sessions for segmentation, market-d
 - injectable Etiq execution and captured-evidence serialization;
 - runtime pipeline JSON as the downstream semantic result, with the Codex authoring proposal retained separately;
 - declaration-first review units with size-based splitting and one-level-on-demand helper expansion;
-- bounded, redacted value previews in review and lineage views;
+- bounded, redacted value previews plus on-demand table, record, sequence, and
+  document inspection in review;
 - review receipts, stored retrace paths, and a dependency-aware trusted frontier;
 - per-review selected-versus-available context accounting;
 - bounded authoring-retry loop for invalid generated bundles and pipelines that fail compilation, execution, runtime-output validation, or Etiq reviewability;
@@ -124,10 +125,9 @@ The dashboard explicitly separates:
 - **model judgments:** trust, suspect, and failure labels produced by Codex and
   persisted for audit.
 
-Executed comparisons are available under
-`/jobs/<job_id>/experiments/<experiment_id>`. They display semantic-only,
-accumulated-history, full-Etiq, and graph-selected arms together with package
-size, measured input tokens, issue paths, and recall.
+Controlled comparisons are available under
+`/jobs/<job_id>/controlled-experiments/<experiment_id>`. They display the
+independent review, repair, and replay outcome for each context arm.
 
 ## Tests
 
@@ -139,8 +139,7 @@ PYTHONPATH=src python3 -m unittest discover -s tests -v
 
 When the pinned Etiq package is installed, the same suite also runs a real
 nested-function scanner contract test; otherwise that one test is skipped.
-The current suite contains 30 passing tests, including strict filesystem
-isolation, invalid-bundle
+The suite includes strict filesystem isolation, invalid-bundle
 authoring-retry and non-Etiq history-filtering regression tests.
 
 The full design and remaining hardening gates are in `IMPLEMENTATION_PLAN.md`.
@@ -151,16 +150,18 @@ units, and initially collapses helper evidence. Review can request one exact dir
 child at a time. Each run stores the selection decisions, context accounting,
 trusted frontier, and any scoped repair target.
 
-## Review-context comparison
+## Controlled repair comparison
 
-Replay the same immutable execution evidence through four review contexts:
+Run four independent review → repair → replay branches from one recorded
+execution:
 
 - `semantic_only`: job request, segments, pipeline input, source, runtime result,
   and logs without Etiq nodes or edges;
 - `history_full`: the semantic-only package plus accumulated non-Etiq artifacts
   from the target job and any explicitly supplied earlier jobs;
 - `etiq_full`: the complete captured Etiq graph;
-- `etiq_selected`: the current section-selected Etiq graph.
+- `etiq_selected`: the section-selected Etiq graph, with no full source during
+  initial review and on-demand helper/artifact expansion.
 
 Here, a **node** specifically means an Etiq-captured intermediate runtime state
 or function invocation. It does not mean a source document, prompt item, text
@@ -169,28 +170,32 @@ For comparisons across all four arms, package characters and actual input
 tokens are the context-size measures. Node and relationship counts show how
 much execution evidence `etiq_selected` retained relative to `etiq_full`.
 
-Plan package sizes without spending Codex tokens:
+Run the end-to-end comparison:
 
 ```bash
-.venv/bin/python -m use_case_icp compare-review JOB_ID \
+.venv/bin/python -m use_case_icp compare-control JOB_ID \
   --baseline-run RUN_ID \
-  --repaired-run REPAIRED_RUN_ID \
-  --history-job EARLIER_JOB_ID \
-  --section section-001
+  --max-repairs 3
 ```
 
-Repeat `--history-job` in chronological order to simulate context growth across
-multiple jobs. The target job is always included automatically. `history_full`
-includes requests, segments, events, pipeline inputs and sources, semantic
-results, logs, repair targets, and repair diffs. It excludes Etiq graph files,
-prior review judgments, comparison outputs, and raw invocation packages so the
-arm does not receive graph evidence or answer leakage. For the target job it
-includes only the target run and its ancestors, omits the target run's later
-repair artifacts, and excludes final state/events that would leak future
-outcomes.
+The baseline is executed once while HTTP responses are recorded. Every branch
+then receives the same runtime input and may use only those recorded responses.
+Each review and repair is a fresh ephemeral Codex session with an
+invocation-only read boundary. Branch artifacts are restricted to that branch's
+ancestor chain, and a fresh blind graph-selected Etiq judge—with the same
+on-demand expansion rights—evaluates each final result.
+The dashboard reports repairs, blind-judge issues and trust, actual token usage,
+and elapsed time. A failure in one branch is an outcome for that branch and
+does not expose it to or stop another branch.
 
-Add `--execute` to invoke Codex. All arms use the same model, assigned units,
-prompt contract, response schema, and immutable runtime artifacts. Use
+The older `compare-review` command remains available for diagnostic,
+review-only package replays; it is not shown in the dashboard because it does
+not measure repair outcomes. Those replays use the same review prompt,
+response schema, and immutable runtime artifacts.
+`etiq_selected` can expand a collapsed helper when the reviewer requests it,
+and both Etiq arms can inspect bounded slices of captured tables and documents.
+The comparison records cumulative tokens and package characters across those
+follow-up rounds. Use
 `--repetitions 3` for a less fragile comparison; be aware that each repetition
 creates one fresh invocation per run, section, and mode.
 
@@ -208,61 +213,49 @@ automatically treated as ground truth.
 
 ## Latest recorded run and comparison
 
-On 30 July 2026, job `job-64d77ce3936e40dc` ran market-demand discovery with
-GPT-5.5. The initial run captured 136 Etiq nodes. Six accepted repairs rotated
-across discovery, retrieval, extraction, and synthesis, but none removed its
-target from the next review, so repair effectiveness was 0/6 and the job failed
-closed before coverage.
+On 30 July 2026, controlled comparison
+`controlled-comparison-25382837f8b34720` ran every GPT-5.5 arm from the same
+recorded baseline corpus. Each arm had three independent scoped
+review → repair → replay cycles, followed by the same fresh blind
+`etiq_selected` judge.
 
-The comparison `review-comparison-44bad695fad64885` replayed the initial and
-latest immutable results once through all four context modes. The issue-quality
-metrics use a manual source-code and runtime assessment rather than treating one
-arm as ground truth:
+| Context | Repairs | Reported input tokens | Blind-judge unresolved boundaries | Measured time |
+| --- | ---: | ---: | ---: | ---: |
+| `semantic_only` | 3 | 568,715 | 4 | 568.1s |
+| `history_full` | 3 | 1,824,533 | 4 | unavailable |
+| `etiq_full` | 3 | 1,331,686 | 3 | 508.4s |
+| `etiq_selected` | 3 | 1,000,797 | 2 | 722.1s |
 
-| Run | Context | Input tokens | Verified core recall | Verified precision | Attribution errors | Useful secondary detail |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
-| Initial | `semantic_only` | 32,043 | 3/3 | 75% | 1 | — |
-| Initial | `history_full` | 32,661 | 3/3 | 100% | 0 | — |
-| Initial | `etiq_full` | 134,996 | 3/3 | 100% | 0 | — |
-| Initial | `etiq_selected` | 65,491 | 3/3 | 75% | 1 | — |
-| Latest repaired | `semantic_only` | 26,937 | 3/3 | 75% | 1 | source failures, missing propagation, retrieval completeness |
-| Latest repaired | `history_full` | 127,017 | 3/3 | 100% | 0 | — |
-| Latest repaired | `etiq_full` | 103,657 | 3/3 | 75% | 1 | source failures, retrieval completeness |
-| Latest repaired | `etiq_selected` | 77,703 | 3/3 | 100% | 0 | — |
+No arm reached blind-judge trust within three repairs. `etiq_selected` used
+24.8% fewer input tokens than `etiq_full` and 45.1% fewer than
+`history_full`, while leaving fewer unresolved boundaries than either and two
+fewer than `semantic_only`. It still used 76.0% more tokens and more wall time
+than semantic-only, so the result supports better repair outcome and graph
+attribution—not universal cost reduction.
 
-The three verified core defects are broad source admission in
-`discover_public_sources`, regex false positives in `extract_evidence_records`,
-and overconfident/gap-suppressing output in `synthesize_market_demand`. All
-arms found all three. The disputed `retrieve_sources` path is counted as an
-attribution error for the observed causal failure, while its separate
-completeness risk remains a secondary finding. No four-arm comparison mode
-produced a pure false-positive path.
-
-Graph selection used 36/136 nodes and 51% fewer input tokens than full Etiq on
-the initial run. On the latest run it used 50/86 nodes and 25% fewer input
-tokens. Flat history grew from one to 61 artifacts and from 32,661 to 127,017
-input tokens. With one repetition, the run demonstrates context reduction
-against full Etiq and flat history, but not better core-defect recall than the
-smaller semantic package.
+The first full-graph judge for `history_full` exceeded Codex's 1,048,576
+character input limit. All four already-produced final runs were therefore
+rejudged with fresh isolated graph-selected judges; superseded judge calls are
+excluded from the table. History's original in-memory duration breakdown was
+not recoverable after that judge failure, so it is shown as unavailable rather
+than zero.
 
 After starting the dashboard, open:
 
 - `/jobs/<job_id>` for a stored job;
 - `/jobs/<job_id>/lineage?run=<run_id>` for a run's Etiq lineage;
-- `/jobs/<job_id>/experiments/<experiment_id>` for an executed comparison.
+- `/jobs/<job_id>/controlled-experiments/<experiment_id>` for an end-to-end
+  controlled comparison.
 
 Generated job data under `outputs/` is intentionally not published. Static
 dashboard examples are available in the
 [`docs/blogpost/figures/`](docs/blogpost/figures/) and
 [`docs/experiments/`](docs/experiments/) directories.
 
-The manual assessment behind the table also recorded the workflow reviewer’s
-separate `collect_runtime_context` false positive and that all seven workflow
-receipts were invalid. Neither finding is attributed to a four-arm comparison
-mode.
-
 The earlier July benchmark blogpost and its curated dashboard figures remain in
 [`docs/blogpost/`](docs/blogpost/); they predate this four-arm run.
 
-The complete curated record of this four-arm run is archived under
+The current controlled comparison is archived under
+[`docs/experiments/2026-07-30-controlled-job-32968d910a7847a7/`](docs/experiments/2026-07-30-controlled-job-32968d910a7847a7/).
+The earlier review-only comparison remains under
 [`docs/experiments/2026-07-29-four-arm-job-883750474f164113/`](docs/experiments/2026-07-29-four-arm-job-883750474f164113/).

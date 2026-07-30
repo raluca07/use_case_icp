@@ -1,0 +1,67 @@
+{
+  "experiment_id": "controlled-comparison-25382837f8b34720",
+  "job_id": "job-32968d910a7847a7",
+  "model": "gpt-5.5",
+  "max_repairs_per_arm": 3,
+  "network_cassette_hash": "2cda1330ad04021adabcd079355a70342f3ab8b961a56e1e4bc378788a16351d",
+  "final_judge": "fresh blind etiq_selected review with expansion",
+  "arms": [
+    {
+      "mode": "semantic_only",
+      "repairs": 3,
+      "effective_repairs": 0,
+      "input_tokens": 568715,
+      "cached_input_tokens": 70016,
+      "output_tokens": 15427,
+      "duration_seconds": 568.139,
+      "unresolved_boundaries": [
+        "define_research_plan",
+        "retrieve_public_sources",
+        "extract_evidence_records",
+        "synthesize_market_demand"
+      ]
+    },
+    {
+      "mode": "history_full",
+      "repairs": 3,
+      "effective_repairs": 1,
+      "input_tokens": 1824533,
+      "cached_input_tokens": 72832,
+      "output_tokens": 19322,
+      "duration_seconds": null,
+      "unresolved_boundaries": [
+        "define_research_plan",
+        "retrieve_public_sources",
+        "extract_evidence_records",
+        "synthesize_market_demand"
+      ]
+    },
+    {
+      "mode": "etiq_full",
+      "repairs": 3,
+      "effective_repairs": 0,
+      "input_tokens": 1331686,
+      "cached_input_tokens": 86400,
+      "output_tokens": 18866,
+      "duration_seconds": 508.378,
+      "unresolved_boundaries": [
+        "retrieve_public_sources",
+        "extract_evidence_records",
+        "synthesize_market_demand"
+      ]
+    },
+    {
+      "mode": "etiq_selected",
+      "repairs": 3,
+      "effective_repairs": 1,
+      "input_tokens": 1000797,
+      "cached_input_tokens": 97408,
+      "output_tokens": 22098,
+      "duration_seconds": 722.124,
+      "unresolved_boundaries": [
+        "extract_evidence_records",
+        "synthesize_market_demand"
+      ]
+    }
+  ]
+}

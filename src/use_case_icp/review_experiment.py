@@ -18,7 +18,14 @@ from .records import (
     new_id,
     stable_hash,
 )
-from .review import frame_name, review_node_payload, review_relationship_payload, visible_evidence
+from .review import (
+    frame_name,
+    inspect_artifact,
+    review_node_payload,
+    review_relationship_payload,
+    validate_expansion,
+    visible_evidence,
+)
 
 
 EXPERIMENT_MODES = (
@@ -112,8 +119,10 @@ def history_artifacts(
     exclude: set[Path] | None = None,
     target_job_id: str | None = None,
     target_run_dir: Path | None = None,
+    max_content_chars: int = 500_000,
 ) -> list[dict[str, Any]]:
     excluded = {path.resolve() for path in (exclude or set())}
+    remaining_chars = max_content_chars
     visible_target_runs: set[str] = set()
     if target_job_id and target_run_dir:
         current = target_run_dir
@@ -170,6 +179,16 @@ def history_artifacts(
             content: Any = text
             if path.suffix == ".json":
                 content = json.loads(text)
+            encoded = json.dumps(content, ensure_ascii=False, default=str)
+            if len(encoded) > remaining_chars:
+                content = {
+                    "truncated": True,
+                    "original_characters": len(encoded),
+                    "preview": encoded[:remaining_chars],
+                }
+                remaining_chars = 0
+            else:
+                remaining_chars -= len(encoded)
             artifacts.append(
                 {
                     "ref": f"history:{job_id}:{relative}",
@@ -190,6 +209,8 @@ def build_experiment_package(
     units: list[EvidenceReviewUnit],
     section: ReviewSection,
     history_job_ids: list[str] | None = None,
+    expanded_prefixes_by_unit: dict[str, list[list[str]]] | None = None,
+    artifact_inspections_by_unit: dict[str, list[dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     if mode not in EXPERIMENT_MODES:
         raise ValueError(f"unknown review experiment mode: {mode}")
@@ -203,12 +224,18 @@ def build_experiment_package(
     }
     node_refs: set[str] = set()
     relationship_refs: set[str] = set()
+    visible_by_unit: dict[str, dict[str, Any]] = {}
     if mode == "etiq_full":
         node_refs.update(node_by_ref)
         relationship_refs.update(relationship_by_ref)
     elif mode == "etiq_selected":
         for unit in context_units:
-            selection = visible_evidence(unit, snapshot)
+            selection = visible_evidence(
+                unit,
+                snapshot,
+                (expanded_prefixes_by_unit or {}).get(unit.unit_id, []),
+            )
+            visible_by_unit[unit.unit_id] = selection
             node_refs.update(selection["node_refs"])
             relationship_refs.update(selection["relationship_refs"])
 
@@ -263,10 +290,14 @@ def build_experiment_package(
             }
             for unit in assigned
         ],
+        "visible_evidence_by_unit": visible_by_unit,
+        "artifact_inspections_by_unit": artifact_inspections_by_unit or {},
         "job_request": store.read_json(job_dir / "request.json", {}),
         "segments": store.read_json(job_dir / "segments.json", {}),
         "pipeline_input": store.read_json(run_dir / "pipeline-input.json", {}),
-        "pipeline_source": _source_bundle(store, run_dir),
+        "pipeline_source": (
+            {} if mode == "etiq_selected" else _source_bundle(store, run_dir)
+        ),
         "semantic_result": store.read_json(run_dir / "semantic-result.json", {}),
         "pipeline_stdout": (run_dir / "pipeline-stdout.log").read_text(encoding="utf-8"),
         "pipeline_stderr": (run_dir / "pipeline-stderr.log").read_text(encoding="utf-8"),
@@ -527,16 +558,127 @@ def run_review_experiment(
             )
         for section in sections:
             for mode in EXPERIMENT_MODES:
-                package = build_experiment_package(
-                    mode,
-                    store=store,
-                    run_dir=run_dir,
-                    snapshot=snapshot,
-                    units=units,
-                    section=section,
-                    history_job_ids=accumulated_job_ids,
-                )
                 for repetition in range(1, repetitions + 1):
+                    context_units = {
+                        unit.unit_id: unit
+                        for unit in units
+                        if unit.unit_id in section.context_unit_ids
+                    }
+                    assigned_units = {
+                        unit.unit_id: unit
+                        for unit in units
+                        if unit.unit_id in section.assigned_unit_ids
+                    }
+                    expanded = {unit_id: [] for unit_id in context_units}
+                    inspections = {unit_id: [] for unit_id in context_units}
+                    invocation_ids: list[str] = []
+                    input_tokens = 0
+                    output_tokens = 0
+                    package_chars = 0
+                    expansion_round = 0
+                    while True:
+                        package = build_experiment_package(
+                            mode,
+                            store=store,
+                            run_dir=run_dir,
+                            snapshot=snapshot,
+                            units=units,
+                            section=section,
+                            history_job_ids=accumulated_job_ids,
+                            expanded_prefixes_by_unit=expanded,
+                            artifact_inspections_by_unit=inspections,
+                        )
+                        current_package_chars = len(
+                            json.dumps(package, sort_keys=True, ensure_ascii=False)
+                        )
+                        package_chars += current_package_chars
+                        if not execute:
+                            break
+                        context = {
+                            "experiment": config,
+                            "run_label": run_label,
+                            "repetition": repetition,
+                            "expansion_round": expansion_round,
+                            "review_package": package,
+                        }
+                        prompt = (
+                            "## Repository instructions\n\n"
+                            f"{repository_instructions.strip()}\n\n"
+                            f"{prompt_template.strip()}\n\n"
+                            "## Context\n\n"
+                            f"{json.dumps(context, indent=2, sort_keys=True, ensure_ascii=False)}\n"
+                        )
+                        suffix = "" if expansion_round == 0 else f"_expand_{expansion_round}"
+                        purpose = (
+                            f"{experiment_id}_{run_label}_{mode}_"
+                            f"{section.section_id}_r{repetition}{suffix}"
+                        )
+                        result = codex.run(
+                            job_id=job_id,
+                            job_type="review_experiment",
+                            purpose=purpose,
+                            prompt=prompt,
+                            output_schema=schema,
+                            artifacts=[
+                                ContextArtifact(
+                                    ref=f"experiment:{purpose}",
+                                    content_hash=stable_hash(context),
+                                    delivery="embedded",
+                                    purpose="review_context_comparison",
+                                    content=context,
+                                )
+                            ],
+                        )
+                        invocation_ids.append(result.invocation_id)
+                        input_tokens += int(result.usage.input_tokens or 0)
+                        output_tokens += int(result.usage.output_tokens or 0)
+                        requested = False
+                        visible_node_refs = {
+                            str(item["node_ref"]) for item in package["captured_nodes"]
+                        }
+                        if mode == "etiq_selected":
+                            for review in result.payload["reviews"]:
+                                unit_id = str(review["unit_id"])
+                                unit = assigned_units.get(unit_id)
+                                if unit is None:
+                                    continue
+                                for prefix in review.get("expand_helper_prefixes", []):
+                                    validated = validate_expansion(
+                                        unit,
+                                        prefix,
+                                        expanded[unit_id],
+                                    )
+                                    if validated not in expanded[unit_id]:
+                                        expanded[unit_id].append(validated)
+                                        requested = True
+                        if mode in {"etiq_full", "etiq_selected"}:
+                            node_by_ref = {node.node_ref: node for node in snapshot.nodes}
+                            for review in result.payload["reviews"]:
+                                unit_id = str(review["unit_id"])
+                                if unit_id not in assigned_units:
+                                    continue
+                                for inspection_request in review.get("inspect_artifacts", []):
+                                    node_ref = str(inspection_request.get("node_ref") or "")
+                                    if node_ref not in visible_node_refs or node_ref not in node_by_ref:
+                                        raise ValueError(
+                                            "artifact inspection must target a visible Etiq node: "
+                                            f"{node_ref}"
+                                        )
+                                    inspection = inspect_artifact(
+                                        node_by_ref[node_ref],
+                                        inspection_request,
+                                    )
+                                    if inspection not in inspections[unit_id]:
+                                        inspections[unit_id].append(inspection)
+                                        requested = True
+                        if not requested:
+                            break
+                        expansion_round += 1
+                        if expansion_round > 3:
+                            raise ValueError(
+                                "review comparison expansion budget exhausted for "
+                                f"{run_id} {section.section_id} {mode}"
+                            )
                     if not execute:
                         records.append(
                             {
@@ -548,13 +690,9 @@ def run_review_experiment(
                                 "invocation_id": None,
                                 "input_tokens": None,
                                 "output_tokens": None,
-                                "package_chars": len(
-                                    json.dumps(
-                                        package,
-                                        sort_keys=True,
-                                        ensure_ascii=False,
-                                    )
-                                ),
+                                "package_chars": package_chars,
+                                "expansion_rounds": 0,
+                                "invocation_ids": [],
                                 "etiq_node_count": len(package["captured_nodes"]),
                                 "etiq_relationship_count": len(
                                     package["captured_relationships"]
@@ -567,39 +705,6 @@ def run_review_experiment(
                             }
                         )
                         continue
-                    context = {
-                        "experiment": config,
-                        "run_label": run_label,
-                        "repetition": repetition,
-                        "review_package": package,
-                    }
-                    prompt = (
-                        "## Repository instructions\n\n"
-                        f"{repository_instructions.strip()}\n\n"
-                        f"{prompt_template.strip()}\n\n"
-                        "## Context\n\n"
-                        f"{json.dumps(context, indent=2, sort_keys=True, ensure_ascii=False)}\n"
-                    )
-                    purpose = (
-                        f"{experiment_id}_{run_label}_{mode}_"
-                        f"{section.section_id}_r{repetition}"
-                    )
-                    result = codex.run(
-                        job_id=job_id,
-                        job_type="review_experiment",
-                        purpose=purpose,
-                        prompt=prompt,
-                        output_schema=schema,
-                        artifacts=[
-                            ContextArtifact(
-                                ref=f"experiment:{purpose}",
-                                content_hash=stable_hash(context),
-                                delivery="embedded",
-                                purpose="review_context_comparison",
-                                content=context,
-                            )
-                        ],
-                    )
                     record = {
                         "run_label": run_label,
                         "run_id": run_id,
@@ -607,11 +712,11 @@ def run_review_experiment(
                         "mode": mode,
                         "repetition": repetition,
                         "invocation_id": result.invocation_id,
-                        "input_tokens": result.usage.input_tokens,
-                        "output_tokens": result.usage.output_tokens,
-                        "package_chars": len(
-                            json.dumps(package, sort_keys=True, ensure_ascii=False)
-                        ),
+                        "invocation_ids": invocation_ids,
+                        "expansion_rounds": expansion_round,
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                        "package_chars": package_chars,
                         "etiq_node_count": len(package["captured_nodes"]),
                         "etiq_relationship_count": len(
                             package["captured_relationships"]

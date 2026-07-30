@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import json
+import re
 from collections import defaultdict, deque
 from typing import Any, Iterable, Mapping
 
 from .records import (
     BoundaryHealth,
     EtiqEvidenceSnapshot,
+    EtiqNodeRecord,
     EvidenceReviewUnit,
     ReviewDecision,
     ReviewDecisionStatus,
@@ -19,6 +22,12 @@ from .records import (
 
 
 def review_node_payload(node: Any) -> dict[str, Any]:
+    artifact_content = node.artifact_content
+    encoded_artifact = (
+        json.dumps(artifact_content, ensure_ascii=False, default=str)
+        if artifact_content is not None
+        else ""
+    )
     return {
         "node_ref": node.node_ref,
         "raw_id": node.raw_id,
@@ -31,6 +40,11 @@ def review_node_payload(node: Any) -> dict[str, Any]:
         "scope_type": node.scope_type,
         "value_preview": node.value_preview,
         "preview_truncated": node.preview_truncated,
+        "artifact_kind": node.artifact_kind,
+        "artifact_size": node.artifact_size,
+        "artifact_available": artifact_content is not None,
+        "artifact_truncated": node.artifact_truncated,
+        "artifact_value": artifact_content if len(encoded_artifact) <= 4_000 else None,
         "raw_metadata_hash": stable_hash(node.raw_metadata),
     }
 
@@ -47,17 +61,30 @@ def review_relationship_payload(relationship: Any) -> dict[str, Any]:
 
 
 def frame_name(frame: str) -> str:
-    return str(frame).split(",", 1)[0].strip()
+    value = str(frame)
+    name, separator, suffix = value.rpartition(",")
+    if (
+        separator
+        and not suffix.startswith("#")
+        and re.fullmatch(r"[A-Za-z0-9_-]{1,64}", suffix)
+    ):
+        return name.strip()
+    return value.strip()
+
+
+def _canonical_stack(stack: Iterable[str]) -> tuple[str, ...]:
+    return tuple(frame_name(str(frame)) for frame in stack)
 
 
 def _prefixes(stack: Iterable[str]) -> list[tuple[str, ...]]:
-    items = tuple(str(item) for item in stack)
+    items = _canonical_stack(stack)
     return [items[:index] for index in range(1, len(items) + 1)]
 
 
 def _starts_with(stack: Iterable[str], prefix: tuple[str, ...]) -> bool:
-    values = tuple(stack)
-    return len(values) >= len(prefix) and values[: len(prefix)] == prefix
+    values = _canonical_stack(stack)
+    expected = _canonical_stack(prefix)
+    return len(values) >= len(expected) and values[: len(expected)] == expected
 
 
 def _boundary_relationships(
@@ -497,11 +524,14 @@ def visible_evidence(
         tuple(unit.func_stack_prefix),
         *(tuple(prefix) for prefix in expanded_prefixes),
     }
+    canonical_visible_prefixes = {
+        _canonical_stack(prefix) for prefix in visible_prefixes
+    }
     node_by_ref = {node.node_ref: node for node in snapshot.nodes}
     node_refs = {
         node.node_ref
         for node in snapshot.nodes
-        if tuple(node.func_stack) in visible_prefixes
+        if _canonical_stack(node.func_stack) in canonical_visible_prefixes
     }
     boundary_refs = set(unit.input_relationship_refs) | set(unit.output_relationship_refs)
     relationship_refs: set[str] = set()
@@ -548,6 +578,122 @@ def validate_expansion(
     return list(requested)
 
 
+def inspect_artifact(node: EtiqNodeRecord, request: Mapping[str, Any]) -> dict[str, Any]:
+    start = max(0, int(request.get("start") or 0))
+    count = max(1, min(100, int(request.get("count") or 20)))
+    query = str(request.get("query") or "").strip()
+    content = node.artifact_content
+    result: dict[str, Any] = {
+        "node_ref": node.node_ref,
+        "artifact_kind": node.artifact_kind,
+        "artifact_size": node.artifact_size,
+        "artifact_truncated_at_capture": node.artifact_truncated,
+        "start": start,
+        "count": count,
+        "query": query,
+    }
+    if content is None:
+        return {**result, "content": None, "error": "artifact content was not captured"}
+    if node.artifact_kind == "table":
+        rows = list(content.get("rows", []))
+        available_columns = [str(item) for item in content.get("columns", [])]
+        requested_columns = [
+            str(item) for item in request.get("columns", []) if str(item) in available_columns
+        ]
+        columns = requested_columns or available_columns
+        matching_rows = (
+            [
+                row
+                for row in rows
+                if query.lower() in json.dumps(row, ensure_ascii=False, default=str).lower()
+            ]
+            if query
+            else rows
+        )
+        selected_rows = [
+            {column: row.get(column) for column in columns}
+            for row in matching_rows[start:start + count]
+        ]
+        return {
+            **result,
+            "columns": columns,
+            "content": selected_rows,
+            "returned": len(selected_rows),
+            "more_available": start + len(selected_rows) < len(matching_rows),
+        }
+    if node.artifact_kind == "document":
+        text = str(content)
+        if query:
+            lowered = text.lower()
+            needle = query.lower()
+            matches: list[dict[str, Any]] = []
+            position = 0
+            while len(matches) < count:
+                found = lowered.find(needle, position)
+                if found < 0:
+                    break
+                context_start = max(0, found - 300)
+                context_end = min(len(text), found + len(query) + 700)
+                matches.append(
+                    {
+                        "character_offset": found,
+                        "text": text[context_start:context_end],
+                    }
+                )
+                position = found + max(1, len(needle))
+            return {
+                **result,
+                "content": matches,
+                "returned": len(matches),
+                "more_available": lowered.find(needle, position) >= 0,
+            }
+        char_count = min(20_000, count * 1_000)
+        selected = text[start:start + char_count]
+        return {
+            **result,
+            "count": char_count,
+            "content": selected,
+            "returned": len(selected),
+            "more_available": start + len(selected) < len(text),
+        }
+    if isinstance(content, list):
+        matching_items = (
+            [
+                item
+                for item in content
+                if query.lower() in json.dumps(item, ensure_ascii=False, default=str).lower()
+            ]
+            if query
+            else content
+        )
+        selected = matching_items[start:start + count]
+        return {
+            **result,
+            "content": selected,
+            "returned": len(selected),
+            "more_available": start + len(selected) < len(matching_items),
+        }
+    if isinstance(content, Mapping):
+        keys = list(content)
+        if query:
+            keys = [
+                key
+                for key in keys
+                if query.lower() in key.lower()
+                or query.lower()
+                in json.dumps(content[key], ensure_ascii=False, default=str).lower()
+            ]
+        requested_keys = [str(item) for item in request.get("columns", []) if str(item) in content]
+        selected_keys = requested_keys or keys[start:start + count]
+        return {
+            **result,
+            "content": {key: content[key] for key in selected_keys},
+            "returned": len(selected_keys),
+            "more_available": not requested_keys and start + len(selected_keys) < len(keys),
+        }
+    return {**result, "content": content, "returned": 1, "more_available": False}
+
+
 def validate_review(
     *,
     review_job_id: str,
@@ -556,6 +702,7 @@ def validate_review(
     decisions: list[ReviewDecision],
     allowed_evidence_refs: set[str],
     receipt_ref: str,
+    visible_node_refs_by_unit: Mapping[str, set[str]] | None = None,
 ) -> tuple[ReviewReceipt, list[TrustAnnotation]]:
     unit_by_id = {unit.unit_id: unit for unit in units}
     assigned = set(section.assigned_unit_ids)
@@ -582,7 +729,10 @@ def validate_review(
             for ref in outcome.get("evidence_refs", [])
         }
         unknown_evidence.update(criterion_refs - allowed_evidence_refs)
-        unknown_suspects = set(decision.suspect_node_refs) - set(unit.node_refs)
+        allowed_suspects = set(unit.node_refs) | set(
+            (visible_node_refs_by_unit or {}).get(decision.unit_id, set())
+        )
+        unknown_suspects = set(decision.suspect_node_refs) - allowed_suspects
         unknown_evidence.update(unknown_suspects)
         if unknown_evidence:
             errors.append(f"review cites evidence outside the section package: {decision.unit_id}")

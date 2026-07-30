@@ -115,7 +115,14 @@ def select_repair_target(
 ) -> dict[str, Any]:
     if mode not in {"boundary", "faulty_node"}:
         raise ValueError("repair_scope_mode must be 'boundary' or 'faulty_node'")
-    receipts = review_context.get("receipts", [])
+    all_receipts = review_context.get("receipts", [])
+    receipts = [
+        receipt
+        for receipt in all_receipts
+        if receipt.get("result") != "rejected"
+    ]
+    if all_receipts and not receipts:
+        raise ValueError("rejected review receipts cannot select a repair target")
     failed_unit_ids = [
         str(unit_id)
         for receipt in receipts
@@ -154,11 +161,20 @@ def select_repair_target(
     ]
     if not candidates:
         raise ValueError("repair units are missing from review context")
+    failed_ids = {str(item["unit_id"]) for item in candidates}
+    causal_roots = [
+        item
+        for item in candidates
+        if not failed_ids.intersection(
+            str(unit_id) for unit_id in item.get("upstream_unit_ids", [])
+        )
+    ]
+    candidate_pool = causal_roots or candidates
     attempt_counts: dict[str, int] = {}
     for function_name in previous_target_function_names or []:
         attempt_counts[function_name] = attempt_counts.get(function_name, 0) + 1
     unit = min(
-        enumerate(candidates),
+        enumerate(candidate_pool),
         key=lambda item: (
             attempt_counts.get(str(item[1].get("function_name")), 0),
             item[0],
@@ -193,7 +209,9 @@ def select_repair_target(
                 str(unit["function_name"]),
                 0,
             ),
-            "selection_reason": "failed boundary with the fewest previous repair attempts",
+            "selection_reason": (
+                "earliest graph-causal failed boundary; ties use the fewest previous repairs"
+            ),
             "retrace_node_refs": retrace_node_refs(
                 snapshot,
                 [suspect_ref] if suspect_ref else unit.get("node_refs", []),

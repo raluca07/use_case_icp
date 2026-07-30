@@ -229,6 +229,10 @@ class EtiqNodeRecord:
     raw_metadata: dict[str, Any]
     value_preview: Any | None = None
     preview_truncated: bool = False
+    artifact_kind: str | None = None
+    artifact_content: Any | None = None
+    artifact_truncated: bool = False
+    artifact_size: dict[str, int] | None = None
 
 
 @dataclass(slots=True)
@@ -306,6 +310,7 @@ class ReviewDecision:
     criteria_outcomes: list[dict[str, Any]] = field(default_factory=list)
     boundary_health_acknowledged: bool = False
     expand_helper_prefixes: list[list[str]] = field(default_factory=list)
+    inspect_artifacts: list[dict[str, Any]] = field(default_factory=list)
     suspect_node_refs: list[str] = field(default_factory=list)
 
 
