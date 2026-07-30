@@ -1,0 +1,2 @@
+# Stable release from PyPI.
+etiq-copilot==2.3.0

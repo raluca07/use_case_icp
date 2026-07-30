@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "use_cases", "icp", "gaps", "limitations"],
+  "properties": {
+    "mode": {"enum": ["supported", "no_sufficient_segment"]},
+    "use_cases": {"type": "array", "items": {"type": "string"}},
+    "icp": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["name", "summary", "traits"],
+      "properties": {
+        "name": {"type": "string"},
+        "summary": {"type": "string"},
+        "traits": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "gaps": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

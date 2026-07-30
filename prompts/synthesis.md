@@ -1,0 +1,1 @@
+Synthesize the supplied reusable-trusted market-demand and coverage evidence into supported use cases and an ICP. If mode is no_sufficient_segment, report partial opportunities and gaps without claiming a validated ICP. Follow the response schema exactly.

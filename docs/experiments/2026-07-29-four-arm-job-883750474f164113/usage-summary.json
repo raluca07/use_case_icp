@@ -1,0 +1,99 @@
+{
+  "by_purpose": {
+    "market_demand": {
+      "input_tokens": 13935,
+      "output_tokens": 6175,
+      "reported": 1,
+      "total_tokens": 20110,
+      "unavailable": 0
+    },
+    "market_demand_repair": {
+      "input_tokens": 84480,
+      "output_tokens": 18957,
+      "reported": 3,
+      "total_tokens": 103437,
+      "unavailable": 0
+    },
+    "market_demand_review_section-001": {
+      "input_tokens": 239864,
+      "output_tokens": 8688,
+      "reported": 4,
+      "total_tokens": 248552,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_baseline_etiq_full_section-001_r1": {
+      "input_tokens": 129204,
+      "output_tokens": 1810,
+      "reported": 1,
+      "total_tokens": 131014,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_baseline_etiq_selected_section-001_r1": {
+      "input_tokens": 69957,
+      "output_tokens": 1848,
+      "reported": 1,
+      "total_tokens": 71805,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_baseline_history_full_section-001_r1": {
+      "input_tokens": 30405,
+      "output_tokens": 1355,
+      "reported": 1,
+      "total_tokens": 31760,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_baseline_semantic_only_section-001_r1": {
+      "input_tokens": 29910,
+      "output_tokens": 1205,
+      "reported": 1,
+      "total_tokens": 31115,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_repaired_etiq_full_section-001_r1": {
+      "input_tokens": 130173,
+      "output_tokens": 1772,
+      "reported": 1,
+      "total_tokens": 131945,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_repaired_etiq_selected_section-001_r1": {
+      "input_tokens": 69331,
+      "output_tokens": 1746,
+      "reported": 1,
+      "total_tokens": 71077,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_repaired_history_full_section-001_r1": {
+      "input_tokens": 89209,
+      "output_tokens": 1266,
+      "reported": 1,
+      "total_tokens": 90475,
+      "unavailable": 0
+    },
+    "review-comparison-e459b6e413904a50_repaired_semantic_only_section-001_r1": {
+      "input_tokens": 29916,
+      "output_tokens": 1303,
+      "reported": 1,
+      "total_tokens": 31219,
+      "unavailable": 0
+    },
+    "segment": {
+      "input_tokens": 12806,
+      "output_tokens": 396,
+      "reported": 1,
+      "total_tokens": 13202,
+      "unavailable": 0
+    }
+  },
+  "complete": true,
+  "job_id": "job-883750474f164113",
+  "schema_version": "1",
+  "totals": {
+    "input_tokens": 929190,
+    "output_tokens": 46521,
+    "reported": 17,
+    "total_tokens": 975711,
+    "unavailable": 0
+  },
+  "updated_at": "2026-07-29T22:13:39.053565+00:00"
+}

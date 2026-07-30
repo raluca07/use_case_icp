@@ -1,0 +1,3 @@
+Map the reusable-trusted market-demand needs, workflows, and demand signals to the supplied product capabilities. Identify supported, partial, and unsupported needs, coverage gaps, candidate use cases, and whether coverage is sufficient. Do not turn background-only or weak market signals into validated product fit. Include a Python pipeline and follow the response schema exactly.
+
+At runtime, the pipeline must write exactly one JSON object to stdout and no other stdout text. That object must contain `mappings`, `use_cases`, `icp_traits`, `gaps`, and `sufficient`. Send operational diagnostics to stderr. The pipeline's runtime output, not the provisional top-level authoring fields, is the evidence-bearing coverage result.

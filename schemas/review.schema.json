@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reviews"],
+  "properties": {
+    "reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["unit_id", "decision", "decision_reason", "evidence_refs", "trust_level", "criteria_outcomes", "boundary_health_acknowledged", "expand_helper_prefixes", "suspect_node_refs"],
+        "properties": {
+          "unit_id": {"type": "string"},
+          "decision": {"enum": ["trusted", "failed", "suspect", "superseded", "not_pipeline_step"]},
+          "decision_reason": {"type": "string"},
+          "evidence_refs": {"type": "array", "items": {"type": "string"}},
+          "trust_level": {"type": ["string", "null"], "enum": ["trusted_for_reuse", "trusted_for_reporting", "provisionally_trusted", null]},
+          "criteria_outcomes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["criterion", "verdict", "evidence_refs"],
+              "properties": {
+                "criterion": {"type": "string"},
+                "verdict": {"enum": ["met", "not_met", "cannot_judge"]},
+                "evidence_refs": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "boundary_health_acknowledged": {"type": "boolean"},
+          "expand_helper_prefixes": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {"type": "string"},
+              "minItems": 1
+            }
+          },
+          "suspect_node_refs": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}
