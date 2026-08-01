@@ -517,6 +517,15 @@ def run_arm(
             replay.run_dir / "parent-run.json",
             {"parent_run_id": current_execution.snapshot.run_id},
         )
+        store.write_json(
+            replay.run_dir / "applied-repair.json",
+            {
+                "previous_run_id": current_execution.snapshot.run_id,
+                "target": target,
+                "change_summary": repair_usage["change_summary"],
+                "unified_diff": repair_usage["diff"],
+            },
+        )
         attempts.append(
             {
                 "attempt": attempt + 1,
@@ -527,6 +536,8 @@ def run_arm(
                 ),
                 "output_hash": stable_hash(replay_semantic),
                 "status": "pending",
+                "change_summary": repair_usage["change_summary"],
+                "diff": repair_usage["diff"],
             }
         )
         previous_targets.append(str(target["function_name"]))

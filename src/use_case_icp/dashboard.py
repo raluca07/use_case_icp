@@ -29,6 +29,10 @@ th,td{text-align:left;padding:10px;border-bottom:1px solid #e4e9f0}.card{backgro
 .unit-list{list-style:none;padding:0}.unit-list li{padding:8px 4px;border-bottom:1px solid #eef1f5}.unit-list .selected{background:#eef5ff}
 input{box-sizing:border-box;width:100%;padding:8px;border:1px solid #cbd3df;border-radius:6px}.notice{border-left:4px solid #1459b8}
 .bar{height:10px;background:#d8e7fb;border-radius:5px;min-width:2px}.nowrap{white-space:nowrap}
+.run-chain{display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:4px 0 10px}.run-step{display:block;min-width:210px;border:1px solid #cbd3df;border-radius:8px;padding:10px;background:#fff;color:inherit}.run-step:hover{border-color:#1459b8;background:#f5f9ff}.run-step.current{border:2px solid #1459b8;background:#eef5ff}.run-arrow{align-self:center;color:#667085;font-size:20px}.run-step .outcome{font-weight:700}.outcome.resolved{color:#176b38}.outcome.still-flagged{color:#b42318}.outcome.initial{color:#475467}
+.repair-panel{border-left:5px solid #667085}.repair-panel.resolved{border-left-color:#16803c}.repair-panel.still-flagged{border-left-color:#d92d20}.repair-panel dl{display:grid;grid-template-columns:max-content 1fr;gap:7px 12px}.repair-panel dt{font-weight:700}.repair-panel dd{margin:0}
+.lineage-node.lineage-changed rect{stroke:#1570ef;stroke-width:3}.lineage-node.explicit-suspect rect{stroke:#d92d20;stroke-width:4}.repair-boundary-resolved{stroke:#16803c;stroke-width:4}.repair-boundary-still-flagged{stroke:#d92d20;stroke-width:4}
+.change-key{display:inline-block;padding:2px 7px;border-radius:10px;background:#e6f0ff;color:#0b4a9e;font-size:12px}
 @media(max-width:950px){.grid{grid-template-columns:1fr}.graph{height:62vh}.scroll{max-height:none}}
 """
 
@@ -48,13 +52,167 @@ def _status_by_unit(annotations: list[dict]) -> dict[str, str]:
     return status
 
 
+def _run_catalog(store: JobStore, root: Path) -> dict[str, dict]:
+    """Describe persisted execution branches and the repair that produced each run."""
+    catalog: dict[str, dict] = {}
+    for path in root.glob("stages/*/*/runs/*"):
+        relative = path.relative_to(root)
+        parts = relative.parts
+        parent = store.read_json(path / "parent-run.json", {})
+        catalog[path.name] = {
+            "run_id": path.name,
+            "path": path,
+            "segment": parts[1],
+            "stage": parts[2],
+            "parent_run_id": parent.get("parent_run_id"),
+            "mtime": path.stat().st_mtime,
+            "kind": "initial",
+        }
+
+    for metric_path in root.glob("stages/*/*/repair-metrics.json"):
+        for attempt in store.read_json(metric_path, {}).get("attempts", []):
+            item = catalog.get(str(attempt.get("result_run_id")))
+            if not item:
+                continue
+            item.update(
+                {
+                    "kind": "repair",
+                    "attempt": attempt.get("attempt"),
+                    "target_function": attempt.get("target_function"),
+                    "status": attempt.get("status"),
+                    "issue_functions_before": attempt.get("issue_functions_before", []),
+                    "issue_functions_after": attempt.get("issue_functions_after", []),
+                    "diff_ref": attempt.get("diff_ref"),
+                    "branch_label": f"{item['segment']} · {item['stage']}",
+                }
+            )
+            applied = store.read_json(item["path"] / "applied-repair.json", {})
+            item["change_summary"] = applied.get("change_summary")
+
+    for experiment_path in root.glob("controlled-experiments/*/result.json"):
+        result = store.read_json(experiment_path, {})
+        experiment_id = experiment_path.parent.name
+        frozen_id = str(result.get("frozen_run_id") or "")
+        if frozen_id in catalog:
+            catalog[frozen_id].update(
+                {
+                    "kind": "frozen",
+                    "branch_label": f"{experiment_id} · frozen baseline",
+                }
+            )
+        for arm in result.get("arms", []):
+            mode = str(arm.get("mode") or "unknown")
+            repair_invocations = [
+                invocation
+                for invocation in arm.get("invocations", [])
+                if invocation.get("change_summary")
+            ]
+            for index, attempt in enumerate(arm.get("repairs", [])):
+                item = catalog.get(str(attempt.get("run_id")))
+                if not item:
+                    continue
+                invocation = (
+                    repair_invocations[index]
+                    if index < len(repair_invocations)
+                    else {}
+                )
+                item.update(
+                    {
+                        "kind": "controlled_repair",
+                        "attempt": attempt.get("attempt"),
+                        "target_function": attempt.get("target_function"),
+                        "status": attempt.get("status"),
+                        "change_summary": attempt.get("change_summary") or invocation.get("change_summary"),
+                        "inline_diff": attempt.get("diff") or invocation.get("diff"),
+                        "mode": mode,
+                        "experiment_id": experiment_id,
+                        "branch_label": f"{experiment_id} · {mode}",
+                    }
+                )
+    return catalog
+
+
+def _run_chain(catalog: dict[str, dict], run_id: str) -> list[dict]:
+    chain: list[dict] = []
+    seen: set[str] = set()
+    current = catalog.get(run_id)
+    while current and current["run_id"] not in seen:
+        chain.append(current)
+        seen.add(current["run_id"])
+        current = catalog.get(str(current.get("parent_run_id") or ""))
+    return list(reversed(chain))
+
+
+def _node_signature(node: dict) -> tuple:
+    stack = tuple(
+        str(frame).split(",", 1)[0]
+        for frame in node.get("func_stack", [])
+    )
+    return (
+        str(node.get("state_type") or ""),
+        tuple(str(name) for name in node.get("names", [])),
+        stack,
+    )
+
+
+def _lineage_diff(nodes: list[dict], parent_nodes: list[dict]) -> dict:
+    """Match repeatable node roles, then compare their stored evidence."""
+    parent_by_signature: dict[tuple, list[dict]] = {}
+    for node in parent_nodes:
+        parent_by_signature.setdefault(_node_signature(node), []).append(node)
+    changes: dict[str, str] = {}
+    matched = 0
+    changed = 0
+    for node in nodes:
+        candidates = parent_by_signature.get(_node_signature(node), [])
+        if not candidates:
+            changes[str(node.get("node_ref"))] = "added"
+            continue
+        parent = candidates.pop(0)
+        matched += 1
+        current_value = node.get("artifact_content", node.get("value_preview"))
+        parent_value = parent.get("artifact_content", parent.get("value_preview"))
+        if current_value != parent_value:
+            changes[str(node.get("node_ref"))] = "changed"
+            changed += 1
+    removed = sum(len(items) for items in parent_by_signature.values())
+    return {
+        "node_changes": changes,
+        "added": sum(value == "added" for value in changes.values()),
+        "changed": changed,
+        "unchanged": matched - changed,
+        "removed": removed,
+    }
+
+
+def _suspect_refs_for_run(store: JobStore, root: Path, run_id: str) -> set[str]:
+    """Return only nodes explicitly cited as suspect by a review of this run."""
+    refs: set[str] = set()
+    prefix = f"{run_id}:"
+    for path in root.glob("invocations/*/agent-output.json"):
+        payload = store.read_json(path, {}).get("payload", {})
+        for review in payload.get("reviews", []):
+            if review.get("decision") not in {"failed", "suspect"}:
+                continue
+            for ref in review.get("suspect_node_refs", []):
+                if str(ref).startswith(prefix):
+                    refs.add(str(ref))
+    return refs
+
+
 def _graph_svg(
     nodes: list[dict],
     relationships: list[dict],
     units: list[dict],
     statuses: dict[str, str],
     selected_unit_id: str | None = None,
+    node_changes: dict[str, str] | None = None,
+    repair_function: str | None = None,
+    repair_status: str | None = None,
+    suspect_node_refs: set[str] | None = None,
 ) -> str:
+    node_changes = node_changes or {}
+    suspect_node_refs = suspect_node_refs or set()
     unit_by_id = {
         str(unit.get("unit_id")): unit
         for unit in units
@@ -130,8 +288,15 @@ def _graph_svg(
         label = str(unit.get("function_name") or "Captured lineage")
         x = 8 + index * 470
         fill = "#f8fbff" if index % 2 == 0 else "#fbfcfe"
+        boundary_class = ""
+        if repair_function and label == repair_function:
+            boundary_class = (
+                "repair-boundary-resolved"
+                if repair_status == "target_resolved"
+                else "repair-boundary-still-flagged"
+            )
         lanes.append(
-            f"<rect x='{x}' y='8' width='454' height='{height - 16}' rx='8' "
+            f"<rect class='{boundary_class}' x='{x}' y='8' width='454' height='{height - 16}' rx='8' "
             f"fill='{fill}' stroke='#d8dee8' stroke-dasharray='5 4'/>"
             f"<text class='lane-label' x='{x + 14}' y='34' font-size='13'>"
             f"{html.escape(label)}</text>"
@@ -183,7 +348,14 @@ def _graph_svg(
             or "pipeline hand-off"
         )[:29]
         escaped_ref = html.escape(ref, quote=True)
-        selected_class = " selected-unit" if owner == selected_unit_id else ""
+        classes = []
+        if owner == selected_unit_id:
+            classes.append("selected-unit")
+        if node_changes.get(ref) in {"added", "changed"}:
+            classes.append("lineage-changed")
+        if ref in suspect_node_refs:
+            classes.append("explicit-suspect")
+        selected_class = " " + " ".join(classes) if classes else ""
         boxes.append(
             f"<g class='lineage-node{selected_class}' data-node-ref='{escaped_ref}' "
             f"tabindex='0' role='button' aria-label='{html.escape(label, quote=True)}'>"
@@ -758,6 +930,9 @@ class DashboardHandler(BaseHTTPRequestHandler):
     def _lineage(self, job_id: str, run: str | None, selected_unit_id: str | None) -> None:
         root = self.store.job_dir(job_id)
         run_dir = self._latest_run(root, run)
+        catalog = _run_catalog(self.store, root)
+        run_info = catalog.get(run_dir.name, {"run_id": run_dir.name, "path": run_dir})
+        chain = _run_chain(catalog, run_dir.name)
         nodes = self.store.read_json(run_dir / "etiq-nodes.json", [])
         relationships = self.store.read_json(run_dir / "etiq-relationships.json", [])
         units = self.store.read_json(run_dir / "review-boundaries.json", [])
@@ -766,6 +941,11 @@ class DashboardHandler(BaseHTTPRequestHandler):
             for annotation in self.store.read_trust_annotations(job_id)
             if str(annotation.get("run_id")) == run_dir.name
         ]
+        suspect_node_refs = _suspect_refs_for_run(
+            self.store,
+            root,
+            run_dir.name,
+        )
         statuses = _status_by_unit(annotations)
         frontier = self.store.read_json(
             run_dir / "trusted-frontier.json",
@@ -775,18 +955,58 @@ class DashboardHandler(BaseHTTPRequestHandler):
             run_dir / "context-accounting.json",
             [],
         )
-        runs = sorted(
-            root.glob("stages/*/*/runs/*"),
-            key=lambda item: item.stat().st_mtime,
+        parent_info = catalog.get(str(run_info.get("parent_run_id") or ""))
+        parent_nodes = (
+            self.store.read_json(parent_info["path"] / "etiq-nodes.json", [])
+            if parent_info
+            else []
         )
-        run_links = " · ".join(
-            (
-                f"<strong>{html.escape(item.name)}</strong>"
-                if item == run_dir
-                else f"<a href='/jobs/{html.escape(job_id)}/lineage?run={html.escape(item.name)}'>"
-                f"{html.escape(item.name)}</a>"
+        lineage_diff = _lineage_diff(nodes, parent_nodes) if parent_info else None
+
+        chain_parts = []
+        for index, item in enumerate(chain):
+            if index:
+                chain_parts.append("<span class='run-arrow'>→</span>")
+            current = item["run_id"] == run_dir.name
+            outcome = str(item.get("status") or "initial")
+            outcome_label = {
+                "target_resolved": "target resolved",
+                "target_still_issued": "target still flagged",
+                "target_still_flagged": "target still flagged",
+                "initial": "initial execution",
+            }.get(outcome, outcome.replace("_", " "))
+            outcome_class = (
+                "resolved" if outcome == "target_resolved"
+                else "still-flagged" if outcome in {"target_still_issued", "target_still_flagged"}
+                else "initial"
             )
-            for item in runs
+            title = (
+                f"Repair {item.get('attempt')} · {item.get('target_function')}"
+                if item.get("kind") in {"repair", "controlled_repair"}
+                else "Frozen baseline" if item.get("kind") == "frozen"
+                else "Initial execution"
+            )
+            chain_parts.append(
+                f"<a class='run-step {'current' if current else ''}' "
+                f"href='/jobs/{html.escape(job_id)}/lineage?run={html.escape(item['run_id'])}'>"
+                f"<strong>{html.escape(title)}</strong><br>"
+                f"<span class='outcome {outcome_class}'>{html.escape(outcome_label)}</span><br>"
+                f"<span class='muted'>{html.escape(item['run_id'])}</span></a>"
+            )
+        branch_groups: dict[str, list[dict]] = {}
+        for item in catalog.values():
+            branch_groups.setdefault(
+                str(item.get("branch_label") or f"{item.get('segment')} · {item.get('stage')}"),
+                [],
+            ).append(item)
+        branch_links = "".join(
+            "<li><strong>" + html.escape(label) + "</strong>: "
+            + " · ".join(
+                f"<a href='/jobs/{html.escape(job_id)}/lineage?run={html.escape(item['run_id'])}'>{html.escape(item['run_id'])}</a>"
+                for item in sorted(items, key=lambda value: value.get("mtime", 0))
+            )
+            + "</li>"
+            for label, items in sorted(branch_groups.items())
         )
         unit_links = "".join(
             f"<li data-unit='{html.escape(str(item.get('function_name')).lower())}'"
@@ -828,6 +1048,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
             units,
             statuses,
             selected_unit_id,
+            lineage_diff["node_changes"] if lineage_diff else {},
+            str(run_info.get("target_function") or "") or None,
+            str(run_info.get("status") or "") or None,
+            suspect_node_refs,
         )
         accounting_rows = "".join(
             "<tr>"
@@ -924,32 +1148,56 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 f"{len(shown_relationships)} captured relationships."
             )
         )
-        body = (
-            f"<div class='card'><h2>Run {html.escape(run_dir.name)}</h2>"
-            f"<p>Runs: {run_links}</p><div class='summary'>"
-            f"<span class='metric'><strong>{len(nodes)}</strong> captured nodes</span>"
-            f"<span class='metric'><strong>{len(relationships)}</strong> captured relationships</span>"
-            f"<span class='metric'><strong>{len(units)}</strong> derived review units</span>"
-            f"<span class='metric'><strong>{len(frontier.get('frontier_unit_ids', []))}</strong> frontier units</span>"
-            f"<span class='metric'><strong>{len(shown_nodes)}</strong> nodes visible</span>"
-            f"</div><p>{artifact_links}"
-            f"{' · ' + comparison_link if comparison_link else ''}</p></div>"
-            "<div class='card notice'><h3>What is deterministic?</h3>"
-            "<p><strong>Captured nodes and edges:</strong> direct Etiq observations and immutable once this run is stored. "
-            "A fresh execution may differ when runtime inputs or external sources differ.</p>"
-            "<p><strong>Review-unit selection, sections, filtering, and layout:</strong> deterministic functions of this stored snapshot and its limits.</p>"
-            "<p><strong>Trust, suspect, and failure labels:</strong> Codex review judgments. They are persisted and auditable, but model output is not assumed deterministic.</p>"
-            "<p><strong>Edges shown below are captured Etiq edges.</strong> Review membership and trust colors are overlays, not inferred execution edges.</p></div>"
-            "<div class='card notice'><h3>How the layers connect</h3><div class='summary'>"
-            "<span class='metric'><strong>1. Review unit</strong><br>Derived from a captured function-stack boundary.</span>"
-            "<span class='metric'><strong>→ 2. Lineage boxes</strong><br>Function invocations and observed artifacts owned by that unit.</span>"
-            "<span class='metric'><strong>→ 3. Captured relationships</strong><br>Etiq input, output, and parent edges between boxes.</span>"
-            "<span class='metric'><strong>→ 4. Derived annotations</strong><br>Validated review judgments tied to a unit and evidence references.</span>"
-            "</div><p>Unit selection filters the lineage. Box selection highlights incident captured edges and reveals only "
-            "the relationships and annotations tied to that box or its owning review unit.</p></div>"
-            f"{annotation_notice}"
-            "<div class='card'><h3>Review context</h3><table><tr><th>Section</th><th>Nodes</th><th>Relationships</th><th>Selected package</th><th>Actual input tokens</th></tr>"
-            f"{accounting_rows or '<tr><td colspan=5>Not reviewed yet</td></tr>'}</table></div>"
+        repair_panel = ""
+        if run_info.get("kind") in {"repair", "controlled_repair"}:
+            status = str(run_info.get("status") or "unknown")
+            status_class = (
+                "resolved" if status == "target_resolved" else "still-flagged"
+            )
+            outcome = (
+                "The targeted boundary was absent from the next review's failed/suspect set."
+                if status == "target_resolved"
+                else "The targeted boundary was still present in the next review's failed/suspect set."
+            )
+            before = ", ".join(run_info.get("issue_functions_before", [])) or "not stored for this controlled arm"
+            after = ", ".join(run_info.get("issue_functions_after", [])) or "see recorded target outcome"
+            diff_detail = ""
+            if run_info.get("diff_ref"):
+                diff_detail = (
+                    f"<p><a href='/jobs/{html.escape(job_id)}/artifact?path={html.escape(str(run_info['diff_ref']))}'>open exact repair diff</a></p>"
+                )
+            elif run_info.get("inline_diff"):
+                diff_detail = (
+                    "<details><summary>Exact repair diff</summary><pre>"
+                    f"{html.escape(str(run_info['inline_diff']))}</pre></details>"
+                )
+            repair_panel = (
+                f"<div class='card repair-panel {status_class}'><h3>Repair {html.escape(str(run_info.get('attempt')))} result</h3>"
+                "<dl>"
+                f"<dt>Branch</dt><dd>{html.escape(str(run_info.get('branch_label') or 'live workflow'))}</dd>"
+                f"<dt>Target</dt><dd><code>{html.escape(str(run_info.get('target_function')))}</code></dd>"
+                f"<dt>Outcome</dt><dd><strong>{html.escape(status.replace('_', ' '))}</strong> — {html.escape(outcome)}</dd>"
+                f"<dt>Issues before</dt><dd>{html.escape(before)}</dd>"
+                f"<dt>Issues after</dt><dd>{html.escape(after)}</dd>"
+                f"<dt>Change</dt><dd>{html.escape(str(run_info.get('change_summary') or 'No summary was stored.'))}</dd>"
+                "</dl>" + diff_detail + "</div>"
+            )
+        comparison_panel = ""
+        if lineage_diff and parent_info:
+            comparison_panel = (
+                "<div class='card'><h3>Compared with parent execution</h3>"
+                f"<p>Parent: <a href='/jobs/{html.escape(job_id)}/lineage?run={html.escape(parent_info['run_id'])}'>{html.escape(parent_info['run_id'])}</a>. "
+                "Nodes are matched deterministically by captured type, variable names, and normalized function stack; stored artifact content is then compared.</p>"
+                "<div class='summary'>"
+                f"<span class='metric'><strong>{lineage_diff['added']}</strong> added</span>"
+                f"<span class='metric'><strong>{lineage_diff['changed']}</strong> changed</span>"
+                f"<span class='metric'><strong>{lineage_diff['unchanged']}</strong> unchanged</span>"
+                f"<span class='metric'><strong>{lineage_diff['removed']}</strong> removed</span>"
+                "</div><p><span class='change-key'>blue outline</span> marks added or changed lineage in the current graph. "
+                "A green review-unit lane means its repair target resolved; a red lane means the boundary remained flagged. "
+                "Only nodes explicitly cited by a reviewer receive a solid red outline.</p></div>"
+            )
+        lineage_panel = (
             "<div class='legend'>"
             "<span><i class='swatch' style='background:#eaf2ff'></i>function invocation</span>"
             "<span><i class='swatch' style='background:#fff'></i>observed artifact</span>"
@@ -957,6 +1205,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             "<span><i class='swatch' style='background:#fff2c9'></i>suspect/provisional</span>"
             "<span><i class='swatch' style='background:#ffe1e1'></i>failed</span>"
             "<span><i class='swatch' style='background:#fff'></i>unreviewed trust state</span>"
+            "<span><i class='swatch' style='background:#fff;border:3px solid #d92d20'></i>explicitly cited suspect node</span>"
             "</div>"
             "<div class='grid'>"
             f"<aside class='card scroll'><h3>Review units</h3>"
@@ -975,7 +1224,40 @@ class DashboardHandler(BaseHTTPRequestHandler):
             "<p>Click a lineage box to inspect it.</p>"
             "<p class='muted'>Captured relationships, derived annotations, review-unit membership, and value previews "
             "remain hidden until a box is selected.</p></div></aside>"
-            f"</div>{interaction_script}"
+            "</div>"
+        )
+        body = (
+            f"<div class='card'><h2>Run {html.escape(run_dir.name)}</h2>"
+            f"<p><strong>Branch:</strong> {html.escape(str(run_info.get('branch_label') or 'live workflow'))}</p>"
+            f"<div class='run-chain'>{''.join(chain_parts)}</div>"
+            f"<details><summary>Show every persisted execution branch</summary><ul>{branch_links}</ul></details>"
+            "<div class='summary'>"
+            f"<span class='metric'><strong>{len(nodes)}</strong> captured nodes</span>"
+            f"<span class='metric'><strong>{len(relationships)}</strong> captured relationships</span>"
+            f"<span class='metric'><strong>{len(units)}</strong> derived review units</span>"
+            f"<span class='metric'><strong>{len(frontier.get('frontier_unit_ids', []))}</strong> frontier units</span>"
+            f"<span class='metric'><strong>{len(shown_nodes)}</strong> nodes visible</span>"
+            f"</div><p>{artifact_links}"
+            f"{' · ' + comparison_link if comparison_link else ''}</p></div>"
+            f"{lineage_panel}"
+            f"{repair_panel}{comparison_panel}"
+            "<div class='card notice'><h3>What is deterministic?</h3>"
+            "<p><strong>Captured nodes and edges:</strong> direct Etiq observations and immutable once this run is stored. "
+            "A fresh execution may differ when runtime inputs or external sources differ.</p>"
+            "<p><strong>Review-unit selection, sections, filtering, and layout:</strong> deterministic functions of this stored snapshot and its limits.</p>"
+            "<p><strong>Trust, suspect, and failure labels:</strong> Codex review judgments. They are persisted and auditable, but model output is not assumed deterministic.</p>"
+            "<p><strong>Edges shown below are captured Etiq edges.</strong> Review membership and trust colors are overlays, not inferred execution edges.</p></div>"
+            "<div class='card notice'><h3>How the layers connect</h3><div class='summary'>"
+            "<span class='metric'><strong>1. Review unit</strong><br>Derived from a captured function-stack boundary.</span>"
+            "<span class='metric'><strong>→ 2. Lineage boxes</strong><br>Function invocations and observed artifacts owned by that unit.</span>"
+            "<span class='metric'><strong>→ 3. Captured relationships</strong><br>Etiq input, output, and parent edges between boxes.</span>"
+            "<span class='metric'><strong>→ 4. Derived annotations</strong><br>Validated review judgments tied to a unit and evidence references.</span>"
+            "</div><p>Unit selection filters the lineage. Box selection highlights incident captured edges and reveals only "
+            "the relationships and annotations tied to that box or its owning review unit.</p></div>"
+            f"{annotation_notice}"
+            "<div class='card'><h3>Review context</h3><table><tr><th>Section</th><th>Nodes</th><th>Relationships</th><th>Selected package</th><th>Actual input tokens</th></tr>"
+            f"{accounting_rows or '<tr><td colspan=5>Not reviewed yet</td></tr>'}</table></div>"
+            f"{interaction_script}"
         )
         self._send(_page(f"Lineage {run_dir.name}", body))
 

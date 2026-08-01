@@ -12,7 +12,11 @@ from use_case_icp.__main__ import build_parser
 from use_case_icp.codex_runner import CodexResult, CodexRunner, extract_usage
 from use_case_icp.dashboard import (
     _graph_svg,
+    _lineage_diff,
     _lineage_interaction_script,
+    _run_catalog,
+    _run_chain,
+    _suspect_refs_for_run,
     experiment_page_body,
 )
 from use_case_icp.etiq_executor import EtiqExecutor
@@ -744,6 +748,109 @@ class CoreTests(unittest.TestCase):
         self.assertIn("Captured relationships", script)
         self.assertIn("Derived annotations", script)
         self.assertIn("lineageData.relationships.filter", script)
+
+    def test_lineage_diff_matches_runtime_roles_across_run_ids(self) -> None:
+        current = [
+            {
+                "node_ref": "new:state:1",
+                "state_type": "DataframeState",
+                "names": ["result_df"],
+                "func_stack": ["main", "stage,new-id"],
+                "artifact_content": {"rows": [{"value": 2}]},
+            }
+        ]
+        parent = [
+            {
+                "node_ref": "old:state:1",
+                "state_type": "DataframeState",
+                "names": ["result_df"],
+                "func_stack": ["main", "stage,old-id"],
+                "artifact_content": {"rows": [{"value": 1}]},
+            }
+        ]
+        comparison = _lineage_diff(current, parent)
+        self.assertEqual(comparison["changed"], 1)
+        self.assertEqual(comparison["added"], 0)
+        self.assertEqual(comparison["node_changes"]["new:state:1"], "changed")
+
+    def test_run_catalog_keeps_controlled_repair_arms_separate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            store = JobStore(Path(temporary) / "jobs")
+            root = store.output_root / "job-test"
+            frozen = root / "stages/experiment-frozen/market_demand/runs/run-frozen"
+            repaired = root / "stages/experiment-etiq_selected/market_demand/runs/run-repaired"
+            frozen.mkdir(parents=True)
+            repaired.mkdir(parents=True)
+            store.write_json(repaired / "parent-run.json", {"parent_run_id": "run-frozen"})
+            store.write_json(
+                root / "controlled-experiments/experiment/result.json",
+                {
+                    "frozen_run_id": "run-frozen",
+                    "arms": [
+                        {
+                            "mode": "etiq_selected",
+                            "invocations": [{"change_summary": "small fix", "diff": "diff"}],
+                            "repairs": [
+                                {
+                                    "attempt": 1,
+                                    "run_id": "run-repaired",
+                                    "target_function": "extract",
+                                    "status": "target_resolved",
+                                }
+                            ],
+                        }
+                    ],
+                },
+            )
+            catalog = _run_catalog(store, root)
+            chain = _run_chain(catalog, "run-repaired")
+            self.assertEqual([item["run_id"] for item in chain], ["run-frozen", "run-repaired"])
+            self.assertEqual(catalog["run-repaired"]["mode"], "etiq_selected")
+            self.assertEqual(catalog["run-repaired"]["status"], "target_resolved")
+
+    def test_only_explicit_suspect_refs_receive_red_node_class(self) -> None:
+        svg = _graph_svg(
+            [
+                {"node_ref": "run:state:1", "names": ["bad"], "state_type": "state"},
+                {"node_ref": "run:state:2", "names": ["context"], "state_type": "state"},
+            ],
+            [],
+            [
+                {
+                    "unit_id": "unit-a",
+                    "function_name": "extract",
+                    "node_refs": ["run:state:1", "run:state:2"],
+                }
+            ],
+            {},
+            repair_function="extract",
+            repair_status="target_still_issued",
+            suspect_node_refs={"run:state:1"},
+        )
+        self.assertEqual(svg.count("explicit-suspect"), 1)
+        self.assertIn("repair-boundary-still-flagged", svg)
+
+    def test_suspect_refs_are_recovered_from_persisted_review(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            store = JobStore(Path(temporary) / "jobs")
+            root = store.output_root / "job-test"
+            store.write_json(
+                root / "invocations/inv-test/agent-output.json",
+                {
+                    "payload": {
+                        "reviews": [
+                            {
+                                "decision": "failed",
+                                "suspect_node_refs": ["run-a:state:1", "other:state:2"],
+                            }
+                        ]
+                    }
+                },
+            )
+            self.assertEqual(
+                _suspect_refs_for_run(store, root, "run-a"),
+                {"run-a:state:1"},
+            )
 
     def test_trusted_frontier_and_retrace_use_existing_edges(self) -> None:
         execution_nodes = [
