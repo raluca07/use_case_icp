@@ -154,9 +154,8 @@ answer.
 Regime & Accuracy & Context & Note \\
 \midrule
 stage purposes only        & 15\,\% & 1{,}343 & no captured values \\
-size-matched random slice  & 35\,\% & 1{,}402 & control \\
-graph-selected region      & 40\,\% & 1{,}466 & $p=0.69$ vs random \\
-selected plus expansion    & 46\,\% & 1{,}466 & the deployed method \\
+size-matched random slice  & 66\,\% & 1{,}402 & control, $n{=}244$ \\
+graph-selected region      & 53\,\% & 1{,}466 & $p=0.0004$ vs random \\
 complete current run       & 50\,\% & 1{,}913 & \\
 accumulated history, d=64  & 40\,\% & 129{,}246 & \\
 \bottomrule
@@ -169,14 +168,29 @@ history costs two orders of magnitude more for less.}
 
 Captured values matter enormously, 15\,\% against 40 to 50 for any regime showing what the
 code produced, which is the strongest evidence here that execution records are the right
-substrate. Selecting among them does not help: the graph-selected region is not separable
-from a size-matched random slice ($p=0.69$), and adding expansion on request, which is the
-method as deployed rather than a weakened stand-in, reaches 46\,\% against 50\,\% for
-simply showing everything. Accumulated history degrades from 52\,\% at depth four or less
-to 40\,\% at depth sixteen or more while its context grows to 129{,}246 characters against
-1{,}913. The mechanism is visible in the failures: shown captured values, a model names a
-downstream stage in 83\,\% of cases, and selection acts on the prompt rather than on the
-answer, so a model handed a selected region still blames the most downstream thing in it.
+substrate. Selecting among them is worse than not bothering. A first comparison returned no
+significant difference, but could only have detected an effect of 35 percentage points, so
+we repeated it at 244 paired cases per arm, enough to detect roughly twelve. A size-matched
+random slice scores 160 of 244 against the graph-selected region's 129, 66\,\% against
+53\,\%, with 21 discordant pairs favouring selection and 52 favouring random (exact
+McNemar, $p=0.0004$). Handing a model a slice chosen in advance is significantly worse than
+handing it an arbitrary one of the same size. Accumulated history separately degrades from
+52\,\% at depth four or less to 40\,\% at depth sixteen or more while its context grows to
+129{,}246 characters against 1{,}913.
+
+The mechanism is visible in the failures. Shown captured values, a model names a stage
+downstream of the fault in 83\,\% of cases, following the evidence to where damage is
+visible rather than where it originated. Selection acts on the prompt and not on the
+answer, so a model handed a selected region still blames the most downstream thing inside
+it, and narrowing the region narrows what it has to reason from without correcting the
+direction it reasons in.
+
+One clarification, since it is easily mistaken for a scale artifact. Both arms above
+receive the same character budget by construction, so the comparison is independent of
+pipeline size. Separately, the deployed system's full-graph package runs to 382{,}071
+characters against a judge limit of 1{,}048{,}576, and at that size selection becomes
+mandatory for capacity. Size forces selection; it does not make selection informative, and
+these are different claims.
 
 \subsection{A protocol that withholds and is asked}
 \label{sec:collapsed}
@@ -332,3 +346,30 @@ attribution narrows to seven boundaries of seven, because in a pipeline that fun
 through a merge every branch is an ancestor of the first suspect. Both failures have one
 cause: exoneration requires a check that the fault \emph{would have violated}, not merely
 a check that passed, and a hand-written contract does not supply one where a scar does.
+
+\subsection{The class nothing structural can express}
+\label{sec:wrongsense}
+
+Every fault so far is structural: a count, a field, an identifier, an order. The
+complementary class leaves the structure perfect and corrupts only the meaning. A pipeline
+researching demand for software agent tooling receives sources about insurance agents, with
+the same quote count, the same identifier, the same date and the same shape, every word
+ordinary and plausible, and only the sense wrong.
+
+Deterministic blindness here is a proof rather than a measurement. Declared invariants flag
+nothing, sixty scars trained on every other fault class flag nothing, and scar minting is
+\emph{refused}, because the difference between an on-topic and a wrong-sense quote is not
+expressible as any check of the kind this paper has used. That makes it the one class where
+a model judge is the only candidate signal.
+
+It does not cover the gap. Shown no captured values and offered the option to decline, the
+judge refuses in twelve of thirteen cases rather than guessing, which earlier arms never did
+because they were never offered it; that is a prompt-design finding worth carrying, since
+the difference between confabulation and refusal was purely whether refusal was available.
+Shown only the retrieval stages it names the right one in eleven of thirteen, and shown the
+whole graph only one of thirteen. The apparent advantage of the narrow arm is an artifact:
+it can only name retrieval stages and the true answer is always a retrieval stage, and it
+also names a stage on all six clean runs, so its precision is 11 of 19 against 1 of 19.
+Neither arm can recognise a clean run. No signal in this study detects a wrong-sense fault
+reliably, and the one that appears to is reading a restricted answer space rather than the
+meaning.

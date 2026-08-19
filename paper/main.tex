@@ -32,11 +32,11 @@ computation over its structure, not through presentation to a model. Computing o
 works: a selector walking the dataflow to the causal root identifies the faulty boundary
 in 21 of 21 contested cases where a source-order baseline manages none, and its advantage
 is exactly the extent to which declaration order diverges from execution order. Showing it
-to a model is more delicate than expected: a context region selected in advance is
-indistinguishable from a size-matched random one, yet a protocol that withholds nested
-detail and lets the reviewer request it one step at a time matches sending everything on
-less context and does separate from random, so the benefit lies in the interaction rather
-than the slice. The sharpest evidence is where checks are placed. Over 90 data faults,
+to a model is more delicate than expected: a context region selected in advance is significantly
+\emph{worse} than a size-matched random one ($p=0.0004$ at 244 paired cases), yet a
+protocol that withholds nested detail and lets the reviewer request it one step at a time
+matches sending everything on less context and does beat random, so the benefit lies in
+the interaction rather than the slice. The sharpest evidence is where checks are placed. Over 90 data faults,
 hand-written contracts detect 26 and localise \emph{none}, firing every time on an
 aggregating stage downstream of the cause, which is the downstream-blame bias the model
 judges showed reproduced in a signal containing no model. Checks learned from caught

@@ -27,10 +27,12 @@ The benchmark, corpora and result files live on branch `fabio/issue-3-and-5` und
 `src/use_case_icp/` and `benchmark-results/`, and are mirrored in the standalone
 artifact repository `graph-trust-bench`.
 
-## Not yet in the PDF
+## State
 
-Two completed results are written up in `paper_plaintext.md` and in the commit log
-but have not been folded into the LaTeX: the collapsed-helper protocol
-(`benchmark-results/collapsed_protocol.json`) and the wrong-sense fault class
-(`benchmark-results/wrong_sense.json`). The powered null re-run
-(`benchmark-results/powered_null.json`) was still in flight.
+All results are in the LaTeX and the PDF. `benchmark-results/FINDINGS.md` collects
+every headline number against the file that produced it, and is the shortest way in.
+
+The selection-versus-random comparison reversed when properly powered: at 244 paired
+cases a size-matched random slice beats the graph-selected region, 66 per cent against
+53, exact McNemar p=0.0004. The earlier underpowered null it supersedes could only have
+detected a 35-point effect.
