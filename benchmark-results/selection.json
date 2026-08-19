@@ -1,0 +1,2541 @@
+{
+  "boundaries": [
+    "synthesize_market_demand",
+    "retrieve_registries",
+    "extract_evidence_records",
+    "define_research_plan",
+    "merge_sources",
+    "retrieve_trackers",
+    "retrieve_vendor_docs"
+  ],
+  "rows": [
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|record_count",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|support",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_registries"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_registries",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 4,
+          "flagged": [
+            "synthesize_market_demand",
+            "retrieve_registries",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_class",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_registries"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_registries",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_registries"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_registries",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|source_ids",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|quote",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|define_research_plan|questions",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "define_research_plan"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "define_research_plan",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "define_research_plan",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "define_research_plan"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "define_research_plan",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "define_research_plan",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "define_research_plan"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "define_research_plan",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "define_research_plan",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "define_research_plan"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "define_research_plan",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "define_research_plan",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|merge_sources|source_ids",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "merge_sources",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 3,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|merge_sources|classes_merged",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "merge_sources",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "merge_sources",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 4,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources",
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_class",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_ids",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 4,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources",
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "fault": "drop_field",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_registries|default",
+      "fault": "truncate_sequence",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 4,
+          "flagged": [
+            "synthesize_market_demand",
+            "retrieve_registries",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "truncate_sequence|define_research_plan|default",
+      "fault": "truncate_sequence",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "define_research_plan"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "define_research_plan",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "define_research_plan",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "fault": "truncate_sequence",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 4,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources",
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_vendor_docs|default",
+      "fault": "truncate_sequence",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 4,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources",
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|PLACEHOLDER-001",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|tracker_delta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|docs_zeta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|observed practitioner statement",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "synthesize_market_demand"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "synthesize_market_demand",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|PLACEHOLDER-001",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_registries"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_registries",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|tracker_delta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|docs_zeta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_registries"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_registries",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|observed practitioner statement",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_registries",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_registries"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_registries",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_registries",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|PLACEHOLDER-001",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|tracker_delta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|docs_zeta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|observed practitioner statement",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|PLACEHOLDER-001",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|tracker_delta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|docs_zeta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|observed practitioner statement",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "define_research_plan",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|PLACEHOLDER-001",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 3,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 3,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|tracker_delta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 3,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|docs_zeta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 3,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 3,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|observed practitioner statement",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "merge_sources",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 3,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records",
+            "merge_sources"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "merge_sources",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|PLACEHOLDER-001",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|tracker_delta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|docs_zeta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|observed practitioner statement",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_trackers",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_trackers"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_trackers",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|PLACEHOLDER-001",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|tracker_delta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|docs_zeta",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registries",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|observed practitioner statement",
+      "fault": "fabricate_identifier",
+      "provenance": "observed",
+      "boundary": "retrieve_vendor_docs",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 1,
+          "flagged": [
+            "retrieve_vendor_docs"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            },
+            "causal_root": {
+              "pick": "retrieve_vendor_docs",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "invert_comparison|extract_evidence_records|default",
+      "fault": "invert_comparison",
+      "provenance": "synthetic",
+      "boundary": "extract_evidence_records",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 2,
+          "flagged": [
+            "synthesize_market_demand",
+            "extract_evidence_records"
+          ],
+          "selectors": {
+            "source_order": {
+              "pick": "synthesize_market_demand",
+              "correct": false
+            },
+            "causal_root": {
+              "pick": "extract_evidence_records",
+              "correct": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "case_id": "reverse_ordering|synthesize_market_demand|default",
+      "fault": "reverse_ordering",
+      "provenance": "synthetic",
+      "boundary": "synthesize_market_demand",
+      "crashed": false,
+      "detectors": {
+        "schema": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        },
+        "contract": {
+          "n_flagged": 0,
+          "flagged": [],
+          "selectors": {
+            "source_order": {
+              "pick": null,
+              "correct": false
+            },
+            "causal_root": {
+              "pick": null,
+              "correct": false
+            }
+          }
+        }
+      }
+    }
+  ]
+}

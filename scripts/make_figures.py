@@ -207,6 +207,40 @@ def fig_localisation(det, path: Path):
     plt.close(fig)
 
 
+def fig_selection(path: Path):
+    sel = json.loads(Path("benchmark-results/selection.json").read_text())
+    live = [r for r in sel["rows"] if not r["crashed"]]
+    contested = [r for r in live if r["detectors"]["contract"]["n_flagged"] > 1]
+    groups = [("all cases", live), ("more than one\nboundary flagged", contested)]
+    names = [("source_order", "source order (no graph)", RED),
+             ("causal_root", "causal root (graph)", GREEN)]
+    fig, ax = plt.subplots(figsize=(5.4, 2.6))
+    width = 0.36
+    for i, (key, label, colour) in enumerate(names):
+        ys = [sum(1 for r in g if r["detectors"]["contract"]["selectors"][key]["correct"]) / len(g)
+              for _, g in groups]
+        offset = (i - 0.5) * width
+        bars = ax.bar([x + offset for x in range(len(groups))], ys, width,
+                      label=label, color=colour, zorder=3)
+        for bar, y in zip(bars, ys):
+            ax.text(bar.get_x() + bar.get_width() / 2, y + 0.02, f"{y:.0%}",
+                    ha="center", va="bottom", fontsize=8, color=INK)
+    ax.set_xticks(range(len(groups)))
+    ax.set_xticklabels([g[0] for g in groups])
+    ax.set_ylabel("repair target correctly identified")
+    ax.set_ylim(0, 1.25)
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1.0])
+    ax.yaxis.set_major_formatter(lambda v, _: f"{v:.0%}")
+    ax.legend(frameon=False, fontsize=8, ncol=2, loc="upper center",
+              bbox_to_anchor=(0.5, 1.18))
+    recess(ax, axis="y")
+    ax.tick_params(axis="x", length=0)
+    fig.savefig(path)
+    plt.close(fig)
+    n_c = len(contested)
+    return {"n": len(live), "contested": n_c}
+
+
 def main() -> int:
     outdir = Path("benchmark-results")
     figdir = Path("../../../../../Users/fabio/Desktop/etiq_trust_benchmark/paper/figures")
@@ -217,6 +251,7 @@ def main() -> int:
     fig_by_fault(det, figdir / "by-fault.pdf")
     print("judge split:", fig_judge_split(det, judge, figdir / "judge-split.pdf"))
     fig_localisation(det, figdir / "localisation.pdf")
+    print("selection:", fig_selection(figdir / "selection.pdf"))
     print("figures ->", figdir)
     return 0
 
