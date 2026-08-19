@@ -1,0 +1,1156 @@
+{
+  "verdicts": [
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|record_count",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|record_count",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|record_count",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|support",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|support",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|support",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_class",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_class",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_class",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|source_ids",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|source_ids",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|source_ids",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|quote",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|quote",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|quote",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|define_research_plan|questions",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|define_research_plan|questions",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|define_research_plan|questions",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|merge_sources|source_ids",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|merge_sources|source_ids",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|merge_sources|source_ids",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|merge_sources|classes_merged",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|merge_sources|classes_merged",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|merge_sources|classes_merged",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_class",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_class",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_class",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_ids",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_ids",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_ids",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_registries|default",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_registries|default",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_registries|default",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|define_research_plan|default",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "truncate_sequence|define_research_plan|default",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "truncate_sequence|define_research_plan|default",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_vendor_docs|default",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_vendor_docs|default",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_vendor_docs|default",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|PLACEHOLDER-001",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|PLACEHOLDER-001",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|PLACEHOLDER-001",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|tracker_delta",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|tracker_delta",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|tracker_delta",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|docs_zeta",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|docs_zeta",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|docs_zeta",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|observed practitioner statement",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|observed practitioner statement",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|observed practitioner statement",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|PLACEHOLDER-001",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|PLACEHOLDER-001",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|PLACEHOLDER-001",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|tracker_delta",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|tracker_delta",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|tracker_delta",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|docs_zeta",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|docs_zeta",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|docs_zeta",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|observed practitioner statement",
+      "boundary": "retrieve_registries",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|observed practitioner statement",
+      "boundary": "retrieve_registries",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|observed practitioner statement",
+      "boundary": "retrieve_registries",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|PLACEHOLDER-001",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|PLACEHOLDER-001",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|PLACEHOLDER-001",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|tracker_delta",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|tracker_delta",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|tracker_delta",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|docs_zeta",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|docs_zeta",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|docs_zeta",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|observed practitioner statement",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|observed practitioner statement",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|observed practitioner statement",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|PLACEHOLDER-001",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|PLACEHOLDER-001",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|PLACEHOLDER-001",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|tracker_delta",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|tracker_delta",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|tracker_delta",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|docs_zeta",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|docs_zeta",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|docs_zeta",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|observed practitioner statement",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|observed practitioner statement",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|observed practitioner statement",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|PLACEHOLDER-001",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|PLACEHOLDER-001",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|PLACEHOLDER-001",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|tracker_delta",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|tracker_delta",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|tracker_delta",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|docs_zeta",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|docs_zeta",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|docs_zeta",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|observed practitioner statement",
+      "boundary": "merge_sources",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|observed practitioner statement",
+      "boundary": "merge_sources",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|observed practitioner statement",
+      "boundary": "merge_sources",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|PLACEHOLDER-001",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|PLACEHOLDER-001",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|PLACEHOLDER-001",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|tracker_delta",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|tracker_delta",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|tracker_delta",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|docs_zeta",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|docs_zeta",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|docs_zeta",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|observed practitioner statement",
+      "boundary": "retrieve_trackers",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|observed practitioner statement",
+      "boundary": "retrieve_trackers",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|observed practitioner statement",
+      "boundary": "retrieve_trackers",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|PLACEHOLDER-001",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|PLACEHOLDER-001",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|PLACEHOLDER-001",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|tracker_delta",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|tracker_delta",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|tracker_delta",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|docs_zeta",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|docs_zeta",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|docs_zeta",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registries",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registries",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registries",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|observed practitioner statement",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|observed practitioner statement",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|observed practitioner statement",
+      "boundary": "retrieve_vendor_docs",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "invert_comparison|extract_evidence_records|default",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "invert_comparison|extract_evidence_records|default",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "invert_comparison|extract_evidence_records|default",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "reverse_ordering|synthesize_market_demand|default",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "reverse_ordering|synthesize_market_demand|default",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "reverse_ordering|synthesize_market_demand|default",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "trusted"
+    }
+  ]
+}
