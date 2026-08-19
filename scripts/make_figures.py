@@ -241,6 +241,31 @@ def fig_selection(path: Path):
     return {"n": len(live), "contested": n_c}
 
 
+def fig_complementarity(det, judge, path: Path):
+    live=[r for r in det["rows"] if not r["crashed"]]
+    by={}
+    for v in judge:
+        if v["verdict"]: by.setdefault(v["case_id"],[]).append(v["verdict"])
+    maj={k:(vs.count("suspect")>len(vs)/2) for k,vs in by.items()}
+    def caught(r,sig):
+        if sig=="judge": return maj.get(r["case_id"],False)
+        return not r["signals"][sig]["false_trust"]
+    combos=[("schema",),("contract",),("judge",),("contract","judge")]
+    names=["schema","invariants","judge (3B)","invariants\n+ judge"]
+    ys=[sum(1 for r in live if not any(caught(r,s) for s in c))/len(live) for c in combos]
+    cols=[BLUE,GREEN,RED,PURPLE]
+    fig,ax=plt.subplots(figsize=(5.4,2.6))
+    bars=ax.bar(names,ys,color=cols,width=0.55,zorder=3)
+    for b,y in zip(bars,ys):
+        ax.text(b.get_x()+b.get_width()/2,y+0.02,f"{y:.0%}",ha="center",va="bottom",fontsize=9,color=INK)
+    ax.set_ylabel("faults left undetected")
+    ax.set_ylim(0,max(ys)+0.16)
+    ax.yaxis.set_major_formatter(lambda v,_: f"{v:.0%}")
+    recess(ax,axis="y"); ax.tick_params(axis="x",length=0)
+    fig.savefig(path); plt.close(fig)
+    return dict(zip(names,[f"{y:.0%}" for y in ys]))
+
+
 def main() -> int:
     outdir = Path("benchmark-results")
     figdir = Path("../../../../../Users/fabio/Desktop/etiq_trust_benchmark/paper/figures")
@@ -252,6 +277,7 @@ def main() -> int:
     print("judge split:", fig_judge_split(det, judge, figdir / "judge-split.pdf"))
     fig_localisation(det, figdir / "localisation.pdf")
     print("selection:", fig_selection(figdir / "selection.pdf"))
+    print("complementarity:", fig_complementarity(det, judge, figdir / "complementarity.pdf"))
     print("figures ->", figdir)
     return 0
 

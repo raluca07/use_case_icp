@@ -1,0 +1,616 @@
+{
+  "verdicts": [
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "synthesize_market_demand",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "synthesize_market_demand",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "CLEAN_PIPELINE",
+      "boundary": "synthesize_market_demand",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_public_sources|source_ids",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_public_sources|source_ids",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_public_sources|source_ids",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_public_sources|attempted",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_public_sources|attempted",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|retrieve_public_sources|attempted",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|source_ids",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|source_ids",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|source_ids",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|quote",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|quote",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|quote",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|record_count",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|record_count",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|record_count",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|need_id",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|need_id",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|need_id",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|support",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|support",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|support",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_public_sources|default",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_public_sources|default",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_public_sources|default",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|PLACEHOLDER-001",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|PLACEHOLDER-001",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|PLACEHOLDER-001",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|registry_alpha",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|registry_alpha",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|registry_alpha",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|tracker_gamma",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|tracker_gamma",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|tracker_gamma",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|registries",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|registries",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|registries",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|observed practitioner statement",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|observed practitioner statement",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|observed practitioner statement",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|unverified vendor claim",
+      "boundary": "define_research_plan",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|unverified vendor claim",
+      "boundary": "define_research_plan",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_public_sources|unverified vendor claim",
+      "boundary": "define_research_plan",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|PLACEHOLDER-001",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|PLACEHOLDER-001",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|PLACEHOLDER-001",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|tracker_gamma",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|tracker_gamma",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|tracker_gamma",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|observed practitioner statement",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|observed practitioner statement",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|observed practitioner statement",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|unverified vendor claim",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|unverified vendor claim",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|unverified vendor claim",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|PLACEHOLDER-001",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|PLACEHOLDER-001",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|PLACEHOLDER-001",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|tracker_gamma",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|tracker_gamma",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|tracker_gamma",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|observed practitioner statement",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|observed practitioner statement",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|observed practitioner statement",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|unverified vendor claim",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|unverified vendor claim",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|unverified vendor claim",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "invert_comparison|extract_evidence_records|default",
+      "boundary": "retrieve_public_sources",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "invert_comparison|extract_evidence_records|default",
+      "boundary": "retrieve_public_sources",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "invert_comparison|extract_evidence_records|default",
+      "boundary": "retrieve_public_sources",
+      "repeat": 2,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "reverse_ordering|synthesize_market_demand|default",
+      "boundary": "extract_evidence_records",
+      "repeat": 0,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "reverse_ordering|synthesize_market_demand|default",
+      "boundary": "extract_evidence_records",
+      "repeat": 1,
+      "verdict": "trusted"
+    },
+    {
+      "case_id": "reverse_ordering|synthesize_market_demand|default",
+      "boundary": "extract_evidence_records",
+      "repeat": 2,
+      "verdict": "trusted"
+    }
+  ]
+}

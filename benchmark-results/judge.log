@@ -1,3 +1,9 @@
 deterministic: 40 cases -> benchmark-results/deterministic.json
-model mlx-community/Qwen3.8-27B-8bit
-  error TimeoutError on drop_field|define_research_plan|questions
+model mlx-community/Qwen2.5-3B-Instruct-4bit
+  20/120 (0.55/s, ~3 min left)
+  40/120 (0.75/s, ~2 min left)
+  60/120 (0.96/s, ~1 min left)
+  80/120 (1.14/s, ~1 min left)
+  100/120 (1.25/s, ~0 min left)
+  120/120 (1.14/s, ~0 min left)
+judge arm complete
