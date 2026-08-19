@@ -911,6 +911,1294 @@
       "arm": "graph_selected",
       "answer": "retrieve_vendor_docs",
       "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_delta+tracker_theta",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|registry_delta+registry_epsilon",
+      "mutation": "empty_response",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|registry_gamma+registry_delta",
+      "mutation": "empty_response",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|tracker_delta+tracker_theta",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon+tracker_iota",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon+tracker_theta",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_delta+tracker_epsilon",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon+tracker_iota",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|tracker_delta+tracker_iota",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|registry_beta+registry_epsilon",
+      "mutation": "empty_response",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|docs_zeta+docs_kappa",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon+tracker_theta",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|docs_zeta+docs_eta",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_delta+tracker_iota",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_theta+tracker_iota",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta+docs_lambda",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta+docs_kappa",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|tracker_theta+tracker_iota",
+      "mutation": "empty_response",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|docs_eta+docs_lambda",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta+docs_lambda",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|docs_eta+docs_kappa",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta+docs_eta",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|docs_kappa+docs_lambda",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_beta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_gamma",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|docs_eta+docs_kappa",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "empty_response|docs_kappa+docs_lambda",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "empty_response|docs_eta+docs_lambda",
+      "mutation": "empty_response",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_gamma",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|tracker_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_theta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_alpha",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_theta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_beta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_alpha",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|docs_kappa",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|docs_zeta",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|docs_eta",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_beta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|docs_kappa",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|docs_zeta",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_eta",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_gamma",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_beta+registry_gamma",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_beta+registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_gamma",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_beta+registry_gamma",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_gamma+registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_beta+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_beta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_beta+registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_delta+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_gamma+registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_gamma+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_beta+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_delta",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_delta+tracker_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_delta+tracker_theta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_delta+tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|tracker_delta+tracker_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|registry_delta+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_alpha+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon+tracker_theta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon+tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|tracker_delta+tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_theta+tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_delta+tracker_theta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_zeta+docs_eta",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon+tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_theta+tracker_iota",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_zeta+docs_kappa",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|registry_gamma+registry_epsilon",
+      "mutation": "missing_date",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_zeta+docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "missing_date|docs_eta+docs_kappa",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon+tracker_theta",
+      "mutation": "missing_date",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_eta+docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_zeta+docs_kappa",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_eta+docs_kappa",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_zeta+docs_eta",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_zeta+docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_eta+docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_alpha",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_kappa+docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_beta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "missing_date|docs_kappa+docs_lambda",
+      "mutation": "missing_date",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_gamma",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_theta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_alpha",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_beta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|docs_eta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_kappa",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_zeta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_lambda",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|docs_eta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_theta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_zeta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_beta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|docs_lambda",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_kappa",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_beta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_beta+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_beta+registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_gamma",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|registry_beta+registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_gamma",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma+registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_delta+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_beta+registry_gamma",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma+registry_delta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_delta+tracker_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_beta+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_beta+registry_gamma",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_delta+tracker_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_delta+tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon+tracker_theta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_delta+tracker_theta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon+tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_theta+tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_delta+tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|registry_delta+registry_epsilon",
+      "mutation": "stale_copy",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|tracker_theta+tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon+tracker_theta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_zeta+docs_eta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_delta+tracker_theta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_eta+docs_kappa",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|docs_zeta+docs_kappa",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_eta+docs_lambda",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon+tracker_iota",
+      "mutation": "stale_copy",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|docs_zeta+docs_eta",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "stale_copy|docs_zeta+docs_lambda",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "stale_copy|docs_eta+docs_lambda",
+      "mutation": "stale_copy",
+      "truth": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
     }
   ]
 }

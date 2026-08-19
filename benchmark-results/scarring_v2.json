@@ -1,0 +1,81 @@
+{
+  "n": 90,
+  "population": 8,
+  "results": {
+    "population n=1": {
+      "rows": [
+        [
+          1,
+          59,
+          59
+        ],
+        [
+          2,
+          73,
+          73
+        ]
+      ],
+      "scars": 73,
+      "refused": 17,
+      "false_suspicion": 21,
+      "healthy_checked": 56,
+      "kinds": {
+        "min_items": 26,
+        "min_each": 26,
+        "required_field": 13,
+        "known_vocabulary": 29,
+        "homogeneous": 13
+      }
+    },
+    "population n=4": {
+      "rows": [
+        [
+          1,
+          59,
+          59
+        ],
+        [
+          2,
+          73,
+          73
+        ]
+      ],
+      "scars": 73,
+      "refused": 17,
+      "false_suspicion": 12,
+      "healthy_checked": 56,
+      "kinds": {
+        "min_items": 26,
+        "min_each": 26,
+        "required_field": 13,
+        "known_vocabulary": 29,
+        "homogeneous": 13
+      }
+    },
+    "population n=8": {
+      "rows": [
+        [
+          1,
+          59,
+          59
+        ],
+        [
+          2,
+          73,
+          73
+        ]
+      ],
+      "scars": 73,
+      "refused": 17,
+      "false_suspicion": 0,
+      "healthy_checked": 56,
+      "kinds": {
+        "min_items": 26,
+        "min_each": 26,
+        "required_field": 13,
+        "known_vocabulary": 29,
+        "homogeneous": 13
+      }
+    }
+  }
+}

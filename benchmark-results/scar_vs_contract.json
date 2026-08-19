@@ -1,0 +1,16 @@
+{
+  "n": 90,
+  "population": 8,
+  "contracts": {
+    "detected": 26,
+    "localised": 0,
+    "misplaced": 26
+  },
+  "scars": 60,
+  "both": {
+    "detected": 60,
+    "localised": 60,
+    "misplaced": 0
+  },
+  "held_out_false_suspicion": 0
+}
