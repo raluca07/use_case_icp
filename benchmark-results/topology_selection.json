@@ -1,0 +1,2484 @@
+{
+  "rows": [
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 9,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "items",
+      "n_flagged": 8,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "items",
+      "n_flagged": 7,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "items",
+      "n_flagged": 6,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s4",
+      "param": "items",
+      "n_flagged": 5,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s5",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s5",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s5",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s6",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s6",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s6",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s7",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s7",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s7",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s8",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s8",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s8",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 9,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s1",
+      "param": "",
+      "n_flagged": 8,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s2",
+      "param": "",
+      "n_flagged": 7,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s3",
+      "param": "",
+      "n_flagged": 6,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s4",
+      "param": "",
+      "n_flagged": 5,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s5",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s6",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s7",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s8",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "items",
+      "n_flagged": 8,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s6",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s6",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s6",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s7",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s7",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s7",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s4",
+      "param": "items",
+      "n_flagged": 5,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 9,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s8",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s8",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s8",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "items",
+      "n_flagged": 6,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "items",
+      "n_flagged": 7,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s5",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s5",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s5",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 9,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s1",
+      "param": "",
+      "n_flagged": 8,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s6",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s7",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s4",
+      "param": "",
+      "n_flagged": 5,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s8",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s3",
+      "param": "",
+      "n_flagged": 6,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s2",
+      "param": "",
+      "n_flagged": 7,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-8",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s5",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 8,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b1",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b2",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b3",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b4",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b5",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b5",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b5",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b6",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b6",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "b6",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "collect",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "collect",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "collect",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 7,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "b1",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "b2",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "b3",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "b4",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "b5",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "b6",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "collect",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b6",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b6",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b6",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "collect",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "collect",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "collect",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b2",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b4",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 8,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b3",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b1",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b5",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b5",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "b5",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 7,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "b6",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "collect",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "b2",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "b4",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "b3",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "b1",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "fan-6",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "b5",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 10,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l1",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l2",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l3",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l4",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "l4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r1",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r2",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r3",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r4",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "r4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "join",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "join",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "join",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 10,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "l1",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "l2",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "l3",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "l4",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "r1",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "r2",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "r3",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "r4",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "join",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r4",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l3",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l1",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l4",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l4",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l4",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r3",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 10,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "join",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "join",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "join",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r2",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l2",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "l2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r1",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "r1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 10,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "r4",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "l3",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "l1",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "l4",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "r3",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "join",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "r2",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "l2",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "diamond-4",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "r1",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s1",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s2",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "dataflow",
+      "fault": "fabricate_identifier",
+      "boundary": "s3",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "items",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s3",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "items",
+      "n_flagged": 3,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s1",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "items",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "seed",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "items",
+      "n_flagged": 2,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "n",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "drop_field",
+      "boundary": "s2",
+      "param": "tag",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "truncate_sequence",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 4,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s3",
+      "param": "",
+      "n_flagged": 1,
+      "source_order_correct": true,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s1",
+      "param": "",
+      "n_flagged": 3,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "seed",
+      "param": "",
+      "n_flagged": 0,
+      "source_order_correct": false,
+      "causal_root_correct": false
+    },
+    {
+      "topology": "chain-3",
+      "order": "scrambled",
+      "fault": "fabricate_identifier",
+      "boundary": "s2",
+      "param": "",
+      "n_flagged": 2,
+      "source_order_correct": false,
+      "causal_root_correct": true
+    }
+  ]
+}
