@@ -16,7 +16,7 @@ from use_case_icp.fault_injection import _dataflow_edges
 from itertools import combinations
 
 OUT=Path("benchmark-results/powered_null.json"); MODEL="haiku"
-def dump(b,out): return f"## {b}\n{json.dumps(out.get(b),default=str)[:600]}\n"
+def dump(b,out): return f"## {b}\n{json.dumps(out.get(b),default=str)[:2000]}\n"
 def ask(p):
     r=subprocess.run(["claude","-p","--model",MODEL],input=p,capture_output=True,text=True,timeout=240)
     return r.stdout
