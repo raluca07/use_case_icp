@@ -5,6 +5,7 @@ import re
 from collections import defaultdict, deque
 from typing import Any, Iterable, Mapping
 
+from .etiq_graph import fence_untrusted
 from .records import (
     BoundaryHealth,
     EtiqEvidenceSnapshot,
@@ -19,6 +20,13 @@ from .records import (
     new_id,
     stable_hash,
 )
+
+
+def _fenced_if_document(node: Any, content: Any) -> Any:
+    """Fence free text handed to the reviewer. Structured artifacts are not fenced."""
+    if getattr(node, "artifact_kind", None) == "document" and isinstance(content, str):
+        return fence_untrusted(content)
+    return content
 
 
 def review_node_payload(node: Any) -> dict[str, Any]:
@@ -44,7 +52,11 @@ def review_node_payload(node: Any) -> dict[str, Any]:
         "artifact_size": node.artifact_size,
         "artifact_available": artifact_content is not None,
         "artifact_truncated": node.artifact_truncated,
-        "artifact_value": artifact_content if len(encoded_artifact) <= 4_000 else None,
+        "artifact_value": (
+            _fenced_if_document(node, artifact_content)
+            if len(encoded_artifact) <= 4_000
+            else None
+        ),
         "raw_metadata_hash": stable_hash(node.raw_metadata),
     }
 
@@ -637,7 +649,7 @@ def inspect_artifact(node: EtiqNodeRecord, request: Mapping[str, Any]) -> dict[s
                 matches.append(
                     {
                         "character_offset": found,
-                        "text": text[context_start:context_end],
+                        "text": fence_untrusted(text[context_start:context_end]),
                     }
                 )
                 position = found + max(1, len(needle))
@@ -652,7 +664,7 @@ def inspect_artifact(node: EtiqNodeRecord, request: Mapping[str, Any]) -> dict[s
         return {
             **result,
             "count": char_count,
-            "content": selected,
+            "content": fence_untrusted(selected),
             "returned": len(selected),
             "more_available": start + len(selected) < len(text),
         }

@@ -21,6 +21,7 @@ from use_case_icp.dashboard import (
 )
 from use_case_icp.etiq_executor import EtiqExecutor
 from use_case_icp.etiq_graph import (
+    fence_untrusted,
     inspectable_artifact,
     serialize_etiq_result,
     value_preview,
@@ -696,7 +697,10 @@ class CoreTests(unittest.TestCase):
             document,
             {"node_ref": "document-node", "start": 10, "count": 1, "columns": []},
         )
-        self.assertEqual(document_slice["content"], ("0123456789" * 99))
+        # Captured documents reach the reviewer fenced as data. See issue #2.
+        self.assertEqual(
+            document_slice["content"], fence_untrusted("0123456789" * 99)
+        )
         document_search = inspect_artifact(
             document,
             {
