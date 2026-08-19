@@ -100,11 +100,30 @@ print(json.dumps(demand, sort_keys=True))
 '''
 
 
-def _doc(source_id: str, n_quotes: int = 2) -> dict[str, Any]:
+ON_TOPIC = [
+    "our agent retries tool calls silently and we cannot tell which step failed",
+    "we need to resume a long agent run without replaying every earlier step",
+    "debugging a multi-step agent means reading thousands of lines of trace",
+    "tool call timeouts surface three stages later as a wrong final answer",
+]
+
+# The same words, the wrong sense. "Agent" here means an insurance agent, "tool" a hand
+# tool, "pipeline" a sales pipeline. Every structural property of the record is intact
+# and only the meaning is wrong, which is the class no structural check can express.
+WRONG_SENSE = [
+    "our agent handles claims for forty households and needs better call notes",
+    "the agent could not resume the policy renewal without the client on the phone",
+    "our sales pipeline stalls at the quote step and we cannot tell which rep dropped it",
+    "the tool broke halfway through the job and we had to start the repair again",
+]
+
+
+def _doc(source_id: str, n_quotes: int = 2, quotes: list[str] | None = None) -> dict[str, Any]:
+    pool = quotes if quotes is not None else ON_TOPIC
     return {
         "id": source_id,
         "published": "2026-07-30",
-        "quotes": [f"{source_id} practitioner statement {i}" for i in range(1, n_quotes + 1)],
+        "quotes": [pool[i % len(pool)] for i in range(n_quotes)],
     }
 
 
@@ -146,6 +165,9 @@ def _stale_published(doc): doc["published"] = "2019-01-01"
 def _mislabel_id(doc): doc["id"] = "registry_alpha"
 def _duplicate_quote(doc): doc["quotes"] = [doc["quotes"][0], doc["quotes"][0]]
 def _blank_id(doc): doc["id"] = None
+def _wrong_sense(doc):
+    """Same number of quotes, same shape, every word plausible, wrong sense entirely."""
+    doc["quotes"] = [WRONG_SENSE[i % len(WRONG_SENSE)] for i in range(len(doc["quotes"]))]
 
 MUTATIONS = {
     "truncated_response": ("observed", _truncate_quotes),
@@ -155,6 +177,7 @@ MUTATIONS = {
     "mislabelled_id": ("observed", _mislabel_id),
     "duplicated_record": ("synthetic", _duplicate_quote),
     "null_identifier": ("synthetic", _blank_id),
+    "wrong_sense": ("observed", _wrong_sense),
 }
 
 

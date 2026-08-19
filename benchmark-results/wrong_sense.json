@@ -1,0 +1,460 @@
+{
+  "runs": [
+    {
+      "case_id": "clean|2",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "clean|3",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "clean|1",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "no_values",
+      "answer": "none",
+      "correct": true
+    },
+    {
+      "case_id": "clean|0",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "clean|4",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "clean|2",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "clean|1",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "clean|2",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "clean|3",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "clean|1",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "clean|5",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_alpha",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "clean|3",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_beta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "clean|5",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "clean|5",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_gamma",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_beta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "graph_full",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "clean|0",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "graph_full",
+      "answer": "none",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|registry_gamma",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "clean|0",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_beta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|registry_delta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_gamma",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|registry_epsilon",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "clean|4",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "graph_full",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_delta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_alpha",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "clean|4",
+      "kind": "clean",
+      "truth": "none",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_alpha",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|tracker_epsilon",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_theta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_delta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "graph_full",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_theta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_delta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_theta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "retrieval_only",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|registry_epsilon",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "graph_full",
+      "answer": "none",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_iota",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|docs_zeta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_epsilon",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|registry_delta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "graph_full",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|docs_eta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_iota",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "graph_full",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|tracker_epsilon",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "graph_full",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_iota",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|registry_delta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_registries",
+      "arm": "retrieval_only",
+      "answer": "retrieve_registries",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|docs_zeta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_full",
+      "answer": "none",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|docs_lambda",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "no_values",
+      "answer": null,
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|tracker_epsilon",
+      "kind": "wrong_sense",
+      "truth": "retrieve_trackers",
+      "arm": "retrieval_only",
+      "answer": "retrieve_trackers",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|docs_zeta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "retrieval_only",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|docs_lambda",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_full",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|docs_eta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_full",
+      "answer": "retrieve_registries",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|docs_kappa",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "no_values",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|docs_lambda",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "retrieval_only",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|docs_eta",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "retrieval_only",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    },
+    {
+      "case_id": "wrong_sense|docs_kappa",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "graph_full",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "wrong_sense|docs_kappa",
+      "kind": "wrong_sense",
+      "truth": "retrieve_vendor_docs",
+      "arm": "retrieval_only",
+      "answer": "retrieve_vendor_docs",
+      "correct": true
+    }
+  ]
+}
