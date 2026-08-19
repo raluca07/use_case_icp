@@ -1,0 +1,48 @@
+\section{Introduction}
+
+An agent that works for a long time on one objective will eventually get something wrong,
+and what happens next is a trust decision. It has to say which earlier steps still stand,
+which are contaminated, and where to resume. Wrong in one direction it redoes sound work.
+Wrong in the other it builds on a spoiled result, which is worse and much harder to see.
+
+The architectural answer under study is the execution graph. A scanner captures the
+artifacts a generated pipeline produced and the functions that produced them, and that
+record becomes the durable state the agent reasons over. The appeal is that a graph built
+from execution cannot be talked out of what happened. Recent work treats provenance of this
+kind as the substrate for agent trust \cite{wang2026traces} and as the basis for
+recoverable execution from recorded checkpoints \cite{zhuang2026agentrewind}.
+
+We take the architecture seriously enough to ask what it is worth, and the answer we find
+is narrower and more useful than the one usually assumed. \textbf{The graph pays off
+through computation over its structure, and not through presentation to a model.} Those are
+different uses of the same artifact and they do not succeed together. A selector that walks
+the recorded dataflow to the causal root of a set of flagged boundaries is exact where a
+baseline without that relation is useless. Acceptance criteria attached to boundaries catch
+faults a model reading the same evidence does not. But handing a model a graph-selected
+region of context, which is the use the substrate is most often justified by, cannot be
+distinguished from handing it a size-matched random region, and accumulating history costs
+two orders of magnitude more context for no gain.
+
+Answering the question at all required a measurement the system does not have. Trust labels
+here are produced by one model reviewing another, so nothing in the loop holds an
+independent answer; when a reviewer calls a boundary trusted, no artifact can contradict it.
+There is good reason not to take that on faith, since judges prefer text they find familiar
+\cite{wataoka2024selfpreference} and a judge's agreement with itself can be high while its
+agreement with the truth is not \cite{norman2026reliability}, and a verifier checking only
+what it can express admits confident false positives \cite{helff2026gaming}. We supply the missing answer
+by injecting a fault into a named boundary through the same scope machinery a repair must
+pass, so the poisoned boundary is confined by mechanism rather than by assertion, and what
+it contaminates is read from the pipeline's own dataflow. We are not aware of prior work
+scoring an agent's own boundary trust labels against faults injected into its own pipeline
+with known ground truth.
+
+The paper's second contribution is methodological and, we think, the more transferable one.
+Five times during this work a measurement produced a confident number that was an artifact
+of how we had built the experiment rather than a property of the system: a static-code arm
+that scored 75\,\% because our faults were source mutations and collapsed to 0\,\% once
+they moved into recorded data; two models that returned a fixed answer regardless of input
+while appearing to score respectably; and a selection result we reported as significant on a
+third of its eventual sample and had to retract. Each would have survived into a published
+table. We report them alongside the results because a benchmark for verifying agents that
+cannot catch its own defects has no standing to measure anyone else's.
+Extended related work appears in Appendix~\ref{app:related}.

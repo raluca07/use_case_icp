@@ -1,0 +1,71 @@
+\section{Injecting a fault whose location is known}
+\label{sec:method}
+
+The missing ingredient is an answer. If we know which boundary is wrong, a trust
+signal stops being something the system relies on and becomes something we can score.
+
+We obtain that answer by injecting the fault ourselves. A fault is a small
+transformation of one boundary function's source. It is applied by locating the
+function, rewriting its abstract syntax tree, and splicing the result back through
+the same scope validator a repair must pass. That last detail is what makes the
+ground truth trustworthy rather than asserted: an injected fault is confined to one
+boundary by the same mechanism that confines a repair, so if the confinement is
+broken the injection fails rather than silently spreading.
+
+Contamination is read from the pipeline rather than declared by us. A boundary is
+downstream of the injected one when the injected function's result reaches its
+arguments, either directly as a nested call or through a module-level name bound to
+that result. Ground truth is therefore a pair: the injected boundary, and the
+ordered list of boundaries its output reaches.
+
+Two guards keep the corpus honest. An injection that leaves the source unchanged is
+refused, because a fault nothing can detect would enter the corpus and depress every
+signal's score equally, making every arm look worse without distinguishing them. And
+a test asserts that every fault in the catalogue still changes something on a
+representative pipeline; when we added it, it caught one that did not.
+
+\subsection{The fault catalogue}
+
+The catalogue separates faults observed in this system's own operational logs from
+synthetic ones, because the two carry different weight. Three are observed. A field
+disappears from a stage's output after upstream source reads failed, which this
+system's logs record alongside HTTP 429, 403 and 500 responses from four source
+registries. A collected sequence is shortened while the stage still reports success.
+An identifier is replaced by a plausible placeholder, which is what a schema-bound
+worker actually returned before a reviewing model discarded its output. Two are
+synthetic: a comparison operator is inverted, and a ranking is reversed while every
+value in it stays present and valid.
+
+An invariant here is an acceptance criterion attached to a boundary and checked
+deterministically against the value it produced; a concrete example is given in
+Appendix~\ref{app:invariant}.
+
+\subsection{What a trust signal is scored on}
+
+A signal labels every boundary trusted or suspect. Scoring compares those labels
+with the injected fault and reports four things.
+
+\emph{False trust} is the injected boundary being labelled trusted. This is the
+safety failure, and a signal that labels everything trusted scores perfectly on cost
+and fails completely here.
+
+\emph{False suspicion} is a boundary that is neither the injected one nor
+contaminated by it being flagged. This is the cost, paid in redone work.
+
+\emph{Localisation error} is signed, and the sign carries the finding. The resume
+point is the earliest suspect boundary, which is where a run acting on these labels
+would restart. A negative error means it restarts upstream of the fault and redoes
+sound work. A positive error means it restarts past the fault and keeps output the
+fault has already contaminated. Averaging the two would hide the second failure
+inside the first, so we report them separately.
+
+\emph{Shipped contaminated output} records whether the positive case occurred.
+
+\subsection{Arms}
+
+Four signals are in scope. Structural schema validation checks a stage's output
+against its declared JSON schema. Content invariants check criteria the boundary
+declared in advance: required fields, minimum counts, value patterns and ordering.
+Both are deterministic and cost nothing per fault, which is what allows the corpus to
+be large. The third arm is the reviewing model itself, which is the only arm that
+costs tokens and the only one whose labels vary between runs on the same input.

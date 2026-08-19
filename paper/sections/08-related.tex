@@ -1,0 +1,29 @@
+\section{Related work}
+
+Empirical work on why multi-agent systems fail supplies the closest framing for our
+problem: Cemri et al.\ build a taxonomy from more than two hundred annotated traces and
+make task verification one of its three top-level categories \cite{cemri2025multiagent},
+though their failures are annotated by human experts rather than detected by the system at
+runtime; Chen et al.\ survey the same territory as a gap between what long-horizon agents
+are asked to do and what their planning, memory and evaluation machinery supports
+\cite{chen2026horizon}. The assumption our benchmark tests is that a language model
+supplies that verification, and there is reason for caution: judges favour text more
+familiar to themselves \cite{wataoka2024selfpreference}, which matters because reviewer
+and reviewed here share a model family; a judge's self-agreement can be high while its
+agreement with the truth is not \cite{norman2026reliability}, the distinction our
+localisation metric operationalises; verifiers checking only what they can express admit
+confident false positives \cite{helff2026gaming}; and multi-step agents exploit
+naturalistic chances to tamper with what evaluates them \cite{thaman2026rewardhacking}.
+Provenance-based trust for agents \cite{wang2026traces} and recoverable execution from
+recorded checkpoints \cite{zhuang2026agentrewind} are the constructive lines this work
+measures rather than proposes.
+
+Our method borrows its central move from mutation testing, a defect of known location
+measuring whether a suite detects it, including the equivalent-mutant problem we meet as
+an injection that changes nothing \cite{jia2011mutation}. The substrate is execution
+provenance \cite{freire2008provenance}, whose distinction between a record of what a
+computation did and a claim about what it meant locates this paper's difficulty: the graph
+is a record, the trust label is a claim, and only the first is checkable. The fencing of
+Section~\ref{sec:defects} addresses indirect prompt injection through fetched content
+\cite{greshake2023injection}, a designed-in exposure here since the pipeline must retrieve
+third-party sources at runtime.

@@ -1,0 +1,130 @@
+\appendix
+
+\section*{Artifact availability}
+The benchmark, every corpus, all result files and the analysis scripts accompany this
+submission as an anonymized artifact and will be released publicly on acceptance; the
+recovered records of Section~\ref{sec:external} are identified by the commit hash of the
+repository they were recovered from.
+
+\section{The published comparison}
+\label{app:published}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Arm & Repairs & Effective & Input tokens & Unresolved boundaries \\
+\midrule
+\texttt{semantic\_only}  & 3 & 0 & 568{,}715   & 4 \\
+\texttt{history\_full}   & 3 & 1 & 1{,}824{,}533 & 4 \\
+\texttt{etiq\_full}      & 3 & 0 & 1{,}331{,}686 & 3 \\
+\texttt{etiq\_selected}  & 3 & 1 & 1{,}000{,}797 & 2 \\
+\bottomrule
+\end{tabular}
+\caption{The published comparison, one run per arm, 30 July 2026, taken from the
+archived machine-readable summary. Its own record notes that ``no arm reached final
+trust''.}
+\label{tab:published}
+\end{table}
+
+\section{Defects in the trust machinery, in detail}
+\label{app:defects}
+
+The validator confining a repair to one boundary returned early whenever the target could
+not be resolved to a function, so in that branch a repair could rewrite the whole target
+file. The branch is reached whenever a declared boundary name does not resolve in the
+generated source, and the authoring model writes both, so it is reachable by ordinary
+error and steerable on purpose; the harness splices over the same span, so an unresolvable
+target produced a whole-file substitution the validator accepted. It was untested, because
+the scanner fixture reported a call stack inside functions the authoring fixture never
+defined, so no target ever resolved and every workflow test of repair ran through the
+unenforced branch. Separately, the module producing the published numbers was imported by
+no test, resource limits around generated code defaulted to inactive, and the home
+directory reached the generated pipeline, which has network access outside replay mode;
+captured third-party text now reaches the reviewer inside a digest-keyed fence it cannot
+close \cite{greshake2023injection}.
+
+\section{A declared invariant, concretely}
+\label{app:invariant}
+
+The retrieval stage of the branching pipeline carries: \texttt{retrieve\_registries} must
+return \texttt{source\_ids} and \texttt{source\_class}; \texttt{source\_ids} must hold at
+least three entries; every entry must match \texttt{\^{}[a-z]+\_[a-z]+\$}. Three clauses
+catching a disappeared field, a silently shortened retrieval, and a malformed identifier;
+what none can catch is an identifier that is correctly shaped and simply wrong, which is
+measured rather than assumed in the body.
+
+\section{Extended related work}
+\label{app:related}
+
+Empirical work on why multi-agent systems fail supplies the closest framing for our
+problem: Cemri et al.\ build a taxonomy from more than two hundred annotated traces and
+make task verification one of its three top-level categories \cite{cemri2025multiagent},
+though their failures are annotated by human experts rather than detected by the system at
+runtime; Chen et al.\ survey the same territory as a gap between what long-horizon agents
+are asked to do and what their planning, memory and evaluation machinery supports
+\cite{chen2026horizon}. The assumption our benchmark tests is that a language model
+supplies that verification, and there is reason for caution: judges favour text more
+familiar to themselves \cite{wataoka2024selfpreference}, which matters because reviewer
+and reviewed here share a model family; a judge's self-agreement can be high while its
+agreement with the truth is not \cite{norman2026reliability}, the distinction our
+localisation metric operationalises; verifiers checking only what they can express admit
+confident false positives \cite{helff2026gaming}; and multi-step agents exploit
+naturalistic chances to tamper with what evaluates them \cite{thaman2026rewardhacking}.
+Provenance-based trust for agents \cite{wang2026traces} and recoverable execution from
+recorded checkpoints \cite{zhuang2026agentrewind} are the constructive lines this work
+measures rather than proposes.
+
+Our method borrows its central move from mutation testing, a defect of known location
+measuring whether a suite detects it, including the equivalent-mutant problem we meet as
+an injection that changes nothing \cite{jia2011mutation}. The substrate is execution
+provenance \cite{freire2008provenance}, whose distinction between a record of what a
+computation did and a claim about what it meant locates this paper's difficulty: the graph
+is a record, the trust label is a claim, and only the first is checkable. The fencing of
+Section~\ref{sec:defects} addresses indirect prompt injection through fetched content
+\cite{greshake2023injection}, a designed-in exposure here since the pipeline must retrieve
+third-party sources at runtime.
+
+\section{Staleness intervention, full results}
+\label{app:stale}
+
+
+We crossed two factors, twenty cases per cell on each of two judges: the history shown
+(clean prior iterations, or a superseded run carrying a fault since repaired) and the
+current run (clean, or carrying a new fault at a different boundary), asking for the
+faulty stage of the current run or none.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llrr}
+\toprule
+History & Current run & Judge A & Judge B \\
+\midrule
+clean & clean     & 18/20 & 4/20 \\
+stale & clean     & 17/20 & 13/20 \\
+clean & new fault & 18/20 & 19/20 \\
+stale & new fault & 11/20 & 19/20 \\
+\bottomrule
+\end{tabular}
+\caption{Correct decisions under the staleness intervention. Each judge fails in a
+different place: A dismisses genuine new faults when a stale prior is present, B cannot
+recognise a clean run unless one is.}
+\label{tab:stale}
+\end{table}
+
+Neither judge re-flagged the repaired boundary, which was the predicted failure; that
+happened once in 160 stale-history calls. Judge A, handed a superseded faulty prior,
+misses genuine new faults, 18/20 falling to 11/20 (Fisher exact, $p=0.03$ uncorrected,
+suggestive after the multiplicity correction of Section~\ref{sec:power}); the prior appears
+to act as a contrast anchor, and a current run that looks better than the old one reads as
+fine. Judge B shows the opposite defect: it detects the new fault regardless of history,
+19/20 in both cells, but cannot recognise a clean run, inventing a fault in 16 of 20
+clean-history cases and naming the final stage in every one, which is the downstream-blame
+bias with nothing to blame; a superseded faulty prior partially restores its ability to
+answer clean, 13/20 against 4/20. The deployed system's own record supplies a third
+signature, a frontier model resurrecting a resolved issue from flat history.
+
+Three judges, three failure shapes from one manipulation. The stable conclusion is a
+dependence rather than a direction: the content of accumulated history modulates a model
+judge's trust decisions in model-specific ways that no prompt here controlled, while
+deterministic signals are unaffected by context by construction.

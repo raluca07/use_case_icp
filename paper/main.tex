@@ -1,0 +1,63 @@
+\documentclass{article}
+% Official NeurIPS 2026 style, from
+% https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip
+% dblblindworkshop is the option for a double-blind workshop track, which is what
+% "Who Verifies the Agents?" runs. Swap to [preprint] to see the author block while drafting.
+\usepackage[dblblindworkshop]{neurips_2026}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\title{Compute Over the Graph, Do Not Show It\\
+\large What an execution graph is worth to a self-repairing agent, measured against
+injected faults}
+
+\author{Fabio Rovai\thanks{Kampakis and Co Ltd, trading as The Tesseract Academy.} \and Raluca Crisan\thanks{Etiq AI. Authorship and affiliation order to be confirmed.}}
+\date{Draft, \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+An execution graph records what a generated pipeline did rather than what a model said it
+did, and is increasingly proposed as the substrate an agent uses to repair itself. We ask
+what that substrate is worth by injecting faults whose location is known by construction,
+so trust decisions can be scored instead of trusted. The graph pays off through
+computation over its structure, not through presentation to a model. Computing over it
+works: a selector walking the dataflow to the causal root identifies the faulty boundary
+in 21 of 21 contested cases where a source-order baseline manages none, and its advantage
+is exactly the extent to which declaration order diverges from execution order. Showing it
+to a model is more delicate than expected: a context region selected in advance is
+indistinguishable from a size-matched random one, yet a protocol that withholds nested
+detail and lets the reviewer request it one step at a time matches sending everything on
+less context and does separate from random, so the benefit lies in the interaction rather
+than the slice. The sharpest evidence is where checks are placed. Over 90 data faults,
+hand-written contracts detect 26 and localise \emph{none}, firing every time on an
+aggregating stage downstream of the cause, which is the downstream-blame bias the model
+judges showed reproduced in a signal containing no model. Checks learned from caught
+faults and placed where they entered detect 60 and localise all 60, with zero false
+suspicion on held-out healthy runs once vocabulary checks are restricted to domains the
+healthy population shows to be closed. Five measurement artifacts caught during this work,
+each of which would have published a confident wrong number, argue that such a benchmark
+is worth as much for what it invalidates as for what it reports.
+\end{abstract}
+
+\input{sections/01-introduction}
+\input{sections/02-system}
+\input{sections/03-why-the-comparison-cannot-settle-it}
+\input{sections/04-method}
+\input{sections/05-results}
+\input{sections/06-defects}
+\input{sections/07-limitations}
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\input{sections/appendix}
+
+\end{document}

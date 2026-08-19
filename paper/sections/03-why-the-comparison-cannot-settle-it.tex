@@ -1,0 +1,24 @@
+\section{What the published comparison can and cannot settle}
+\label{sec:cannot}
+
+
+
+The published comparison ran four arms over the same frozen pipeline, input and recorded
+corpus, differing in what the reviewer sees: stage metadata, accumulated history, the
+complete graph, or a selected part of it (table in Appendix~\ref{app:published}). It is
+carefully controlled: the same frozen pipeline, input
+and recorded corpus across arms, fresh sessions, no cross-arm visibility. Three properties
+nonetheless prevent it settling which regime is better, and they determine what this paper
+had to build.
+
+Sample size is the first. One run per arm and three repairs within each makes every
+quantity a count out of three or a single ordinal, and the recommended arm ties the
+accumulated-history baseline on effective repairs. Second, the arms were not adjudicated
+identically: the archived record states the first common full-graph judge exceeded the
+model's 1{,}048{,}576 character input limit on the history branch, and those runs were
+rejudged with isolated graph-selected judges, a failure that also removed that arm's
+timing. Third, and most usefully, the function selecting which boundary to repair differs
+across arms. The graph arms filter flagged units to causal roots using upstream
+identifiers; the baselines rotate with no causal step. The comparison is presented as one
+of context regimes but the arms also differ in how they choose a target. Rather than
+control that away we make it the treatment, and it produces the paper's largest effect.

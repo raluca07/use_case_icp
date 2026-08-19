@@ -1,0 +1,39 @@
+\section{Defects, in the system and in the measurement}
+\label{sec:defects}
+
+\subsection{In the trust machinery}
+
+Four defects, detailed in Appendix~\ref{app:defects}: the repair-scope validator silently
+skipped enforcement whenever a declared boundary name failed to resolve, a branch the
+authoring model controls and that the entire workflow test suite unknowingly ran through;
+the module producing the published numbers had no tests; resource limits around generated
+code were inactive by default; and the real home directory, with credentials, reached
+model-written code that has network access outside replay
+\cite{greshake2023injection}.
+
+\subsection{In our own measurement}
+
+A benchmark built to verify agents has no standing to measure anyone else if it cannot
+catch its own defects, and five times a confident number here turned out to be an artifact
+of how we built the experiment.
+
+A control arm shown the source text of the implicated region scored 75\,\%, appearing to
+refute the premise that captured values matter; our faults were source mutations, so it
+was reading the fault rather than diagnosing it, and moving faults into recorded responses
+with the source byte-identical across all 48 cases dropped it to 0\,\%. A 3B judge scored
+0\,\% on seven-way localisation while returning valid stage names, answering one of two
+regardless of input; a 30B model later returned \texttt{transform\_3} for all 48 cases at
+every chain length from five to seventeen stages, producing a flat apparent degradation
+with horizon that was a constant. Both look like results until the answer distribution is
+examined, and neither can exhibit an effect of context because neither depends on context.
+We reported that graph-selected context beat a size-matched random slice, 40 against
+28\,\%, on a third of the eventual sample; at full sample the difference vanished
+($p=0.69$), and the claim was retracted, having been made in the same paragraph as a
+criticism of single-run reporting. Because data-level faults land on the stage that
+fetches the corrupted response, ground truth concentrated on three of seven boundaries,
+making the correct chance baseline 42\,\% rather than 14\,\%, and an arm shown no captured
+values scored exactly that by always naming the most common answer. Finally, a dump cap truncated retrieval
+evidence before the judge saw it, so faults on later sources were invisible and the judge
+blamed downstream aggregates. Each would have survived into a table, and we take the
+frequency as evidence that scoring against constructed ground truth is worth as much for
+what it invalidates as for what it establishes.

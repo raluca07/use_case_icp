@@ -1,0 +1,334 @@
+\section{Results}
+\label{sec:results}
+
+The results divide along the paper's claim. Sections~\ref{sec:compute1} to
+\ref{sec:compute2} concern computing over the graph's structure, where it pays. The final
+part concerns showing the graph to a model, where it does not.
+
+\subsection{Detection: what declared signals catch}
+
+A first corpus crashed on seventeen of twenty-eight faults, so execution is itself a strong
+free detector; but a fault that halts the run never reaches a trust decision, and real
+generated pipelines read inputs through accessors with defaults. Everything below concerns
+faults such a pipeline survives silently: 104 cases across two pipelines, the cross product
+of five fault classes, the boundaries and the applicable parameters, most from classes
+observed in this system's own logs.
+
+Structural schema validation leaves 78\,\% undetected, declared invariants 27\,\%, and a
+model judge 18\,\%, none of them raising a single false suspicion. The intervals for the
+latter two overlap and an exact McNemar test does not separate them ($p=0.16$), so we make
+no claim that either is better; what the sample supports is that both are significantly
+worse than their union, which leaves 7\,\% ($p<0.0001$ and $p=0.0005$). The failures are
+disjoint. Invariants catch twelve faults the judge misses, every one a matter of counting
+or shape; the judge catches twenty-one the invariants miss, eighteen of them substituted
+identifiers including every plausible one that defeated the pattern check. Schema
+validation contributes nothing either does not, detecting only the fault class that
+changes a record's shape.
+
+\subsection{What the graph is actually for}
+\label{sec:compute1}
+
+Detection tells a run something is wrong. It does not say what to repair. When several
+boundaries are flagged, something must choose, and that choice is where the graph does work
+no cheaper signal can. We measure a selector that walks recorded dataflow to the causal
+root against one that walks the declared boundary list in order.
+
+The comparison is only meaningful when those two orders differ. In a pipeline whose
+functions are declared in the order they run, the causal root of any flagged set is simply
+the first of them, and the selectors cannot disagree. Models writing code do not reliably
+declare in execution order, so we test both conditions across four shapes: a deep chain, a
+wide fan-out, a diamond that splits and reconverges, and a short chain.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{llrrr}
+\toprule
+Shape & Declaration order & Contested & Causal root & Source order \\
+\midrule
+chain-8    & dataflow  & 16 & 100\,\% & 100\,\% \\
+chain-8    & scrambled & 16 & 100\,\% & 38\,\% \\
+fan-6      & scrambled &  2 & 100\,\% & 0\,\% \\
+diamond-4  & scrambled & 14 & 100\,\% & 14\,\% \\
+chain-3    & scrambled &  6 & 100\,\% & 0\,\% \\
+\midrule
+all        & dataflow  & 38 & 100\,\% & 100\,\% \\
+all        & scrambled & 38 & \textbf{100\,\%} & \textbf{21\,\%} \\
+\bottomrule
+\end{tabular}
+\caption{Repair-target selection across four pipeline shapes. The causal-root selector is
+exact in every cell. The baseline matches it only when declaration order already encodes
+execution order.}
+\label{tab:selection}
+\end{table}
+
+The causal-root selector is exact in all 38 contested cases of every shape and both
+orderings. The baseline matches it perfectly when declaration order happens to encode
+execution order and falls to 21\,\% when it does not. This gives the graph's value a precise
+form: \emph{it is worth exactly the extent to which declaration order diverges from
+execution order}. A team whose pipelines are written in order gains nothing here. A team
+whose pipelines are model-authored gains the difference between 100 and 21 per cent, and
+cannot know in advance which case they are in, which is itself an argument for computing
+the relation rather than assuming it.
+
+\subsection{The model judge, and where each signal fails}
+\label{sec:compute2}
+
+We expected the language-model judge to be the weak arm. It was not, and reporting what
+happened instead is more useful than the result we set out to find.
+
+The judge is a 3B model run locally, asked about one boundary at a time and given that
+stage's declared purpose in prose. Across both corpora, 104 silent faults with three
+repeats each, it never once disagreed with itself. Every one of the 104 cases came back
+unanimous over 312 calls, with no parse failures.
+
+A false-trust rate alone would mean nothing, because a judge answering suspect
+indiscriminately scores perfectly while being useless. We therefore asked the same judge
+about boundaries known to be sound: every boundary of the clean unfaulted pipeline, and
+for each case a boundary strictly upstream of the fault, which cannot be contaminated.
+Across 102 such calls it returned trusted every time, so its false-suspicion rate matches
+both deterministic signals at zero and the comparison stands.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrl}
+\toprule
+Signal & Missed & Rate & 95\,\% CI \\
+\midrule
+schema validation      & 81/104 & 78\,\% & [69, 85] \\
+declared invariants    & 28/104 & 27\,\% & [19, 36] \\
+model judge (3B)       & 19/104 & 18\,\% & [12, 27] \\
+invariants + judge     &  7/104 &  7\,\% & [3, 13] \\
+\bottomrule
+\end{tabular}
+\caption{Faults left undetected over 104 cases, with Wilson intervals. The intervals for
+invariants and the judge overlap; the pair is separated from both.}
+\label{tab:signals}
+\end{table}
+
+\subsection{What the sample supports, and what it does not}
+
+The ranking in Table~\ref{tab:signals} invites a conclusion the data does not carry, so
+we tested it on the paired outcomes. An exact McNemar test does not separate the judge
+from declared invariants (12 against 21 discordant, $p=0.16$), and their confidence
+intervals overlap. We make no claim that either is the better signal, and the sample is
+large enough that this is a finding rather than a shrug: two signals of quite different
+kinds, one a compiled check and one a 3B model, are not distinguishable by error rate.
+
+The combination is a different matter. It improves on invariants alone (0 against 21,
+$p<0.0001$) and on the judge alone (0 against 12, $p=0.0005$). Both single signals are
+significantly worse than using both; neither is significantly worse than the other.
+Schema validation is separated from all three at $p<0.0001$, and adding it to any pair
+changes nothing, because it catches nothing they do not.
+
+The result is therefore about complementarity rather than ranking. Invariants catch
+twelve faults the judge misses, and every one is a matter of counting or shape: fields
+removed from a record, sequences silently shortened. The judge catches twenty-one the
+invariants miss, and eighteen of those are substituted identifiers, including every
+plausible one that defeated the pattern check. Each signal is blind close to where the
+other sees, and it is that disjointness the evidence establishes.
+
+It would be wrong to read this as a model outperforming a static check. The judge was
+given the stage's declared purpose, for instance that a retrieval stage must fetch every
+source in every declared class and report what it retrieved. That is an acceptance
+criterion. It is the same kind of statement the invariant encodes, written in prose and
+checked by a model rather than compiled into a count and a regular expression.
+
+So the comparison was never between having criteria and not having them. It was between
+two encodings of the same criteria, and the encodings fail differently. A count is exact
+about quantity and silent about meaning. A sentence carries meaning and is vague about
+quantity. That is why the union is so much stronger than either part, and it is a reason
+to declare criteria at a boundary at all rather than a reason to prefer one checker.
+
+\subsection{Showing the graph to a model does not pay}
+\label{sec:show}
+
+The use an execution graph is most often justified by is presentation: give the agent a
+relevant slice rather than everything or nothing. Four regimes were asked the same
+question over a branching corpus, name the faulty stage, with the injected fault as the
+answer.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrl}
+\toprule
+Regime & Accuracy & Context & Note \\
+\midrule
+stage purposes only        & 15\,\% & 1{,}343 & no captured values \\
+size-matched random slice  & 35\,\% & 1{,}402 & control \\
+graph-selected region      & 40\,\% & 1{,}466 & $p=0.69$ vs random \\
+selected plus expansion    & 46\,\% & 1{,}466 & the deployed method \\
+complete current run       & 50\,\% & 1{,}913 & \\
+accumulated history, d=64  & 40\,\% & 129{,}246 & \\
+\bottomrule
+\end{tabular}
+\caption{Localisation under six context regimes. Selection is not separable from a random
+slice of the same size, including in the form the system actually deploys; accumulated
+history costs two orders of magnitude more for less.}
+\label{tab:context}
+\end{table}
+
+Captured values matter enormously, 15\,\% against 40 to 50 for any regime showing what the
+code produced, which is the strongest evidence here that execution records are the right
+substrate. Selecting among them does not help: the graph-selected region is not separable
+from a size-matched random slice ($p=0.69$), and adding expansion on request, which is the
+method as deployed rather than a weakened stand-in, reaches 46\,\% against 50\,\% for
+simply showing everything. Accumulated history degrades from 52\,\% at depth four or less
+to 40\,\% at depth sixteen or more while its context grows to 129{,}246 characters against
+1{,}913. The mechanism is visible in the failures: shown captured values, a model names a
+downstream stage in 83\,\% of cases, and selection acts on the prompt rather than on the
+answer, so a model handed a selected region still blames the most downstream thing in it.
+
+\subsection{A protocol that withholds and is asked}
+\label{sec:collapsed}
+
+The arms above hand the reviewer a slice chosen in advance. The system we study does
+something different, and the distinction turns out to matter. Its initial package carries
+nodes at exactly the boundary's function-stack level, names the nested helpers without
+their contents, and permits the reviewer to request one direct child at a time for at most
+three rounds. Evaluating that needs a pipeline whose boundaries call helpers, so we built
+one and planted faults at three depths: visible at the boundary, inside a helper, and
+inside a sub-helper.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Arm & Faults & Clean & Mean chars & Expansions \\
+\midrule
+collapsed, expansion on request & 5/6 & 4/4 & 841 & 9 \\
+everything, flattened           & 5/6 & 4/4 & 922 & 0 \\
+random subset, budget matched   & 4/6 & 3/4 & 831 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{The deployed protocol against sending everything and against a size-matched
+random subset. It matches the former on nine per cent less context and, unlike every
+fixed-slice arm we tested, does not tie the latter.}
+\label{tab:collapsed}
+\end{table}
+
+This is the only selection arm in the paper that separates from a size-matched random
+control, and it forces a narrower statement of the result above. A selected region handed
+over in advance is not better than a random one of the same size. A protocol that
+withholds nested detail and lets the reviewer pull what it needs is a different mechanism,
+and on this evidence it works: the same accuracy as sending everything, for less, and
+better than random at equal cost. What we can say is that the benefit lies in the
+interaction rather than in the choice of slice, which is not what we expected and not what
+the fixed-slice arms could have shown.
+
+Two details qualify it. Faults planted two levels deep were caught with zero and one
+expansions, because a deep fault usually surfaces in the boundary's own output, so the
+reviewer rarely has to drill to where the fault lives. And the single miss is a reversed
+ranking judged clean after an expansion was spent, which is precisely the fault an
+ordering scar catches deterministically in Section~\ref{sec:scars}. With ten cases per arm
+this is directional rather than sized, and we implemented the collapsed-helper half of the
+protocol but not its artifact inspection.
+
+\subsection{External validity: three recovered runs of the real system}
+\label{sec:external}
+
+Everything above runs on pipelines we authored, which is the weakest thing about it. Three
+records of the real system, deleted in a cleanup commit but recoverable from its git
+history, supply the external check.
+
+A four-arm run of 29 July 2026, on the real model-authored pipeline with a frontier model,
+reports that graph-selected context matched the full graph's issue coverage with 46\,\%
+fewer input tokens on the initial run and 47\,\% on the latest, while accumulated flat
+history grew from 71{,}470 to 303{,}757 characters and became 29\,\% more expensive than
+the selected region. A second run of 30 July shows the same shape at 31{,}369 tokens for
+stage metadata against 109{,}590 for accumulated history, all arms finding the same three
+issue functions. This is the efficiency half of our claim, measured on the system itself.
+
+The same 29 July record contains one further observation we regard as the most important
+sentence in either dataset: accumulated history \emph{retained a previously repaired
+boundary as an open issue after every other arm treated it as resolved}, which its authors
+attribute to stale prior versions remaining salient in flat history. Our synthetic history
+sweep never produced this, and the recovered run shows why: our accumulated history was
+clean prior iterations, which hand the model a helpful baseline to diff against, whereas
+real history contains superseded versions of boundaries that have since changed. Staleness,
+not volume, is the active ingredient. Section~\ref{sec:stale} tests that as an
+intervention.
+
+\subsection{Staleness, briefly}
+\label{sec:stale}
+
+Accumulated history harms a model judge, and what it does depends on the model. A
+superseded faulty run in context halves one judge's detection of genuine new faults;
+another judge cannot recognise a clean run without one, inventing a fault in sixteen of
+twenty clean cases and naming the final stage every time; the deployed system's own record
+shows a third model resurrecting a resolved issue from flat history. Neither of ours
+re-flagged the repaired boundary, which was the predicted failure. The stable conclusion
+is a dependence rather than a direction: history content modulates judge behaviour in
+model-specific ways that no prompt here controlled, while deterministic signals are
+unaffected by context by construction. Full cells in Appendix~\ref{app:stale}; the
+detection drop does not survive the multiplicity correction of Section~\ref{sec:power}.
+
+\subsection{Checks placed where faults enter}
+\label{sec:scars}
+
+Every signal so far was written in advance by an author deciding what to assert. The
+alternative is to learn a check from a fault once it has been caught, place it on the
+boundary where it entered, and pay for that fault only once.
+
+We adopt the term \emph{scar} from prior work on coupling kernels, where a scar is a
+low-rank invariant subspace that lets a query be \emph{read} exactly rather than searched
+over an intractably large state space \cite{rovai2026worldkernel}, and from its use in
+agent goal induction, where a goal is treated as a low-rank commitment set read in a
+number of probes proportional to its rank \cite{rovai2026civex}. The move transfers
+directly. A caught fault commits a small set of properties; rather than re-deriving them
+on every subsequent run, they are read off once and pinned to the boundary that produced
+them. What is new here is the application to trust decisions and the measurement of what
+it buys, which separates the two halves of this paper more sharply than anything else.
+
+A scar is minted from a population of healthy observations of one boundary and one faulty
+observation of the same boundary, keeping only structural properties that held across the
+whole population and broke in the faulty one: a field present throughout and now absent, a
+count below its healthy floor, a list that stopped being homogeneous, an ordering that
+held and no longer does. A property expressible as no such check is refused rather than
+stored as vague suspicion, because the deterministic signals' zero false-suspicion rate is
+the thing that makes them worth having.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Signal & Detected & Localised & Misplaced \\
+\midrule
+declared contracts & 26/90 & \textbf{0/90} & 26/90 \\
+learned scars      & 60/90 & \textbf{60/90} & 0/90 \\
+\bottomrule
+\end{tabular}
+\caption{Ninety data faults. Localisation is whether the flagged boundary is the one the
+fault entered. Declared contracts never localise: every detection fires on an aggregating
+stage downstream of the cause.}
+\label{tab:scars}
+\end{table}
+
+Table~\ref{tab:scars} contains the result we consider most important in this paper.
+Hand-written contracts detect 26 of 90 faults and localise \emph{none} of them. A stage
+that faithfully passes on a bad input satisfies every criterion anyone thought to write
+about its own behaviour, so the checks fire on the aggregating stages downstream and the
+suspect set sits entirely past the cause. This is the same failure the model judges
+showed, in a signal with no model in it, which tells us the downstream-blame bias is not a
+property of language models but of where checks are placed. Scars localise every fault
+they detect, because a scar is placed where the fault was observed to enter rather than
+where an author's attention happened to fall.
+
+Two further results bound the method. Population size does not affect detection at all,
+identical at one, four and eight healthy observations; what it buys is false suspicion,
+falling from 21 of 56 boundary-checks at $n=1$ to zero at $n=8$. A single healthy
+observation cannot separate an invariant from that run's value, so scars minted from one
+pair fire on honest variation, and only a population can tell the difference. Second, a
+vocabulary check is minted only when the population shows the domain closed: identifiers
+drawn from a fixed registry stop admitting new values, dates and free text do not, and a
+vocabulary check over an open domain is guaranteed to fire on an honest run eventually.
+Enforcing that costs detection, 73 falling to 60, and takes false suspicion on held-out
+healthy runs the scars never saw from 3 of 28 to zero. We regard that trade as the correct
+one, and the refusal of faults visible only in an open domain as a feature of the design.
+
+We also implemented the two graph computations this suggests, and both are negative.
+Forward propagation of contamination reclassifies nothing, because the declared checks
+fire downstream of the fault and there is nothing to propagate forward from. Backward
+attribution narrows to seven boundaries of seven, because in a pipeline that funnels
+through a merge every branch is an ancestor of the first suspect. Both failures have one
+cause: exoneration requires a check that the fault \emph{would have violated}, not merely
+a check that passed, and a hand-written contract does not supply one where a scar does.

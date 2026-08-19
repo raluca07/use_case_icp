@@ -1,0 +1,14 @@
+\section{The system under test}
+
+The pipeline is a marketing research agent. A model authors Python that discovers market
+demand from public sources, a scanner executes it and captures the values crossing each
+function boundary, a reviewing session judges each boundary, and a repairing session
+returns a change confined to one boundary.
+
+Three properties matter. The generated pipeline declares its own review boundaries as named
+functions, and the review and repair machinery anchors to those declarations. Stage inputs
+and outputs pass by argument and return value rather than shared state, which makes a stage
+replayable against its recorded inputs. And a run records a network cassette, so a pipeline
+that fetches third-party sources replays against exactly the responses the original run
+saw. The cassette is what makes this work deterministic, and later what lets us move faults
+out of the source entirely.
