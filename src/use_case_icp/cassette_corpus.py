@@ -50,19 +50,19 @@ def define_research_plan():
     }
 
 def retrieve_registries(plan):
-    ids = ["registry_alpha", "registry_beta", "registry_gamma"]
+    ids = ["registry_alpha", "registry_beta", "registry_gamma", "registry_delta", "registry_epsilon"]
     docs = [fetch(i) for i in ids]
     return {"source_class": "registries", "documents": docs,
             "source_ids": [d.get("id") for d in docs]}
 
 def retrieve_trackers(plan):
-    ids = ["tracker_delta", "tracker_epsilon"]
+    ids = ["tracker_delta", "tracker_epsilon", "tracker_theta", "tracker_iota"]
     docs = [fetch(i) for i in ids]
     return {"source_class": "issue_trackers", "documents": docs,
             "source_ids": [d.get("id") for d in docs]}
 
 def retrieve_vendor_docs(plan):
-    ids = ["docs_zeta", "docs_eta"]
+    ids = ["docs_zeta", "docs_eta", "docs_kappa", "docs_lambda"]
     docs = [fetch(i) for i in ids]
     return {"source_class": "vendor_docs", "documents": docs,
             "source_ids": [d.get("id") for d in docs]}
@@ -110,15 +110,19 @@ def _doc(source_id: str, n_quotes: int = 2) -> dict[str, Any]:
 
 BASE_CASSETTE: dict[str, dict[str, Any]] = {
     sid: _doc(sid)
-    for sid in ["registry_alpha", "registry_beta", "registry_gamma",
-                "tracker_delta", "tracker_epsilon", "docs_zeta", "docs_eta"]
+    for sid in ["registry_alpha", "registry_beta", "registry_gamma", "registry_delta",
+                "registry_epsilon", "tracker_delta", "tracker_epsilon", "tracker_theta",
+                "tracker_iota", "docs_zeta", "docs_eta", "docs_kappa", "docs_lambda"]
 }
 
 SOURCE_OWNER = {
     "registry_alpha": "retrieve_registries", "registry_beta": "retrieve_registries",
-    "registry_gamma": "retrieve_registries",
+    "registry_gamma": "retrieve_registries", "registry_delta": "retrieve_registries",
+    "registry_epsilon": "retrieve_registries",
     "tracker_delta": "retrieve_trackers", "tracker_epsilon": "retrieve_trackers",
+    "tracker_theta": "retrieve_trackers", "tracker_iota": "retrieve_trackers",
     "docs_zeta": "retrieve_vendor_docs", "docs_eta": "retrieve_vendor_docs",
+    "docs_kappa": "retrieve_vendor_docs", "docs_lambda": "retrieve_vendor_docs",
 }
 
 DOWNSTREAM = {
@@ -215,10 +219,10 @@ INTENT = {
 }
 
 CONTRACTS = {
-    "retrieve_registries": Contract("retrieve_registries", required_fields=["source_ids", "documents"], min_items={"source_ids": 3}),
-    "retrieve_trackers": Contract("retrieve_trackers", required_fields=["source_ids", "documents"], min_items={"source_ids": 2}),
-    "retrieve_vendor_docs": Contract("retrieve_vendor_docs", required_fields=["source_ids", "documents"], min_items={"source_ids": 2}),
-    "merge_sources": Contract("merge_sources", required_fields=["documents"], min_items={"documents": 7}),
-    "extract_evidence_records": Contract("extract_evidence_records", required_fields=["records"], min_items={"records": 14}),
-    "synthesize_market_demand": Contract("synthesize_market_demand", required_fields=["needs"], min_items={"needs": 14}),
+    "retrieve_registries": Contract("retrieve_registries", required_fields=["source_ids", "documents"], min_items={"source_ids": 5}),
+    "retrieve_trackers": Contract("retrieve_trackers", required_fields=["source_ids", "documents"], min_items={"source_ids": 4}),
+    "retrieve_vendor_docs": Contract("retrieve_vendor_docs", required_fields=["source_ids", "documents"], min_items={"source_ids": 4}),
+    "merge_sources": Contract("merge_sources", required_fields=["documents"], min_items={"documents": 13}),
+    "extract_evidence_records": Contract("extract_evidence_records", required_fields=["records"], min_items={"records": 26}),
+    "synthesize_market_demand": Contract("synthesize_market_demand", required_fields=["needs"], min_items={"needs": 26}),
 }
