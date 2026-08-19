@@ -28,6 +28,29 @@ class EtiqExecution:
         return not self.snapshot.scan_errors and bool(self.snapshot.nodes)
 
 
+DEFAULT_MEMORY_LIMIT_MB = 2048
+DEFAULT_CPU_LIMIT_SECONDS = 900
+
+
+def worker_limits(runtime_input: Any | None) -> dict[str, int]:
+    """Resource limits for the generated-pipeline worker.
+
+    The caller may lower or raise these. They previously defaulted to 0, which
+    `_apply_limits` reads as "apply no limit at all". See issue #1.
+    """
+    limits: dict[str, Any] = {}
+    if isinstance(runtime_input, dict):
+        request = runtime_input.get("request")
+        if isinstance(request, dict) and isinstance(request.get("limits"), dict):
+            limits = request["limits"]
+    return {
+        "memory_limit_mb": int(limits.get("etiq_memory_mb", DEFAULT_MEMORY_LIMIT_MB)),
+        "cpu_limit_seconds": int(
+            limits.get("etiq_cpu_seconds", DEFAULT_CPU_LIMIT_SECONDS)
+        ),
+    }
+
+
 class EtiqExecutor:
     """Runs one generated entry source through Etiq and persists captured evidence."""
 
@@ -80,9 +103,13 @@ class EtiqExecutor:
             schema_version=str(summary["schema_version"]),
         )
 
-    def _worker_environment(self, runtime_input: Any | None) -> dict[str, str]:
+    def _worker_environment(
+        self,
+        runtime_input: Any | None,
+        *,
+        home: Path,
+    ) -> dict[str, str]:
         allowed = {
-            "HOME",
             "LANG",
             "LC_ALL",
             "PATH",
@@ -100,13 +127,20 @@ class EtiqExecutor:
                     allowed.update(str(name) for name in policy.get("environment_allowlist", []))
         environment = {name: os.environ[name] for name in allowed if name in os.environ}
         environment["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+        # Set last so a source_policy allowlist cannot hand the generated pipeline the
+        # real home directory, and with it ~/.codex/auth.json, ~/.ssh and ~/.aws.
+        home.mkdir(parents=True, exist_ok=True)
+        environment["HOME"] = str(home)
         return environment
 
     def _run_worker(self, request_path: Path, runtime_input: Any | None) -> None:
         process = subprocess.Popen(
             [sys.executable, "-m", "use_case_icp.etiq_worker", str(request_path)],
             cwd=request_path.parent,
-            env=self._worker_environment(runtime_input),
+            env=self._worker_environment(
+                runtime_input,
+                home=request_path.parent / "worker-home",
+            ),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -176,11 +210,7 @@ class EtiqExecutor:
                     result=result,
                 )
             else:
-                limits: dict[str, Any] = {}
-                if isinstance(runtime_input, dict):
-                    request = runtime_input.get("request")
-                    if isinstance(request, dict) and isinstance(request.get("limits"), dict):
-                        limits = request["limits"]
+                limits = worker_limits(runtime_input)
                 worker_request = {
                     "output_root": str(self.store.output_root),
                     "run_dir": str(run_dir),
@@ -188,8 +218,8 @@ class EtiqExecutor:
                     "run_id": run_id,
                     "entry_file": pipeline.entry_file,
                     "manifest_hash": manifest["manifest_hash"],
-                    "memory_limit_mb": int(limits.get("etiq_memory_mb", 0)),
-                    "cpu_limit_seconds": int(limits.get("etiq_cpu_seconds", 0)),
+                    "memory_limit_mb": limits["memory_limit_mb"],
+                    "cpu_limit_seconds": limits["cpu_limit_seconds"],
                     "network_mode": network_mode,
                     "network_cassette_path": (
                         str(network_cassette_path.resolve())
