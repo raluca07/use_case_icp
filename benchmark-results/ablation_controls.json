@@ -1,0 +1,724 @@
+{
+  "runs": [
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "synthesize_market_demand",
+      "correct": true,
+      "prompt_chars": 802
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_vendor_docs",
+      "correct": false,
+      "prompt_chars": 530
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "merge_sources",
+      "correct": false,
+      "prompt_chars": 602
+    },
+    {
+      "case_id": "drop_field|synthesize_market_demand|needs",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "merge_sources",
+      "correct": false,
+      "prompt_chars": 602
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "true_boundary": "retrieve_registries",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "merge_sources",
+      "correct": false,
+      "prompt_chars": 1595
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1294
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_trackers",
+      "correct": false,
+      "prompt_chars": 994
+    },
+    {
+      "case_id": "drop_field|retrieve_registries|source_ids",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1348
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "true_boundary": "extract_evidence_records",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "extract_evidence_records",
+      "correct": true,
+      "prompt_chars": 1172
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_trackers",
+      "correct": false,
+      "prompt_chars": 541
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_registries",
+      "correct": false,
+      "prompt_chars": 653
+    },
+    {
+      "case_id": "drop_field|extract_evidence_records|records",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "define_research_plan",
+      "correct": false,
+      "prompt_chars": 617
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "true_boundary": "define_research_plan",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2096
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2332
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2332
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2332
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "true_boundary": "retrieve_trackers",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 1578
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 1238
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "define_research_plan",
+      "correct": false,
+      "prompt_chars": 1535
+    },
+    {
+      "case_id": "drop_field|retrieve_trackers|source_ids",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "define_research_plan",
+      "correct": false,
+      "prompt_chars": 1535
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "prompt_chars": 1560
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1782
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1659
+    },
+    {
+      "case_id": "drop_field|retrieve_vendor_docs|source_class",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1485
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "true_boundary": "retrieve_trackers",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 1580
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1405
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "extract_evidence_records",
+      "correct": false,
+      "prompt_chars": 1678
+    },
+    {
+      "case_id": "truncate_sequence|retrieve_trackers|default",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "extract_evidence_records",
+      "correct": false,
+      "prompt_chars": 1678
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "synthesize_market_demand",
+      "correct": true,
+      "prompt_chars": 853
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "extract_evidence_records",
+      "correct": false,
+      "prompt_chars": 1132
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_trackers",
+      "correct": false,
+      "prompt_chars": 541
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registry_alpha",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "define_research_plan",
+      "correct": false,
+      "prompt_chars": 617
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "synthesize_market_demand",
+      "correct": true,
+      "prompt_chars": 825
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_registries",
+      "correct": false,
+      "prompt_chars": 556
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_trackers",
+      "correct": false,
+      "prompt_chars": 541
+    },
+    {
+      "case_id": "fabricate_identifier|synthesize_market_demand|registries",
+      "true_boundary": "synthesize_market_demand",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "retrieve_trackers",
+      "correct": false,
+      "prompt_chars": 541
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "true_boundary": "retrieve_registries",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2199
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2408
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2408
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registry_alpha",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 2408
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "true_boundary": "retrieve_registries",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "retrieve_registries",
+      "correct": true,
+      "prompt_chars": 1605
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1570
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1894
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_registries|registries",
+      "true_boundary": "retrieve_registries",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "extract_evidence_records",
+      "correct": false,
+      "prompt_chars": 1585
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "true_boundary": "extract_evidence_records",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1183
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_trackers",
+      "correct": false,
+      "prompt_chars": 541
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "merge_sources",
+      "correct": false,
+      "prompt_chars": 602
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registry_alpha",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "extract_evidence_records",
+      "correct": true,
+      "prompt_chars": 495
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "true_boundary": "extract_evidence_records",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 1171
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 556
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_registries",
+      "correct": false,
+      "prompt_chars": 556
+    },
+    {
+      "case_id": "fabricate_identifier|extract_evidence_records|registries",
+      "true_boundary": "extract_evidence_records",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "extract_evidence_records",
+      "correct": true,
+      "prompt_chars": 495
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "true_boundary": "define_research_plan",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2151
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2387
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2387
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registry_alpha",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2387
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "true_boundary": "define_research_plan",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2131
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2367
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2367
+    },
+    {
+      "case_id": "fabricate_identifier|define_research_plan|registries",
+      "true_boundary": "define_research_plan",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "define_research_plan",
+      "correct": true,
+      "prompt_chars": 2367
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "true_boundary": "merge_sources",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "merge_sources",
+      "correct": true,
+      "prompt_chars": 1437
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "true_boundary": "merge_sources",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "prompt_chars": 556
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "true_boundary": "merge_sources",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "merge_sources",
+      "correct": true,
+      "prompt_chars": 598
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registry_alpha",
+      "true_boundary": "merge_sources",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "define_research_plan",
+      "correct": false,
+      "prompt_chars": 617
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "true_boundary": "merge_sources",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "merge_sources",
+      "correct": true,
+      "prompt_chars": 1433
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "true_boundary": "merge_sources",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "merge_sources",
+      "correct": true,
+      "prompt_chars": 598
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "true_boundary": "merge_sources",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_vendor_docs",
+      "correct": false,
+      "prompt_chars": 530
+    },
+    {
+      "case_id": "fabricate_identifier|merge_sources|registries",
+      "true_boundary": "merge_sources",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "merge_sources",
+      "correct": true,
+      "prompt_chars": 587
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "true_boundary": "retrieve_trackers",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 2194
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 2399
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 2399
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registry_alpha",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 2399
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "true_boundary": "retrieve_trackers",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 1587
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 1493
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 1388
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_trackers|registries",
+      "true_boundary": "retrieve_trackers",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "prompt_chars": 1327
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "static_slice",
+      "seed": 0,
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "prompt_chars": 2208
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "seed": 1,
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "prompt_chars": 2457
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "seed": 2,
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "prompt_chars": 2457
+    },
+    {
+      "case_id": "fabricate_identifier|retrieve_vendor_docs|registry_alpha",
+      "true_boundary": "retrieve_vendor_docs",
+      "arm": "random_slice",
+      "seed": 3,
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "prompt_chars": 2457
+    }
+  ]
+}
