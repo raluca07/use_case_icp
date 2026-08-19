@@ -151,8 +151,19 @@ class _TruncateSequence(ast.NodeTransformer):
 
 
 class _FabricateIdentifier(ast.NodeTransformer):
+    """Replace identifier values with a plausible placeholder.
+
+    Dict keys are left alone. Rewriting them would change the record's shape, which
+    a schema check catches for the wrong reason; the point of this fault is that the
+    output stays structurally valid while carrying an invented value.
+    """
+
     def __init__(self, replacement: str) -> None:
         self.replacement = replacement
+
+    def visit_Dict(self, node: ast.Dict) -> ast.Dict:
+        node.values = [self.visit(value) for value in node.values]
+        return node
 
     def visit_Constant(self, node: ast.Constant) -> ast.Constant:
         if isinstance(node.value, str) and node.value:
