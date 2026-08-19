@@ -244,10 +244,14 @@ def validate_repair_scope(
         if path != target_file and old_files[path] != new_files[path]:
             raise ValueError(f"repair changed a file outside its scope: {path}")
 
+    if target.get("scope_kind") == "module_fallback":
+        raise ValueError(
+            "repair target does not resolve to a single function, so the repair "
+            "cannot be scoped: "
+            f"{target.get('function_name')!r}"
+        )
     old_functions = _functions(old_files[target_file], str(target["function_name"]))
     new_functions = _functions(new_files[target_file], str(target["function_name"]))
-    if target.get("scope_kind") == "module_fallback":
-        return
     if len(old_functions) != 1 or len(new_functions) != 1:
         raise ValueError("repair must preserve one unambiguous target function")
     old_function, new_function = old_functions[0], new_functions[0]
