@@ -1,2 +1,5 @@
 k=1 done (48 runs)
 k=2 done (96 runs)
+k=4 done (144 runs)
+k=8 done (192 runs)
+k=16 done (240 runs)

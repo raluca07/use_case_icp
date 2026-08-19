@@ -1239,6 +1239,1166 @@
       "blame_distance": 3,
       "chance": 0.2,
       "prompt_chars": 3218
+    },
+    {
+      "case_id": "mislabelled_id|registry_beta|k4",
+      "mutation": "mislabelled_id",
+      "k": 4,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|k4",
+      "mutation": "mislabelled_id",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|k4",
+      "mutation": "mislabelled_id",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "mislabelled_id|tracker_epsilon|k4",
+      "mutation": "mislabelled_id",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|k4",
+      "mutation": "mislabelled_id",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "mislabelled_id|docs_eta|k4",
+      "mutation": "mislabelled_id",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "duplicated_record|registry_alpha|k4",
+      "mutation": "duplicated_record",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "duplicated_record|registry_beta|k4",
+      "mutation": "duplicated_record",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "duplicated_record|registry_gamma|k4",
+      "mutation": "duplicated_record",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "duplicated_record|tracker_delta|k4",
+      "mutation": "duplicated_record",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "duplicated_record|tracker_epsilon|k4",
+      "mutation": "duplicated_record",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "duplicated_record|docs_zeta|k4",
+      "mutation": "duplicated_record",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "duplicated_record|docs_eta|k4",
+      "mutation": "duplicated_record",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|k4",
+      "mutation": "null_identifier",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "null_identifier|registry_beta|k4",
+      "mutation": "null_identifier",
+      "k": 4,
+      "answer": null,
+      "correct": false,
+      "blame_distance": null,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|k4",
+      "mutation": "null_identifier",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|k4",
+      "mutation": "null_identifier",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "null_identifier|tracker_epsilon|k4",
+      "mutation": "null_identifier",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|k4",
+      "mutation": "null_identifier",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "null_identifier|docs_eta|k4",
+      "mutation": "null_identifier",
+      "k": 4,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.2,
+      "prompt_chars": 3218
+    },
+    {
+      "case_id": "truncated_response|registry_alpha|k8",
+      "mutation": "truncated_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "truncated_response|registry_beta|k8",
+      "mutation": "truncated_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|k8",
+      "mutation": "truncated_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|k8",
+      "mutation": "truncated_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "truncated_response|tracker_epsilon|k8",
+      "mutation": "truncated_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|k8",
+      "mutation": "truncated_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "truncated_response|docs_eta|k8",
+      "mutation": "truncated_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "empty_response|registry_alpha|k8",
+      "mutation": "empty_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "empty_response|registry_beta|k8",
+      "mutation": "empty_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "empty_response|registry_gamma|k8",
+      "mutation": "empty_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "empty_response|tracker_delta|k8",
+      "mutation": "empty_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon|k8",
+      "mutation": "empty_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "empty_response|docs_zeta|k8",
+      "mutation": "empty_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "empty_response|docs_eta|k8",
+      "mutation": "empty_response",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "missing_date|registry_alpha|k8",
+      "mutation": "missing_date",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "missing_date|registry_beta|k8",
+      "mutation": "missing_date",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "missing_date|registry_gamma|k8",
+      "mutation": "missing_date",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "missing_date|tracker_delta|k8",
+      "mutation": "missing_date",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon|k8",
+      "mutation": "missing_date",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "missing_date|docs_zeta|k8",
+      "mutation": "missing_date",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "missing_date|docs_eta|k8",
+      "mutation": "missing_date",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|k8",
+      "mutation": "stale_copy",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "stale_copy|registry_beta|k8",
+      "mutation": "stale_copy",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|k8",
+      "mutation": "stale_copy",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|k8",
+      "mutation": "stale_copy",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon|k8",
+      "mutation": "stale_copy",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|k8",
+      "mutation": "stale_copy",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "stale_copy|docs_eta|k8",
+      "mutation": "stale_copy",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "mislabelled_id|registry_beta|k8",
+      "mutation": "mislabelled_id",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|k8",
+      "mutation": "mislabelled_id",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|k8",
+      "mutation": "mislabelled_id",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "mislabelled_id|tracker_epsilon|k8",
+      "mutation": "mislabelled_id",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|k8",
+      "mutation": "mislabelled_id",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "mislabelled_id|docs_eta|k8",
+      "mutation": "mislabelled_id",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "duplicated_record|registry_alpha|k8",
+      "mutation": "duplicated_record",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "duplicated_record|registry_beta|k8",
+      "mutation": "duplicated_record",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "duplicated_record|registry_gamma|k8",
+      "mutation": "duplicated_record",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "duplicated_record|tracker_delta|k8",
+      "mutation": "duplicated_record",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "duplicated_record|tracker_epsilon|k8",
+      "mutation": "duplicated_record",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "duplicated_record|docs_zeta|k8",
+      "mutation": "duplicated_record",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "duplicated_record|docs_eta|k8",
+      "mutation": "duplicated_record",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|k8",
+      "mutation": "null_identifier",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "null_identifier|registry_beta|k8",
+      "mutation": "null_identifier",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|k8",
+      "mutation": "null_identifier",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|k8",
+      "mutation": "null_identifier",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "null_identifier|tracker_epsilon|k8",
+      "mutation": "null_identifier",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|k8",
+      "mutation": "null_identifier",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "null_identifier|docs_eta|k8",
+      "mutation": "null_identifier",
+      "k": 8,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.1111111111111111,
+      "prompt_chars": 5594
+    },
+    {
+      "case_id": "truncated_response|registry_alpha|k16",
+      "mutation": "truncated_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "truncated_response|registry_beta|k16",
+      "mutation": "truncated_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|k16",
+      "mutation": "truncated_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|k16",
+      "mutation": "truncated_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "truncated_response|tracker_epsilon|k16",
+      "mutation": "truncated_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|k16",
+      "mutation": "truncated_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "truncated_response|docs_eta|k16",
+      "mutation": "truncated_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "empty_response|registry_alpha|k16",
+      "mutation": "empty_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "empty_response|registry_beta|k16",
+      "mutation": "empty_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "empty_response|registry_gamma|k16",
+      "mutation": "empty_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "empty_response|tracker_delta|k16",
+      "mutation": "empty_response",
+      "k": 16,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon|k16",
+      "mutation": "empty_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "empty_response|docs_zeta|k16",
+      "mutation": "empty_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "empty_response|docs_eta|k16",
+      "mutation": "empty_response",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "missing_date|registry_alpha|k16",
+      "mutation": "missing_date",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "missing_date|registry_beta|k16",
+      "mutation": "missing_date",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "missing_date|registry_gamma|k16",
+      "mutation": "missing_date",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "missing_date|tracker_delta|k16",
+      "mutation": "missing_date",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon|k16",
+      "mutation": "missing_date",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "missing_date|docs_zeta|k16",
+      "mutation": "missing_date",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "missing_date|docs_eta|k16",
+      "mutation": "missing_date",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|k16",
+      "mutation": "stale_copy",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "stale_copy|registry_beta|k16",
+      "mutation": "stale_copy",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|k16",
+      "mutation": "stale_copy",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|k16",
+      "mutation": "stale_copy",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon|k16",
+      "mutation": "stale_copy",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|k16",
+      "mutation": "stale_copy",
+      "k": 16,
+      "answer": null,
+      "correct": false,
+      "blame_distance": null,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "stale_copy|docs_eta|k16",
+      "mutation": "stale_copy",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "mislabelled_id|registry_beta|k16",
+      "mutation": "mislabelled_id",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|k16",
+      "mutation": "mislabelled_id",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|k16",
+      "mutation": "mislabelled_id",
+      "k": 16,
+      "answer": null,
+      "correct": false,
+      "blame_distance": null,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "mislabelled_id|tracker_epsilon|k16",
+      "mutation": "mislabelled_id",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|k16",
+      "mutation": "mislabelled_id",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "mislabelled_id|docs_eta|k16",
+      "mutation": "mislabelled_id",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "duplicated_record|registry_alpha|k16",
+      "mutation": "duplicated_record",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "duplicated_record|registry_beta|k16",
+      "mutation": "duplicated_record",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "duplicated_record|registry_gamma|k16",
+      "mutation": "duplicated_record",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "duplicated_record|tracker_delta|k16",
+      "mutation": "duplicated_record",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "duplicated_record|tracker_epsilon|k16",
+      "mutation": "duplicated_record",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "duplicated_record|docs_zeta|k16",
+      "mutation": "duplicated_record",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "duplicated_record|docs_eta|k16",
+      "mutation": "duplicated_record",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|k16",
+      "mutation": "null_identifier",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "null_identifier|registry_beta|k16",
+      "mutation": "null_identifier",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|k16",
+      "mutation": "null_identifier",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|k16",
+      "mutation": "null_identifier",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "null_identifier|tracker_epsilon|k16",
+      "mutation": "null_identifier",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|k16",
+      "mutation": "null_identifier",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
+    },
+    {
+      "case_id": "null_identifier|docs_eta|k16",
+      "mutation": "null_identifier",
+      "k": 16,
+      "answer": "transform_3",
+      "correct": false,
+      "blame_distance": 3,
+      "chance": 0.058823529411764705,
+      "prompt_chars": 10360
     }
   ]
 }
