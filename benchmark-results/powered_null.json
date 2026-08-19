@@ -1,0 +1,92 @@
+{
+  "runs": [
+    {
+      "case_id": "truncated_response|tracker_delta",
+      "mutation": "truncated_response",
+      "truth": "retrieve_trackers",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_epsilon",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_gamma",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_alpha",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "retrieve_vendor_docs",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_beta",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_delta",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "graph_selected",
+      "answer": "synthesize_market_demand",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_alpha",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_gamma",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "merge_sources",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_delta",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "extract_evidence_records",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|registry_beta",
+      "mutation": "truncated_response",
+      "truth": "retrieve_registries",
+      "arm": "random_slice",
+      "answer": "retrieve_vendor_docs",
+      "correct": false
+    },
+    {
+      "case_id": "truncated_response|tracker_delta",
+      "mutation": "truncated_response",
+      "truth": "retrieve_trackers",
+      "arm": "random_slice",
+      "answer": "retrieve_trackers",
+      "correct": true
+    }
+  ]
+}

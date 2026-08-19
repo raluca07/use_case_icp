@@ -1,0 +1,804 @@
+{
+  "runs": [
+    {
+      "case_id": "truncated_response|registry_alpha|tracker_delta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|registry_alpha|tracker_delta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|docs_zeta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|docs_zeta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|registry_alpha|tracker_delta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|docs_zeta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|registry_beta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|registry_alpha|tracker_delta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|registry_beta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|docs_zeta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|registry_beta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|tracker_epsilon|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|tracker_epsilon|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|tracker_epsilon|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|tracker_epsilon|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_alpha|tracker_delta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|registry_beta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "truncated_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_alpha|tracker_delta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_alpha|tracker_delta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|tracker_delta|docs_zeta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|tracker_delta|docs_zeta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|tracker_delta|docs_zeta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|tracker_delta|docs_zeta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta|registry_beta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta|registry_beta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta|registry_beta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_alpha|tracker_delta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|docs_zeta|registry_beta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_gamma|tracker_epsilon|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_gamma|tracker_epsilon|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_gamma|tracker_epsilon|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_alpha|tracker_delta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_alpha|tracker_delta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "empty_response|registry_gamma|tracker_epsilon|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "empty_response",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_alpha|tracker_delta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_alpha|tracker_delta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|docs_zeta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|docs_zeta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|docs_zeta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|registry_beta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|registry_beta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|docs_zeta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|registry_beta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|tracker_epsilon|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|tracker_epsilon|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|tracker_epsilon|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|registry_beta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|tracker_epsilon|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "mislabelled_id",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|tracker_delta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|tracker_delta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|tracker_delta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|tracker_delta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": null,
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|docs_zeta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|docs_zeta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|docs_zeta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|registry_beta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|registry_beta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|registry_beta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|docs_zeta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|tracker_epsilon|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|tracker_epsilon|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|registry_beta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|tracker_epsilon|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|tracker_epsilon|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "null_identifier",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|tracker_delta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|tracker_delta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|tracker_delta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|tracker_delta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|docs_zeta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|docs_zeta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|docs_zeta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "retrieve_vendor_docs",
+      "answer": "retrieve_vendor_docs",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|registry_beta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|registry_beta|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|docs_zeta|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_trackers",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|registry_beta|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|tracker_epsilon|stale_fault",
+      "cell": "stale_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|tracker_epsilon|clean_clean",
+      "cell": "clean_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "synthesize_market_demand",
+      "correct": false,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|registry_beta|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_vendor_docs",
+      "truth": "retrieve_registries",
+      "answer": "retrieve_registries",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|tracker_epsilon|clean_fault",
+      "cell": "clean_fault",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "retrieve_trackers",
+      "answer": "retrieve_trackers",
+      "correct": true,
+      "blamed_stale": false
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|tracker_epsilon|stale_clean",
+      "cell": "stale_clean",
+      "mutation": "stale_copy",
+      "stale_boundary": "retrieve_registries",
+      "truth": "none",
+      "answer": "none",
+      "correct": true,
+      "blamed_stale": false
+    }
+  ]
+}
