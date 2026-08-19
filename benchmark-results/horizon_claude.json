@@ -1,0 +1,894 @@
+{
+  "runs": [
+    {
+      "case_id": "truncated_response|registry_alpha|k1",
+      "mutation": "truncated_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "truncated_response|registry_beta|k1",
+      "mutation": "truncated_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|k1",
+      "mutation": "truncated_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|k1",
+      "mutation": "truncated_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "truncated_response|tracker_epsilon|k1",
+      "mutation": "truncated_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|k1",
+      "mutation": "truncated_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "truncated_response|docs_eta|k1",
+      "mutation": "truncated_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "empty_response|registry_alpha|k1",
+      "mutation": "empty_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "empty_response|registry_beta|k1",
+      "mutation": "empty_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "empty_response|registry_gamma|k1",
+      "mutation": "empty_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "empty_response|tracker_delta|k1",
+      "mutation": "empty_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon|k1",
+      "mutation": "empty_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "empty_response|docs_zeta|k1",
+      "mutation": "empty_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "empty_response|docs_eta|k1",
+      "mutation": "empty_response",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "missing_date|registry_alpha|k1",
+      "mutation": "missing_date",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "missing_date|registry_beta|k1",
+      "mutation": "missing_date",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "missing_date|registry_gamma|k1",
+      "mutation": "missing_date",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "missing_date|tracker_delta|k1",
+      "mutation": "missing_date",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon|k1",
+      "mutation": "missing_date",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "missing_date|docs_zeta|k1",
+      "mutation": "missing_date",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "missing_date|docs_eta|k1",
+      "mutation": "missing_date",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|k1",
+      "mutation": "stale_copy",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "stale_copy|registry_beta|k1",
+      "mutation": "stale_copy",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|k1",
+      "mutation": "stale_copy",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|k1",
+      "mutation": "stale_copy",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon|k1",
+      "mutation": "stale_copy",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|k1",
+      "mutation": "stale_copy",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "stale_copy|docs_eta|k1",
+      "mutation": "stale_copy",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "mislabelled_id|registry_beta|k1",
+      "mutation": "mislabelled_id",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|k1",
+      "mutation": "mislabelled_id",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|k1",
+      "mutation": "mislabelled_id",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "mislabelled_id|tracker_epsilon|k1",
+      "mutation": "mislabelled_id",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|k1",
+      "mutation": "mislabelled_id",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "mislabelled_id|docs_eta|k1",
+      "mutation": "mislabelled_id",
+      "k": 1,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "duplicated_record|registry_alpha|k1",
+      "mutation": "duplicated_record",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "duplicated_record|registry_beta|k1",
+      "mutation": "duplicated_record",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "duplicated_record|registry_gamma|k1",
+      "mutation": "duplicated_record",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "duplicated_record|tracker_delta|k1",
+      "mutation": "duplicated_record",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "duplicated_record|tracker_epsilon|k1",
+      "mutation": "duplicated_record",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "duplicated_record|docs_zeta|k1",
+      "mutation": "duplicated_record",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "duplicated_record|docs_eta|k1",
+      "mutation": "duplicated_record",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "null_identifier|registry_alpha|k1",
+      "mutation": "null_identifier",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "null_identifier|registry_beta|k1",
+      "mutation": "null_identifier",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "null_identifier|registry_gamma|k1",
+      "mutation": "null_identifier",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "null_identifier|tracker_delta|k1",
+      "mutation": "null_identifier",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "null_identifier|tracker_epsilon|k1",
+      "mutation": "null_identifier",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "null_identifier|docs_zeta|k1",
+      "mutation": "null_identifier",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "null_identifier|docs_eta|k1",
+      "mutation": "null_identifier",
+      "k": 1,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.5,
+      "prompt_chars": 1436
+    },
+    {
+      "case_id": "truncated_response|registry_alpha|k2",
+      "mutation": "truncated_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "truncated_response|registry_beta|k2",
+      "mutation": "truncated_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "truncated_response|registry_gamma|k2",
+      "mutation": "truncated_response",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "truncated_response|tracker_delta|k2",
+      "mutation": "truncated_response",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "truncated_response|tracker_epsilon|k2",
+      "mutation": "truncated_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "truncated_response|docs_zeta|k2",
+      "mutation": "truncated_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "truncated_response|docs_eta|k2",
+      "mutation": "truncated_response",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "empty_response|registry_alpha|k2",
+      "mutation": "empty_response",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "empty_response|registry_beta|k2",
+      "mutation": "empty_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "empty_response|registry_gamma|k2",
+      "mutation": "empty_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "empty_response|tracker_delta|k2",
+      "mutation": "empty_response",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "empty_response|tracker_epsilon|k2",
+      "mutation": "empty_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "empty_response|docs_zeta|k2",
+      "mutation": "empty_response",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "empty_response|docs_eta|k2",
+      "mutation": "empty_response",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "missing_date|registry_alpha|k2",
+      "mutation": "missing_date",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "missing_date|registry_beta|k2",
+      "mutation": "missing_date",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "missing_date|registry_gamma|k2",
+      "mutation": "missing_date",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "missing_date|tracker_delta|k2",
+      "mutation": "missing_date",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "missing_date|tracker_epsilon|k2",
+      "mutation": "missing_date",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "missing_date|docs_zeta|k2",
+      "mutation": "missing_date",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "missing_date|docs_eta|k2",
+      "mutation": "missing_date",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "stale_copy|registry_alpha|k2",
+      "mutation": "stale_copy",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "stale_copy|registry_beta|k2",
+      "mutation": "stale_copy",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "stale_copy|registry_gamma|k2",
+      "mutation": "stale_copy",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "stale_copy|tracker_delta|k2",
+      "mutation": "stale_copy",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "stale_copy|tracker_epsilon|k2",
+      "mutation": "stale_copy",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "stale_copy|docs_zeta|k2",
+      "mutation": "stale_copy",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "stale_copy|docs_eta|k2",
+      "mutation": "stale_copy",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "mislabelled_id|registry_beta|k2",
+      "mutation": "mislabelled_id",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "mislabelled_id|registry_gamma|k2",
+      "mutation": "mislabelled_id",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "mislabelled_id|tracker_delta|k2",
+      "mutation": "mislabelled_id",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "mislabelled_id|tracker_epsilon|k2",
+      "mutation": "mislabelled_id",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "mislabelled_id|docs_zeta|k2",
+      "mutation": "mislabelled_id",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "mislabelled_id|docs_eta|k2",
+      "mutation": "mislabelled_id",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "duplicated_record|registry_alpha|k2",
+      "mutation": "duplicated_record",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "duplicated_record|registry_beta|k2",
+      "mutation": "duplicated_record",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "duplicated_record|registry_gamma|k2",
+      "mutation": "duplicated_record",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "duplicated_record|tracker_delta|k2",
+      "mutation": "duplicated_record",
+      "k": 2,
+      "answer": "transform_1",
+      "correct": false,
+      "blame_distance": 1,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "duplicated_record|tracker_epsilon|k2",
+      "mutation": "duplicated_record",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "duplicated_record|docs_zeta|k2",
+      "mutation": "duplicated_record",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    },
+    {
+      "case_id": "duplicated_record|docs_eta|k2",
+      "mutation": "duplicated_record",
+      "k": 2,
+      "answer": "retrieve_sources",
+      "correct": true,
+      "blame_distance": 0,
+      "chance": 0.3333333333333333,
+      "prompt_chars": 2030
+    }
+  ]
+}
