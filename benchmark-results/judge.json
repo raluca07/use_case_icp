@@ -1,0 +1,36 @@
+{
+  "verdicts": [
+    {
+      "case_id": "drop_field|define_research_plan|questions",
+      "boundary": "define_research_plan",
+      "fault": "drop_field",
+      "model": "mlx-community/Qwen3.8-27B-8bit",
+      "repeat": 0,
+      "verdict": null
+    },
+    {
+      "case_id": "drop_field|define_research_plan|source_classes",
+      "boundary": "define_research_plan",
+      "fault": "drop_field",
+      "model": "mlx-community/Qwen3.8-27B-8bit",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|define_research_plan|minimum_sources",
+      "boundary": "define_research_plan",
+      "fault": "drop_field",
+      "model": "mlx-community/Qwen3.8-27B-8bit",
+      "repeat": 0,
+      "verdict": "suspect"
+    },
+    {
+      "case_id": "drop_field|retrieve_public_sources|source_ids",
+      "boundary": "retrieve_public_sources",
+      "fault": "drop_field",
+      "model": "mlx-community/Qwen3.8-27B-8bit",
+      "repeat": 0,
+      "verdict": "suspect"
+    }
+  ]
+}

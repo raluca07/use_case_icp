@@ -1,0 +1,3 @@
+deterministic: 40 cases -> benchmark-results/deterministic.json
+model mlx-community/Qwen3.8-27B-8bit
+  error TimeoutError on drop_field|define_research_plan|questions
