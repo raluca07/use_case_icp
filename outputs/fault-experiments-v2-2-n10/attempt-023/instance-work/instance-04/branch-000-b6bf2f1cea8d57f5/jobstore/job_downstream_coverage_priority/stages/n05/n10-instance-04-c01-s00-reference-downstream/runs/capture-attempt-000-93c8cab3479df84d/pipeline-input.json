@@ -1,0 +1,136 @@
+{
+  "capabilities": [
+    {
+      "capability_id": "cap-handoff",
+      "need": "trace exact artifact handoffs between jobs"
+    },
+    {
+      "capability_id": "cap-inspect",
+      "need": "inspect bounded intermediate table values"
+    },
+    {
+      "capability_id": "cap-frontier",
+      "need": "resume from a verified trusted frontier"
+    },
+    {
+      "capability_id": "cap-localize",
+      "need": "localize a transformation to one function"
+    },
+    {
+      "capability_id": "cap-compare",
+      "need": "compare selected and complete runtime evidence"
+    },
+    {
+      "capability_id": "cap-ledger",
+      "need": "preserve immutable review attempts"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "rank": 1,
+      "record_id": "n06-r01",
+      "source_id": "s01",
+      "source_weight": 5
+    },
+    {
+      "rank": 2,
+      "record_id": "n06-r02",
+      "source_id": "s02",
+      "source_weight": 4
+    },
+    {
+      "rank": 3,
+      "record_id": "n06-r03",
+      "source_id": "s03",
+      "source_weight": 4
+    },
+    {
+      "rank": 4,
+      "record_id": "n06-r04",
+      "source_id": "s04",
+      "source_weight": 4
+    },
+    {
+      "rank": 5,
+      "record_id": "n06-r05",
+      "source_id": "s05",
+      "source_weight": 3
+    },
+    {
+      "rank": 6,
+      "record_id": "n06-r06",
+      "source_id": "s06",
+      "source_weight": 3
+    },
+    {
+      "rank": 7,
+      "record_id": "n06-r07",
+      "source_id": "s07",
+      "source_weight": 3
+    },
+    {
+      "rank": 8,
+      "record_id": "n06-r08",
+      "source_id": "s08",
+      "source_weight": 2
+    }
+  ],
+  "needs": [
+    {
+      "demand_score": 9,
+      "need": "isolate faulty execution branches before replay",
+      "record_id": "n06-r01",
+      "source_id": "s01",
+      "source_weight": 5
+    },
+    {
+      "demand_score": 8,
+      "need": "trace exact artifact handoffs between jobs",
+      "record_id": "n06-r02",
+      "source_id": "s02",
+      "source_weight": 4
+    },
+    {
+      "demand_score": 7,
+      "need": "inspect bounded intermediate table values",
+      "record_id": "n06-r03",
+      "source_id": "s03",
+      "source_weight": 4
+    },
+    {
+      "demand_score": 6,
+      "need": "resume from a verified trusted frontier",
+      "record_id": "n06-r04",
+      "source_id": "s04",
+      "source_weight": 4
+    },
+    {
+      "demand_score": 6,
+      "need": "localize a transformation to one function",
+      "record_id": "n06-r05",
+      "source_id": "s05",
+      "source_weight": 3
+    },
+    {
+      "demand_score": 5,
+      "need": "compare selected and complete runtime evidence",
+      "record_id": "n06-r06",
+      "source_id": "s06",
+      "source_weight": 3
+    },
+    {
+      "demand_score": 4,
+      "need": "recompute downstream jobs after an upstream repair",
+      "record_id": "n06-r07",
+      "source_id": "s07",
+      "source_weight": 3
+    },
+    {
+      "demand_score": 3,
+      "need": "preserve immutable review attempts",
+      "record_id": "n06-r08",
+      "source_id": "s08",
+      "source_weight": 2
+    }
+  ]
+}

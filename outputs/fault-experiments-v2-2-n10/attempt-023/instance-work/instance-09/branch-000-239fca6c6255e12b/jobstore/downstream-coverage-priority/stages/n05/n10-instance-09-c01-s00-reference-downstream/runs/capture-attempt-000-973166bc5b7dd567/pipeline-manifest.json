@@ -1,0 +1,59 @@
+{
+  "entry_file": "generated/protocol_2_2/downstream_job.py",
+  "file_hashes": {
+    "generated/protocol_2_2/downstream_job.py": "ee88779e15b4779a71ebc0359734273db6f5d827336e2173e7c713826af3b8d0"
+  },
+  "manifest_hash": "fd2e49b187482a27ff0fb9dfb336e517a085b0fd6ed93c9a256b0271f3bbdc9c",
+  "review_boundaries": [
+    {
+      "boundary_id": "bnd-d-1109-001",
+      "expected_inputs": [
+        "needs DataFrame consumed from upstream handoff"
+      ],
+      "expected_outputs": [
+        "coverage DataFrame with record_id, need, capability_id, coverage"
+      ],
+      "function_name": "map_coverage",
+      "function_source_sha256": "sha256:3f04021084a78be652c004831b1ec00af1b6651352e66aee9e5fc95b400df10a",
+      "job_id": "downstream-coverage-priority",
+      "qualified_function_name": "map_coverage",
+      "role": "Map handoff needs to direct capability coverage while preserving allowed handoff record identifiers.",
+      "semantic_stage": "downstream_coverage_mapping",
+      "source_path": "generated/protocol_2_2/downstream_job.py"
+    },
+    {
+      "boundary_id": "bnd-d-1109-002",
+      "expected_inputs": [
+        "coverage DataFrame",
+        "evidence_sources DataFrame consumed from upstream handoff"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame with one priority per need"
+      ],
+      "function_name": "prioritize_needs",
+      "function_source_sha256": "sha256:97372c1c1baf6dac62ba1a11551ce16c695c1f83f18af5bb820150d08d671f43",
+      "job_id": "downstream-coverage-priority",
+      "qualified_function_name": "prioritize_needs",
+      "role": "Rank unsupported needs ahead of covered needs using upstream provenance rank as primary ordering within each group.",
+      "semantic_stage": "downstream_prioritization",
+      "source_path": "generated/protocol_2_2/downstream_job.py"
+    },
+    {
+      "boundary_id": "bnd-d-1109-003",
+      "expected_inputs": [
+        "priorities DataFrame"
+      ],
+      "expected_outputs": [
+        "single-row recommendation DataFrame with top_need and decision"
+      ],
+      "function_name": "synthesize_recommendation",
+      "function_source_sha256": "sha256:b67ce4dc62a7fb5bfa42596b825b2422ab121e0e62ce82ea8ab19e883316bc04",
+      "job_id": "downstream-coverage-priority",
+      "qualified_function_name": "synthesize_recommendation",
+      "role": "Create final recommendation directly from the first already-ranked priority within an eight-item window.",
+      "semantic_stage": "downstream_synthesis",
+      "source_path": "generated/protocol_2_2/downstream_job.py"
+    }
+  ],
+  "schema_version": "1"
+}

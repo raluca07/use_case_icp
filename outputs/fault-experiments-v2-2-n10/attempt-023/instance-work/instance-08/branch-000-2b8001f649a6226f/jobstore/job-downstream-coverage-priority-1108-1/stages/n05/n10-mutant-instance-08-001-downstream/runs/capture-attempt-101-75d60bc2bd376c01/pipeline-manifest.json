@@ -1,0 +1,61 @@
+{
+  "entry_file": "generated/protocol_2_2_job2.py",
+  "file_hashes": {
+    "generated/protocol_2_2_job2.py": "62a78ebe134fa6beb72f5e206232f509615b095a24019992a03cc4db30f7d7ae"
+  },
+  "manifest_hash": "7d1ef1688f2bd2f2510b646d710b0d44c3eb01fc4eb04273cf45b17662910aab",
+  "review_boundaries": [
+    {
+      "boundary_id": "bnd-down-1108-001",
+      "expected_inputs": [
+        "needs DataFrame from upstream handoff",
+        "capabilities DataFrame"
+      ],
+      "expected_outputs": [
+        "coverage DataFrame with record_id, need, capability_id, coverage"
+      ],
+      "function_name": "map_coverage",
+      "function_source_sha256": "sha256:cd2060cdc4e1398ea943a3f09b9cceba49ac3778c0632d3499c6eebe72b17b9d",
+      "job_id": "job-downstream-coverage-priority-1108-1",
+      "qualified_function_name": "map_coverage",
+      "role": "Map exact handoff needs to direct capability coverage with missing-safe field access and allowed record retention.",
+      "semantic_stage": "downstream_coverage_mapping",
+      "source_path": "generated/protocol_2_2_job2.py"
+    },
+    {
+      "boundary_id": "bnd-down-1108-002",
+      "expected_inputs": [
+        "coverage DataFrame",
+        "evidence_sources DataFrame from upstream handoff"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame with one priority per need"
+      ],
+      "function_name": "prioritize_needs",
+      "function_source_sha256": "sha256:3f35f9152ade53e9b6173e35722e6a76ba34cd7253cfa96923ab464c7738e387",
+      "job_id": "job-downstream-coverage-priority-1108-1",
+      "qualified_function_name": "prioritize_needs",
+      "role": "Rank unsupported needs ahead of covered needs using evidence source rank as the primary within-group ordering key.",
+      "semantic_stage": "downstream_prioritization",
+      "source_path": "generated/protocol_2_2_job2.py"
+    },
+    {
+      "boundary_id": "bnd-down-1108-003",
+      "expected_inputs": [
+        "ranked priorities DataFrame"
+      ],
+      "expected_outputs": [
+        "bounded priorities DataFrame",
+        "recommendation dictionary"
+      ],
+      "function_name": "synthesize_recommendation",
+      "function_source_sha256": "sha256:86a645625bce739d462fee623dca9eae0fa928aada960f169a8597a3eaa55b89",
+      "job_id": "job-downstream-coverage-priority-1108-1",
+      "qualified_function_name": "synthesize_recommendation",
+      "role": "Retain eight already-ranked priorities and construct the recommendation from the first priority record without recomputing ranking.",
+      "semantic_stage": "downstream_synthesis",
+      "source_path": "generated/protocol_2_2_job2.py"
+    }
+  ],
+  "schema_version": "1"
+}

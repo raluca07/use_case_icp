@@ -1,0 +1,58 @@
+{
+  "entry_file": "generated/job_01_upstream.py",
+  "file_hashes": {
+    "generated/job_01_upstream.py": "2e3ba07318080cef157546eaf78bf63de1999298a75f300da69cdf9c358e93d1"
+  },
+  "manifest_hash": "ff75722651304a1f0a03dcec5ff0c97f99c0a9a12c2a0d935dcaa416b780a798",
+  "review_boundaries": [
+    {
+      "boundary_id": "rb_1107_a3f91c02",
+      "expected_inputs": [
+        "corpus DataFrame with record_id, need, demand_score, source_id, source_weight"
+      ],
+      "expected_outputs": [
+        "selected needs candidate DataFrame"
+      ],
+      "function_name": "select_demand_records",
+      "function_source_sha256": "sha256:171f0778f14f2369d60a6d21d03f6b2ecfbe005b9852fc1cc5fe47617bf6050e",
+      "job_id": "job_01_upstream",
+      "qualified_function_name": "select_demand_records",
+      "role": "Select demanded corpus rows while preserving the explicit fallback path and constructing records literally.",
+      "semantic_stage": "upstream_demand_selection",
+      "source_path": "generated/job_01_upstream.py"
+    },
+    {
+      "boundary_id": "rb_1107_b7d42e19",
+      "expected_inputs": [
+        "selected needs candidate DataFrame"
+      ],
+      "expected_outputs": [
+        "normalized needs DataFrame"
+      ],
+      "function_name": "normalize_evidence_fields",
+      "function_source_sha256": "sha256:e23a4b98cf96e646f9037665b7849701d843b93e552be6fbe70769660fbb1565",
+      "job_id": "job_01_upstream",
+      "qualified_function_name": "normalize_evidence_fields",
+      "role": "Normalize selected evidence fields with neutral sentinels, allowed identifiers, and bounded retention.",
+      "semantic_stage": "upstream_evidence_normalization",
+      "source_path": "generated/job_01_upstream.py"
+    },
+    {
+      "boundary_id": "rb_1107_c62a8f54",
+      "expected_inputs": [
+        "normalized needs DataFrame"
+      ],
+      "expected_outputs": [
+        "evidence_sources DataFrame"
+      ],
+      "function_name": "assemble_provenance_sources",
+      "function_source_sha256": "sha256:f0a6a7864909840c44d9bf55f4f24993d5fd79859123537251cc0f0fcc19adf2",
+      "job_id": "job_01_upstream",
+      "qualified_function_name": "assemble_provenance_sources",
+      "role": "Assemble ranked source provenance using missing-safe access and deterministic demand ordering.",
+      "semantic_stage": "upstream_provenance_assembly",
+      "source_path": "generated/job_01_upstream.py"
+    }
+  ],
+  "schema_version": "1"
+}

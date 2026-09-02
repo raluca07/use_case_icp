@@ -1,0 +1,13 @@
+{
+  "schema_version": "1",
+  "catalogue_id": "experimental-synthetic-recovery-capabilities-v1",
+  "license": "CC0-1.0",
+  "capabilities": [
+    {"capability_id": "cap-handoff", "need": "trace exact artifact handoffs between jobs"},
+    {"capability_id": "cap-inspect", "need": "inspect bounded intermediate table values"},
+    {"capability_id": "cap-frontier", "need": "resume from a verified trusted frontier"},
+    {"capability_id": "cap-localize", "need": "localize a transformation to one function"},
+    {"capability_id": "cap-compare", "need": "compare selected and complete runtime evidence"},
+    {"capability_id": "cap-ledger", "need": "preserve immutable review attempts"}
+  ]
+}

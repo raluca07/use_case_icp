@@ -1,0 +1,1 @@
+{"artifact_allowlist":["evidence/common-base.json","evidence/review-package.json"],"branch_id":"branch-032-8d837b735e9a2e02","package_layout":{"evidence":"evidence","workspace":"workspace"},"package_manifest_sha256":"sha256:da561b5cf7d4d5d9acc2167361fb6436aafb26fcbcc9c3bb3395578af7c0c4ad","process_isolation_provided":false,"production_sandbox_required":true,"schema_version":"1"}

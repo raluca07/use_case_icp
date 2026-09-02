@@ -1,0 +1,61 @@
+{
+  "entry_file": "generated/job_downstream.py",
+  "file_hashes": {
+    "generated/job_downstream.py": "19ed7ca48cc5b1566c9822732a3f792e10ff73caf6f6c87c8d98e059b10583f5"
+  },
+  "manifest_hash": "3f69fe1cfd3587413f6a60f6e38079939c9b3d90cdff0f44841f3d81b8d6e9cf",
+  "review_boundaries": [
+    {
+      "boundary_id": "b-1101-91e8ad40",
+      "expected_inputs": [
+        "needs DataFrame",
+        "capabilities DataFrame"
+      ],
+      "expected_outputs": [
+        "coverage DataFrame"
+      ],
+      "function_name": "coverage_mapping",
+      "function_source_sha256": "sha256:c74ae78efc830db2d402aa2ff1358513f3abe6f81e74c575a5151ca0d89eee49",
+      "job_id": "job-downstream-prioritization-1101",
+      "qualified_function_name": "coverage_mapping",
+      "role": "Map handoff needs to direct capability coverage while retaining only allowed existing record identifiers.",
+      "semantic_stage": "downstream_coverage_mapping",
+      "source_path": "generated/job_downstream.py"
+    },
+    {
+      "boundary_id": "b-1101-d36fa257",
+      "expected_inputs": [
+        "coverage DataFrame",
+        "evidence_sources DataFrame"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame"
+      ],
+      "function_name": "prioritization",
+      "function_source_sha256": "sha256:e7137e42b50745570598aa06051feb294f478a4918cecb297c363164032b88d0",
+      "job_id": "job-downstream-prioritization-1101",
+      "qualified_function_name": "prioritization",
+      "role": "Rank unsupported needs ahead of covered needs using upstream provenance rank as the primary ordering key within each group.",
+      "semantic_stage": "downstream_prioritization",
+      "source_path": "generated/job_downstream.py"
+    },
+    {
+      "boundary_id": "b-1101-6b94cf18",
+      "expected_inputs": [
+        "priorities DataFrame"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame",
+        "recommendation object"
+      ],
+      "function_name": "synthesis",
+      "function_source_sha256": "sha256:4722690ced68da1afc4e1742866423be00dc762a80cf0be717137c35763df8b1",
+      "job_id": "job-downstream-prioritization-1101",
+      "qualified_function_name": "synthesis",
+      "role": "Apply the explicit eight-item priority window and construct the final recommendation from the first ranked priority record.",
+      "semantic_stage": "downstream_synthesis",
+      "source_path": "generated/job_downstream.py"
+    }
+  ],
+  "schema_version": "1"
+}

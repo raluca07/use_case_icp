@@ -187,30 +187,74 @@ class GeneratedPipeline:
             raise ValueError("pipeline bundle contains duplicate paths")
         if self.entry_file not in paths:
             raise ValueError("entry_file must be included in files")
-        names: list[str] = []
+        boundary_keys: list[tuple[str, ...]] = []
         for boundary in self.review_boundaries:
+            source_path = str(boundary.get("source_path") or "").strip()
+            qualified_name = str(
+                boundary.get("qualified_function_name") or ""
+            ).strip()
+            if source_path or qualified_name:
+                if not source_path or not qualified_name:
+                    raise ValueError(
+                        "v2 review boundary requires source_path and qualified_function_name"
+                    )
+                path = PurePosixPath(source_path.replace("\\", "/"))
+                if path.is_absolute() or ".." in path.parts or not path.parts:
+                    raise ValueError("v2 review boundary source_path is unsafe")
+                derived_name = qualified_name.split(".")[-1]
+                supplied_name = str(boundary.get("function_name") or "").strip()
+                if supplied_name and supplied_name != derived_name:
+                    raise ValueError(
+                        "v2 compatibility function_name disagrees with qualified name"
+                    )
+                boundary["function_name"] = derived_name
+                boundary["source_path"] = path.as_posix()
+                boundary["qualified_function_name"] = qualified_name
+                boundary_keys.append((path.as_posix(), qualified_name))
+                continue
             name = str(boundary.get("function_name") or "").strip()
             if not name:
                 raise ValueError("review boundary requires function_name")
-            names.append(name)
-        if len(names) != len(set(names)):
-            raise ValueError("review boundary function names must be unique")
+            boundary_keys.append((name,))
+        if len(boundary_keys) != len(set(boundary_keys)):
+            raise ValueError("review boundary identities must be unique")
 
     @classmethod
     def from_payload(cls, payload: Mapping[str, Any]) -> "GeneratedPipeline":
         pipeline = cls(
             entry_file=str(payload.get("entry_file") or "pipeline.py"),
             files=[GeneratedFile(path=str(item["path"]), content=str(item["content"])) for item in payload.get("files", [])],
-            review_boundaries=[
-                {
-                    "function_name": str(item["function_name"]),
-                    "role": str(item.get("role") or ""),
-                    "expected_inputs": [str(value) for value in item.get("expected_inputs", [])],
-                    "expected_outputs": [str(value) for value in item.get("expected_outputs", [])],
-                }
-                for item in payload.get("review_boundaries", [])
-            ],
+            review_boundaries=[],
         )
+        for item in payload.get("review_boundaries", []):
+            qualified_name = str(item.get("qualified_function_name") or "").strip()
+            boundary = {
+                "function_name": str(
+                    item.get("function_name")
+                    or (qualified_name.split(".")[-1] if qualified_name else "")
+                ),
+                "role": str(item.get("role") or ""),
+                "expected_inputs": [
+                    str(value) for value in item.get("expected_inputs", [])
+                ],
+                "expected_outputs": [
+                    str(value) for value in item.get("expected_outputs", [])
+                ],
+            }
+            if item.get("semantic_stage") is not None:
+                boundary["semantic_stage"] = str(item["semantic_stage"])
+            if "boundary_id" in item:
+                boundary["boundary_id"] = str(item.get("boundary_id") or "")
+            if "source_path" in item or "qualified_function_name" in item:
+                boundary["source_path"] = str(item.get("source_path") or "")
+                boundary["qualified_function_name"] = qualified_name
+            if item.get("function_source_sha256") is not None:
+                boundary["function_source_sha256"] = str(
+                    item["function_source_sha256"]
+                )
+            if item.get("job_id") is not None:
+                boundary["job_id"] = str(item["job_id"])
+            pipeline.review_boundaries.append(boundary)
         pipeline.validate()
         return pipeline
 

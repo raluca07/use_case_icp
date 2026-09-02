@@ -1,0 +1,5 @@
+condition,source_setting,review_records,detection,localisation,false_positives,review_input_tokens,review_cached_input_tokens,review_output_tokens,review_reasoning_tokens,review_provider_attempts
+current_run,source_present,36,20/30,19/30,1/6,690002,378368,44433,0,36
+history_full,source_present,36,24/30,24/30,1/6,721481,378368,45173,0,36
+etiq_full,source_present,36,22/30,18/30,2/6,2038764,357888,54830,0,36
+etiq_selected_adaptive,source_present,36,25/30,22/30,3/6,1568920,388608,57340,0,36

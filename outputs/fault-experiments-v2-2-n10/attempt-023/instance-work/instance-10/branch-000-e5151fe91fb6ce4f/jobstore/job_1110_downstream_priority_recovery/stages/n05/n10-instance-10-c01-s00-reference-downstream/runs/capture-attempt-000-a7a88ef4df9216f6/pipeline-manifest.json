@@ -1,0 +1,61 @@
+{
+  "entry_file": "generated/protocol_2_2_job2.py",
+  "file_hashes": {
+    "generated/protocol_2_2_job2.py": "afaba33a3d02eea0e2f102ad10d31692cfa1685b5b4a289f8c45065a5cbe3fbd"
+  },
+  "manifest_hash": "19d9e2b427edcb42be53b24ddbdea65cafa2b650b123cc487e42d366c8cde819",
+  "review_boundaries": [
+    {
+      "boundary_id": "rb_1110_d_01_map_coverage",
+      "expected_inputs": [
+        "needs DataFrame from exact handoff",
+        "capabilities DataFrame"
+      ],
+      "expected_outputs": [
+        "coverage DataFrame"
+      ],
+      "function_name": "map_coverage",
+      "function_source_sha256": "sha256:aa07f01b385b8c59290cb3933351382b5ddcc2758634f02afc0439b149f83b35",
+      "job_id": "job_1110_downstream_priority_recovery",
+      "qualified_function_name": "map_coverage",
+      "role": "Map each allowed handoff need to direct capability coverage or a neutral missing capability sentinel.",
+      "semantic_stage": "downstream_coverage_mapping",
+      "source_path": "generated/protocol_2_2_job2.py"
+    },
+    {
+      "boundary_id": "rb_1110_d_02_prioritize_needs",
+      "expected_inputs": [
+        "coverage DataFrame",
+        "evidence_sources DataFrame from exact handoff"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame"
+      ],
+      "function_name": "prioritize_needs",
+      "function_source_sha256": "sha256:fe11cde0e07e9ab42419d870ecb63b73d36f055c42e40bc42b2d53c908f1f5c7",
+      "job_id": "job_1110_downstream_priority_recovery",
+      "qualified_function_name": "prioritize_needs",
+      "role": "Rank unsupported needs ahead of covered needs using upstream provenance rank within each group.",
+      "semantic_stage": "downstream_prioritization",
+      "source_path": "generated/protocol_2_2_job2.py"
+    },
+    {
+      "boundary_id": "rb_1110_d_03_synthesize_recommendation",
+      "expected_inputs": [
+        "priorities DataFrame"
+      ],
+      "expected_outputs": [
+        "retained priorities DataFrame",
+        "recommendation dictionary"
+      ],
+      "function_name": "synthesize_recommendation",
+      "function_source_sha256": "sha256:6d5dbb90863d876907480c6028726918a455ce1a2a1622c26848f2cdcd63305c",
+      "job_id": "job_1110_downstream_priority_recovery",
+      "qualified_function_name": "synthesize_recommendation",
+      "role": "Retain the eight ranked priority records and build the recommendation from the first ranked record.",
+      "semantic_stage": "downstream_synthesis",
+      "source_path": "generated/protocol_2_2_job2.py"
+    }
+  ],
+  "schema_version": "1"
+}

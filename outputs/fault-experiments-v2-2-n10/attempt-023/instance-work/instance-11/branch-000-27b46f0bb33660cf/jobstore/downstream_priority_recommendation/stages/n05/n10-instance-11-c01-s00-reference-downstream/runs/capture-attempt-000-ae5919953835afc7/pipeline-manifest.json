@@ -1,0 +1,61 @@
+{
+  "entry_file": "generated/downstream_priority_recommendation.py",
+  "file_hashes": {
+    "generated/downstream_priority_recommendation.py": "c1f5f1fee13f793f017fd7acec9073a1a213a86a927046279cef2ad69852493f"
+  },
+  "manifest_hash": "ef49aba09492e05e44ad266f677956eb5a3e74c0c6c854a715b2a32c9a4e56e0",
+  "review_boundaries": [
+    {
+      "boundary_id": "rb_8e6f590c12ab4d01",
+      "expected_inputs": [
+        "needs handoff DataFrame",
+        "capabilities DataFrame"
+      ],
+      "expected_outputs": [
+        "coverage DataFrame with record_id, need, capability_id, coverage"
+      ],
+      "function_name": "map_coverage",
+      "function_source_sha256": "sha256:9eaf0f56137eed6bd6eaeb9dc12082c891cb95307b86120041e5ec9e03094057",
+      "job_id": "downstream_priority_recommendation",
+      "qualified_function_name": "map_coverage",
+      "role": "Map exact upstream needs handoff rows to direct capability coverage with missing-safe sentinels.",
+      "semantic_stage": "downstream_coverage_mapping",
+      "source_path": "generated/downstream_priority_recommendation.py"
+    },
+    {
+      "boundary_id": "rb_a415ce7f8e9142bc",
+      "expected_inputs": [
+        "coverage DataFrame",
+        "evidence_sources handoff DataFrame"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame with one row per need"
+      ],
+      "function_name": "prioritize_needs",
+      "function_source_sha256": "sha256:105a73a7c75ed6c689b2c62aa640a82e59d2c6d8289b60253ffe3b5591948779",
+      "job_id": "downstream_priority_recommendation",
+      "qualified_function_name": "prioritize_needs",
+      "role": "Rank unsupported needs ahead of covered needs using upstream provenance rank as primary ordering within each group.",
+      "semantic_stage": "downstream_prioritization",
+      "source_path": "generated/downstream_priority_recommendation.py"
+    },
+    {
+      "boundary_id": "rb_5ca90db2d76e4b9e",
+      "expected_inputs": [
+        "ranked priorities DataFrame"
+      ],
+      "expected_outputs": [
+        "retained priorities DataFrame",
+        "recommendation dictionary"
+      ],
+      "function_name": "synthesize_recommendation",
+      "function_source_sha256": "sha256:ce24bc28321b13d89ba598f31e7dea92d1e51b0d2a4728f68ce14f88211a6a82",
+      "job_id": "downstream_priority_recommendation",
+      "qualified_function_name": "synthesize_recommendation",
+      "role": "Retain the eight already-ranked priority rows and construct the recommendation from the first priority record.",
+      "semantic_stage": "downstream_synthesis",
+      "source_path": "generated/downstream_priority_recommendation.py"
+    }
+  ],
+  "schema_version": "1"
+}

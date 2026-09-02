@@ -1,0 +1,37 @@
+{
+  "schema_version": "1",
+  "protocol_id": "neurips-2026-workshop-fault-localisation-v2",
+  "protocol_version": "2.1.0",
+  "status": "pre_results_frozen",
+  "security_boundary": "n05_runner_bubblewrap_production_launcher",
+  "sandbox_backend": "bubblewrap",
+  "minimum_backend_version": "0.9.0",
+  "unrestricted_fallback_allowed": false,
+  "output_root": "outputs/fault-experiments-v2-1/",
+  "branch_visible_roots": ["copied_hash_verified_evidence", "workspace", "private_home", "private_temp", "private_output", "branch_local_jobstore", "frozen_dependencies", "minimal_read_only_runtime"],
+  "controller_only_roots": ["repository", "common_capture", "restricted_truth", "condition_map", "aggregate_ledger", "sibling_branches", "old_outputs"],
+  "codex_control_plane": {
+    "bubblewrap_filesystem_and_process_isolation": true,
+    "network_namespace_unshared": false,
+    "provider_transport_required": true,
+    "fresh_ephemeral_non_resumed": true,
+    "branch_local_jobstore": true,
+    "host_codex_home_mounted": false,
+    "authentication": "copy only individually allowlisted required authentication files into the private ephemeral Codex home"
+  },
+  "model_executed_commands": {
+    "permission_profile": "n05-branch-command",
+    "network_enabled": false,
+    "filesystem_root": "deny",
+    "readable": ["copied evidence", "minimal runtime"],
+    "writable": ["workspace", "temp", "output"]
+  },
+  "authored_python": {"bubblewrap_network_unshared": true, "branch_only_filesystem": true},
+  "repaired_python": {"bubblewrap_network_unshared": true, "branch_only_filesystem": true},
+  "path_hygiene": {"resolve_before_copy": true, "regular_files_only": true, "reject_symlinks": true, "different_inode_required": true, "hash_verify_after_copy": true, "close_inherited_descriptors": true, "minimal_environment": true},
+  "required_probe_roles": ["codex", "codex_launched_command", "authored_python", "repaired_python"],
+  "required_exact_path_targets": ["repository", "controller_truth", "common_capture", "aggregate_ledger", "sibling_branch", "host_codex_home"],
+  "required_probe_classes": ["package", "session", "filesystem", "history", "subprocess", "network", "condition_blinding", "aggregation", "tamper", "fail_closed", "resume"],
+  "gate_rule": "Every probe must pass through the exact production launch function; skipped, unavailable, mock, stale, disabled, or misconfigured checks fail the gate.",
+  "tester_signature_required_before_scientific_model_calls": true
+}

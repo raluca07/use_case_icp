@@ -1,0 +1,61 @@
+{
+  "entry_file": "generated/protocol_2_2/job2_downstream.py",
+  "file_hashes": {
+    "generated/protocol_2_2/job2_downstream.py": "7987f5c56a5f9f1bb759c1196b6eb1f53175ae46687aad9a29d29240c2c8d2fb"
+  },
+  "manifest_hash": "bddd34969cc5e9de4f13d5ec1ac2a37c98ca3698990118251d91ebf68f030019",
+  "review_boundaries": [
+    {
+      "boundary_id": "rb_1106_d_d3a19e74",
+      "expected_inputs": [
+        "needs DataFrame",
+        "capabilities DataFrame"
+      ],
+      "expected_outputs": [
+        "coverage DataFrame"
+      ],
+      "function_name": "map_coverage",
+      "function_source_sha256": "sha256:4435e5db693a15fcf2aceb611ca64d6836e92b72f613310f41eee652c2deb47b",
+      "job_id": "job-downstream-coverage-priority",
+      "qualified_function_name": "map_coverage",
+      "role": "Map exact needs handoff rows to direct capability coverage while retaining allowed existing record identifiers.",
+      "semantic_stage": "downstream_coverage_mapping",
+      "source_path": "generated/protocol_2_2/job2_downstream.py"
+    },
+    {
+      "boundary_id": "rb_1106_d_e9640bc2",
+      "expected_inputs": [
+        "coverage DataFrame",
+        "evidence_sources DataFrame"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame"
+      ],
+      "function_name": "prioritize",
+      "function_source_sha256": "sha256:839cc7cb32431247566eed6ec7a7b058b208c13f3581e92a774bc15d967c27a6",
+      "job_id": "job-downstream-coverage-priority",
+      "qualified_function_name": "prioritize",
+      "role": "Rank unsupported needs ahead of covered needs using upstream provenance rank within each group.",
+      "semantic_stage": "downstream_prioritization",
+      "source_path": "generated/protocol_2_2/job2_downstream.py"
+    },
+    {
+      "boundary_id": "rb_1106_d_f7b82a10",
+      "expected_inputs": [
+        "priorities DataFrame"
+      ],
+      "expected_outputs": [
+        "priorities DataFrame",
+        "recommendation object"
+      ],
+      "function_name": "synthesize",
+      "function_source_sha256": "sha256:c29287688f07af93e19ee717329543709943c05dfa8e5808f485773cc00c8f87",
+      "job_id": "job-downstream-coverage-priority",
+      "qualified_function_name": "synthesize",
+      "role": "Retain the eight ranked priorities and derive recommendation directly from the first priority record.",
+      "semantic_stage": "downstream_synthesis",
+      "source_path": "generated/protocol_2_2/job2_downstream.py"
+    }
+  ],
+  "schema_version": "1"
+}

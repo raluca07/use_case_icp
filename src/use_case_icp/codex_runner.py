@@ -22,12 +22,26 @@ from .job_store import JobStore
 
 DEFAULT_CODEX_MODEL = "gpt-5.5"
 STRICT_PERMISSION_PROFILE = "etiq-invocation-only"
+PROVIDER_ERROR_EVENT_LIMIT = 8
+PROVIDER_ERROR_TEXT_LIMIT = 2048
+STDERR_DIAGNOSTIC_LIMIT = 4096
 
 
 class CodexInvocationError(RuntimeError):
-    def __init__(self, message: str, invocation_id: str) -> None:
+    def __init__(
+        self,
+        message: str,
+        invocation_id: str,
+        *,
+        provider_error: str = "",
+        terminal_status: str | None = None,
+        usage: Mapping[str, Any] | None = None,
+    ) -> None:
         super().__init__(message)
         self.invocation_id = invocation_id
+        self.provider_error = provider_error
+        self.terminal_status = terminal_status
+        self.usage = dict(usage or {})
 
 
 @dataclass(slots=True)
@@ -97,6 +111,90 @@ def _int_value(value: Any) -> int | None:
     return None
 
 
+def _bounded_diagnostic_text(value: Any, limit: int) -> str | None:
+    if not isinstance(value, str):
+        return None
+    normalized = " ".join(value.split())
+    if not normalized:
+        return None
+    if len(normalized) <= limit:
+        return normalized
+    suffix = "...[truncated]"
+    return normalized[: limit - len(suffix)] + suffix
+
+
+def _json_mapping(value: Any) -> Mapping[str, Any] | None:
+    if isinstance(value, Mapping):
+        return value
+    if not isinstance(value, str):
+        return None
+    try:
+        loaded = json.loads(value)
+    except json.JSONDecodeError:
+        return None
+    return loaded if isinstance(loaded, Mapping) else None
+
+
+def _provider_metadata(value: Any, *, depth: int = 0) -> dict[str, Any]:
+    if depth >= 4 or (mapping := _json_mapping(value)) is None:
+        return {}
+    metadata: dict[str, Any] = {}
+    code = _bounded_diagnostic_text(mapping.get("code"), PROVIDER_ERROR_TEXT_LIMIT)
+    if code:
+        metadata["code"] = code
+    status = mapping.get("status")
+    if isinstance(status, (int, str)) and not isinstance(status, bool):
+        normalized_status = _bounded_diagnostic_text(str(status), 32)
+        if normalized_status:
+            metadata["status"] = normalized_status
+
+    for key in ("error", "message"):
+        nested = _provider_metadata(mapping.get(key), depth=depth + 1)
+        for field, item in nested.items():
+            metadata.setdefault(field, item)
+
+    message = mapping.get("message")
+    if _json_mapping(message) is None:
+        normalized_message = _bounded_diagnostic_text(
+            message, PROVIDER_ERROR_TEXT_LIMIT
+        )
+        if normalized_message:
+            metadata.setdefault("message", normalized_message)
+    return metadata
+
+
+def extract_provider_error(
+    events: list[dict[str, Any]], stderr: str
+) -> str:
+    """Return bounded provider failure metadata plus stderr diagnostics."""
+    provider_events: list[dict[str, Any]] = []
+    for event in events:
+        event_type = event.get("type")
+        if event_type not in {"error", "turn.failed"}:
+            continue
+        metadata = _provider_metadata(event)
+        if "status" not in metadata:
+            status = event.get("status")
+            if isinstance(status, (int, str)) and not isinstance(status, bool):
+                normalized_status = _bounded_diagnostic_text(str(status), 32)
+                if normalized_status:
+                    metadata["status"] = normalized_status
+        if event_type == "turn.failed" and "message" in metadata:
+            metadata["terminal_error_message"] = metadata["message"]
+        if metadata:
+            provider_events.append({"event_type": event_type, **metadata})
+        if len(provider_events) == PROVIDER_ERROR_EVENT_LIMIT:
+            break
+
+    summary: dict[str, Any] = {"provider_events": provider_events}
+    stderr_diagnostics = _bounded_diagnostic_text(stderr, STDERR_DIAGNOSTIC_LIMIT)
+    if stderr_diagnostics:
+        summary["stderr_diagnostics"] = stderr_diagnostics
+    if not provider_events and not stderr_diagnostics:
+        return ""
+    return json.dumps(summary, sort_keys=True, separators=(",", ":"))
+
+
 def _usage_candidates(value: Any) -> Iterable[Mapping[str, Any]]:
     if isinstance(value, Mapping):
         lowered = {str(key).lower(): item for key, item in value.items()}
@@ -157,11 +255,13 @@ class CodexRunner:
         *,
         codex_bin: str = "codex",
         model: str | None = DEFAULT_CODEX_MODEL,
+        reasoning_effort: str | None = None,
         timeout_seconds: int = 1800,
     ) -> None:
         self.store = store
         self.codex_bin = codex_bin
         self.model = model
+        self.reasoning_effort = reasoning_effort
         self.timeout_seconds = timeout_seconds
 
     def run(
@@ -223,6 +323,11 @@ class CodexRunner:
         ]
         for override in _strict_config_overrides(self.codex_bin):
             command[2:2] = ["--config", override]
+        if self.reasoning_effort:
+            command[2:2] = [
+                "--config",
+                f'model_reasoning_effort="{self.reasoning_effort}"',
+            ]
         if self.model:
             command[2:2] = ["--model", self.model]
         self.store.write_json(
@@ -232,6 +337,7 @@ class CodexRunner:
                 "fresh_session": True,
                 "ephemeral": True,
                 "model": self.model,
+                "reasoning_effort": self.reasoning_effort,
                 "profile": STRICT_PERMISSION_PROFILE,
                 "working_directory": str(invocation_dir),
                 "read_boundary": {
@@ -309,7 +415,15 @@ class CodexRunner:
             raise CodexInvocationError(
                 f"Codex invocation {terminal_status}; see {invocation_dir.relative_to(self.store.output_root)}",
                 invocation_id,
+                provider_error=extract_provider_error(events, stderr),
+                terminal_status=terminal_status,
+                usage=jsonable(usage),
             )
         if not payload:
-            raise CodexInvocationError("Codex returned no valid structured payload", invocation_id)
+            raise CodexInvocationError(
+                "Codex returned no valid structured payload",
+                invocation_id,
+                terminal_status=terminal_status,
+                usage=jsonable(usage),
+            )
         return CodexResult(invocation_id=invocation_id, payload=payload, usage=usage, events=events)
