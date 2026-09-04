@@ -1,0 +1,45 @@
+{
+  "capabilities": [
+    {
+      "capability_id": "cap-handoff",
+      "need": "trace exact artifact handoffs between jobs"
+    },
+    {
+      "capability_id": "cap-inspect",
+      "need": "inspect bounded intermediate table values"
+    },
+    {
+      "capability_id": "cap-frontier",
+      "need": "resume from a verified trusted frontier"
+    },
+    {
+      "capability_id": "cap-localize",
+      "need": "localize a transformation to one function"
+    },
+    {
+      "capability_id": "cap-compare",
+      "need": "compare selected and complete runtime evidence"
+    },
+    {
+      "capability_id": "cap-ledger",
+      "need": "preserve immutable review attempts"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "rank": 1,
+      "record_id": "n06-r01",
+      "source_id": "s01",
+      "source_weight": 5
+    }
+  ],
+  "needs": [
+    {
+      "demand_score": 9,
+      "need": "isolate faulty execution branches before replay",
+      "record_id": "n06-r01",
+      "source_id": "s01",
+      "source_weight": 5
+    }
+  ]
+}

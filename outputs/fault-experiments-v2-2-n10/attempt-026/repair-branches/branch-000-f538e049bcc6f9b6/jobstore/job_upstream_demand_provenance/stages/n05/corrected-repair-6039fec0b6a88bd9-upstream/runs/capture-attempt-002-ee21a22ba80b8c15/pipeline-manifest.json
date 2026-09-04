@@ -1,0 +1,58 @@
+{
+  "entry_file": "generated/protocol_2_2/upstream_demand_provenance.py",
+  "file_hashes": {
+    "generated/protocol_2_2/upstream_demand_provenance.py": "6eb9a6f1b532420fbaadd68f1f4c129d42942a5bb2371636674ce4c563049ad7"
+  },
+  "manifest_hash": "b2e7d984f573bae3bf86a9b192444fc2169b8278d4ac3cd9fe2dc24fe51df58e",
+  "review_boundaries": [
+    {
+      "boundary_id": "rb_1104_a17f_select",
+      "expected_inputs": [
+        "corpus DataFrame with record_id, need, demand_score, source_id, source_weight"
+      ],
+      "expected_outputs": [
+        "DataFrame of selected demand records constructed from Python dictionary literals"
+      ],
+      "function_name": "select_demand",
+      "function_source_sha256": "sha256:34a39ac4826be1dea3bf68ea4a8a8eef7764866def4b3a06afe5142a9dd671c7",
+      "job_id": "job_upstream_demand_provenance",
+      "qualified_function_name": "select_demand",
+      "role": "Select demand records using the score threshold while keeping the explicit fallback identifiers in the returned data path.",
+      "semantic_stage": "upstream_demand_selection",
+      "source_path": "generated/protocol_2_2/upstream_demand_provenance.py"
+    },
+    {
+      "boundary_id": "rb_1104_b92d_normalize",
+      "expected_inputs": [
+        "selected demand DataFrame"
+      ],
+      "expected_outputs": [
+        "bounded normalized needs DataFrame preserving allowed corpus identifiers"
+      ],
+      "function_name": "normalize",
+      "function_source_sha256": "sha256:743734b4aaaa1ae043e0ec3c69d2374b2e03e89eb144f0b813f920a31be22ee8",
+      "job_id": "job_upstream_demand_provenance",
+      "qualified_function_name": "normalize",
+      "role": "Normalize selected evidence to required columns, neutral sentinels, allowed identifiers, and bounded index window.",
+      "semantic_stage": "upstream_evidence_normalization",
+      "source_path": "generated/protocol_2_2/upstream_demand_provenance.py"
+    },
+    {
+      "boundary_id": "rb_1104_c63e_provenance",
+      "expected_inputs": [
+        "normalized needs DataFrame"
+      ],
+      "expected_outputs": [
+        "evidence_sources DataFrame with record_id, source_id, source_weight, rank"
+      ],
+      "function_name": "assemble_provenance",
+      "function_source_sha256": "sha256:7711048fa866a22bf31d4df307b84493abcd0947dca80d1799d0a11a36ec570a",
+      "job_id": "job_upstream_demand_provenance",
+      "qualified_function_name": "assemble_provenance",
+      "role": "Assemble ranked source provenance with missing-safe field access and deterministic ordering.",
+      "semantic_stage": "upstream_provenance_assembly",
+      "source_path": "generated/protocol_2_2/upstream_demand_provenance.py"
+    }
+  ],
+  "schema_version": "1"
+}

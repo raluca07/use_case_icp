@@ -1,0 +1,382 @@
+{
+  "analysis_status": "The prespecified complete analysis was not generated because only 43 of 96 repair traces completed.",
+  "attempt": "attempt-026",
+  "completed_counts": {
+    "frozen_packages": 64,
+    "initial_reviews": 192,
+    "missing_repair_records": 53,
+    "planned_repair_records": 96,
+    "repair_records": 43
+  },
+  "initial_review_outcomes": {
+    "cells": [
+      {
+        "condition": "current_run",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 3,
+        "localisation_denominator": 6,
+        "localisation_numerator": 3,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 119296,
+          "input_tokens": 204264,
+          "logical_call_count": 12,
+          "output_tokens": 13524,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "current_run",
+        "detection_denominator": 6,
+        "detection_numerator": 6,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 1,
+        "localisation_denominator": 6,
+        "localisation_numerator": 5,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 109056,
+          "input_tokens": 231192,
+          "logical_call_count": 12,
+          "output_tokens": 14086,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      },
+      {
+        "condition": "etiq_empty",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 3,
+        "localisation_denominator": 6,
+        "localisation_numerator": 3,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 139776,
+          "input_tokens": 205208,
+          "logical_call_count": 12,
+          "output_tokens": 13825,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "etiq_empty",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 0,
+        "localisation_denominator": 6,
+        "localisation_numerator": 4,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 139776,
+          "input_tokens": 232145,
+          "logical_call_count": 12,
+          "output_tokens": 14208,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      },
+      {
+        "condition": "etiq_full",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 3,
+        "localisation_denominator": 6,
+        "localisation_numerator": 4,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 154240,
+          "input_tokens": 741218,
+          "logical_call_count": 15,
+          "output_tokens": 19372,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "etiq_full",
+        "detection_denominator": 6,
+        "detection_numerator": 6,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 2,
+        "localisation_denominator": 6,
+        "localisation_numerator": 4,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 139776,
+          "input_tokens": 649626,
+          "logical_call_count": 12,
+          "output_tokens": 15280,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      },
+      {
+        "condition": "etiq_random_matched",
+        "detection_denominator": 6,
+        "detection_numerator": 6,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 2,
+        "localisation_denominator": 6,
+        "localisation_numerator": 4,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 152832,
+          "input_tokens": 490343,
+          "logical_call_count": 14,
+          "output_tokens": 17628,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "etiq_random_matched",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 1,
+        "localisation_denominator": 6,
+        "localisation_numerator": 3,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 129536,
+          "input_tokens": 451275,
+          "logical_call_count": 12,
+          "output_tokens": 15237,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      },
+      {
+        "condition": "etiq_selected_adaptive",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 3,
+        "localisation_denominator": 6,
+        "localisation_numerator": 4,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 232960,
+          "input_tokens": 720468,
+          "logical_call_count": 20,
+          "output_tokens": 26057,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "etiq_selected_adaptive",
+        "detection_denominator": 6,
+        "detection_numerator": 6,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 2,
+        "localisation_denominator": 6,
+        "localisation_numerator": 4,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 120704,
+          "input_tokens": 479775,
+          "logical_call_count": 13,
+          "output_tokens": 16657,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      },
+      {
+        "condition": "etiq_selected_fixed",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 2,
+        "localisation_denominator": 6,
+        "localisation_numerator": 3,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 107008,
+          "input_tokens": 418486,
+          "logical_call_count": 12,
+          "output_tokens": 14346,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "etiq_selected_fixed",
+        "detection_denominator": 6,
+        "detection_numerator": 6,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 1,
+        "localisation_denominator": 6,
+        "localisation_numerator": 4,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 174720,
+          "input_tokens": 548580,
+          "logical_call_count": 15,
+          "output_tokens": 19614,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      },
+      {
+        "condition": "history_empty",
+        "detection_denominator": 6,
+        "detection_numerator": 5,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 3,
+        "localisation_denominator": 6,
+        "localisation_numerator": 3,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 119296,
+          "input_tokens": 204264,
+          "logical_call_count": 12,
+          "output_tokens": 14105,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "history_empty",
+        "detection_denominator": 6,
+        "detection_numerator": 6,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 1,
+        "localisation_denominator": 6,
+        "localisation_numerator": 6,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 139776,
+          "input_tokens": 231197,
+          "logical_call_count": 12,
+          "output_tokens": 14152,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      },
+      {
+        "condition": "history_full",
+        "detection_denominator": 6,
+        "detection_numerator": 4,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 2,
+        "localisation_denominator": 6,
+        "localisation_numerator": 3,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 98816,
+          "input_tokens": 213702,
+          "logical_call_count": 12,
+          "output_tokens": 14170,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_absent"
+      },
+      {
+        "condition": "history_full",
+        "detection_denominator": 6,
+        "detection_numerator": 6,
+        "false_positives_denominator": 6,
+        "false_positives_numerator": 1,
+        "localisation_denominator": 6,
+        "localisation_numerator": 5,
+        "review_records": 12,
+        "review_usage": {
+          "cached_input_tokens": 139776,
+          "input_tokens": 240636,
+          "logical_call_count": 12,
+          "output_tokens": 14852,
+          "reasoning_tokens": null,
+          "total_tokens": null
+        },
+        "source_setting": "source_present"
+      }
+    ],
+    "control_false_positives": {
+      "denominator": 96,
+      "numerator": 30
+    },
+    "exact_boundary_localisation": {
+      "denominator": 96,
+      "numerator": 62
+    },
+    "fault_detection": {
+      "denominator": 96,
+      "numerator": 86
+    }
+  },
+  "partial_repair_accounting": {
+    "attempted": 34,
+    "interpretation": "Interrupted prefix only; not a complete repair comparison.",
+    "records": 43,
+    "success_without_regression": 1
+  },
+  "sample_size_limitation": "Four instances are descriptive and not population-powered.",
+  "schema_version": "1",
+  "status": "terminal_incomplete",
+  "terminal_records": [
+    {
+      "completed_repair_records": 43,
+      "completed_review_records": 192,
+      "error": "ValueError: N05 real-Etiq capture is not reviewable",
+      "failure_classification": "controller_package_capture_or_sandbox_failure",
+      "failure_stage": "resumable_lifecycle",
+      "model_repair_failure": false,
+      "schema_version": "corrected-four-instance-terminal-1",
+      "status": "terminal_incomplete",
+      "terminal_sha256": "sha256:9f79e5855c5eafa60bd62c8ab210ccaba7f74df11aafa06410ef2a590589eb9a"
+    },
+    {
+      "completed_repair_records": 0,
+      "completed_review_records": 80,
+      "error": "ValueError: review exceeded three operation follow-up calls",
+      "failure_classification": "controller_package_capture_or_sandbox_failure",
+      "failure_stage": "resumable_lifecycle",
+      "model_repair_failure": false,
+      "schema_version": "corrected-four-instance-terminal-1",
+      "status": "terminal_incomplete",
+      "terminal_sha256": "sha256:d95e59d47dd6e85729d526ee2d334bf1d928523c519893b763657185162bc166"
+    }
+  ],
+  "usage": {
+    "initial_reviews": {
+      "cached_input_tokens": 2217344,
+      "input_tokens": 6262379,
+      "logical_call_count": 209,
+      "output_tokens": 257113,
+      "reasoning_tokens": null,
+      "total_tokens": null
+    },
+    "partial_repairs": {
+      "cached_input_tokens": 794496,
+      "input_tokens": 1529526,
+      "logical_call_count": 68,
+      "output_tokens": 75602,
+      "reasoning_tokens": null,
+      "total_tokens": null
+    }
+  }
+}

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import ast
 import json
 import inspect
 import os
 import re
 import time
+import tempfile
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -22,6 +24,7 @@ from .records import (
 from .repair import source_scope, validate_repair_scope
 from .review import inspect_artifact, retrace_node_refs, trusted_frontier, validate_review
 from .review import review_node_payload, review_relationship_payload
+from .n05_runner import materialize_opaque_branch, run_python_in_branch
 
 
 OPERATION_CAPABILITIES = {
@@ -32,6 +35,375 @@ OPERATION_CAPABILITIES = {
     "etiq_selected_adaptive": {"inspect": True, "expand": True, "retrace": True},
     "etiq_random_matched": {"inspect": True, "expand": False, "retrace": True},
 }
+
+
+def _json_value_type(value: Any) -> str:
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "boolean"
+    if isinstance(value, int):
+        return "integer"
+    if isinstance(value, float):
+        return "number"
+    if isinstance(value, str):
+        return "string"
+    if isinstance(value, list):
+        return "array"
+    return "object"
+
+
+def inspect_catalogue_artifact(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    request: Mapping[str, Any],
+    *,
+    python_executor: Callable[[Mapping[str, Any], str], Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Inspect one visible frozen catalogue artifact through the July operation path."""
+    if "artifact_inspection" not in package.get("available_operations", []):
+        raise ValueError("artifact inspection is unavailable in this reviewer package")
+    ref = str(request.get("node_ref") or "")
+    visible = {
+        str(value["node_ref"])
+        for value in package.get("runtime_evidence", {}).get("nodes", [])
+    }
+    if ref not in visible:
+        raise ValueError("artifact inspection requires a currently visible node")
+    job = catalogue["jobs"][catalogue["assigned_job_id"]]
+    node = next((value for value in job["nodes"] if str(value["node_ref"]) == ref), None)
+    if node is None or node.get("artifact_content") is None:
+        raise ValueError("visible node has no captured artifact value")
+    inspection = str(request.get("inspection") or "read")
+    start = int(request.get("start") or 0)
+    count = int(request.get("count") or 20)
+    if start < 0 or count < 1:
+        raise ValueError("artifact read ranges must be positive")
+    content = node["artifact_content"]
+    base = {
+        "operation": "artifact_inspection",
+        "node_ref": ref,
+        "inspection": inspection,
+        "artifact_kind": node.get("artifact_kind"),
+        "artifact_value_sha256": node.get("artifact_value_sha256"),
+        "artifact_truncated_at_capture": bool(node.get("artifact_truncated")),
+    }
+    if inspection == "describe":
+        if node.get("artifact_kind") == "table":
+            rows = list(content.get("rows", []))
+            columns = list(map(str, content.get("columns", [])))
+            requested = list(map(str, request.get("columns", [])))
+            unknown = set(requested) - set(columns)
+            if unknown:
+                raise ValueError(f"describe requested unknown columns: {sorted(unknown)}")
+            numeric = {}
+            for column in requested:
+                values = [
+                    float(row[column])
+                    for row in rows
+                    if isinstance(row.get(column), (int, float))
+                    and not isinstance(row.get(column), bool)
+                ]
+                if values:
+                    ordered = sorted(values)
+                    middle = len(ordered) // 2
+                    numeric[column] = {
+                        "count": len(values),
+                        "minimum": min(values),
+                        "maximum": max(values),
+                        "mean": sum(values) / len(values),
+                        "median": ordered[middle]
+                        if len(ordered) % 2
+                        else (ordered[middle - 1] + ordered[middle]) / 2,
+                    }
+            result = {
+                "row_count": len(rows),
+                "column_count": len(columns),
+                "columns": columns,
+                "json_value_types": {
+                    column: sorted({_json_value_type(row.get(column)) for row in rows})
+                    for column in columns
+                },
+                "null_counts": {
+                    column: sum(row.get(column) is None for row in rows)
+                    for column in columns
+                },
+                "numeric_statistics": numeric,
+            }
+        elif node.get("artifact_kind") == "document":
+            text = str(content)
+            result = {
+                "character_count": len(text),
+                "line_count": len(text.splitlines()),
+                "capture_metadata": {
+                    "artifact_size": deepcopy(node.get("artifact_size")),
+                    "artifact_truncated": bool(node.get("artifact_truncated")),
+                    "artifact_value_sha256": node.get("artifact_value_sha256"),
+                },
+            }
+        else:
+            result = {
+                "json_value_type": _json_value_type(content),
+                "artifact_size": deepcopy(node.get("artifact_size")),
+            }
+        if request.get("include_raw_metadata") is True:
+            result["raw_metadata"] = deepcopy(node.get("raw_metadata", {}))
+            result["raw_metadata_sha256"] = node.get("raw_metadata_sha256")
+    elif inspection == "full":
+        result = {"content": deepcopy(content), "more_available": False, "full_data_requested": True}
+    elif inspection == "python":
+        if python_executor is None:
+            raise ValueError("python artifact inspection is disabled: signed production sandbox unavailable")
+        result = {
+            **dict(python_executor(node, str(request.get("code") or ""))),
+            "python_analysis_requested": True,
+        }
+    elif inspection == "read":
+        query = str(request.get("query") or "")
+        if node.get("artifact_kind") == "document":
+            text = str(content)
+            if query:
+                lowered, needle, offset, matches = text.casefold(), query.casefold(), 0, []
+                while len(matches) < count:
+                    found = lowered.find(needle, offset)
+                    if found < 0:
+                        break
+                    matches.append({"character_offset": found, "text": text[found:found + len(query)]})
+                    offset = found + max(1, len(query))
+                result = {
+                    "content": matches,
+                    "returned_document_characters": sum(len(value["text"]) for value in matches),
+                    "more_available": lowered.find(needle, offset) >= 0,
+                }
+            else:
+                selected = text[start:start + count]
+                result = {
+                    "content": selected,
+                    "returned_document_characters": len(selected),
+                    "more_available": start + len(selected) < len(text),
+                }
+        elif node.get("artifact_kind") == "table":
+            rows = list(content.get("rows", []))
+            available = list(map(str, content.get("columns", [])))
+            columns = list(map(str, request.get("columns", []))) or available
+            unknown = set(columns) - set(available)
+            if unknown:
+                raise ValueError(f"read requested unknown columns: {sorted(unknown)}")
+            if query:
+                rows = [row for row in rows if query.casefold() in json.dumps(row, ensure_ascii=False).casefold()]
+            selected = [
+                {column: row.get(column) for column in columns}
+                for row in rows[start:start + count]
+            ]
+            result = {
+                "content": selected,
+                "columns": columns,
+                "returned_rows": len(selected),
+                "returned_columns": len(columns),
+                "more_available": start + len(selected) < len(rows),
+            }
+        else:
+            values = content if isinstance(content, list) else [content]
+            selected = deepcopy(values[start:start + count])
+            result = {"content": selected, "returned_records": len(selected), "more_available": start + len(selected) < len(values)}
+    else:
+        raise ValueError(f"unknown artifact inspection choice: {inspection}")
+    response = {**base, **result}
+    response["artifact_bytes_returned"] = len(_encode(response.get("content", response.get("result"))))
+    return response
+
+
+def expand_catalogue_direct_child(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    request: Mapping[str, Any],
+    *,
+    projection_builder: Callable[..., Mapping[str, Any]],
+    boundary_map: Mapping[str, str],
+    package_validator: Callable[[Mapping[str, Any]], None],
+    stack_normalizer: Callable[[Iterable[str]], Iterable[str]],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Reveal exactly one captured direct-child prefix and keep siblings hidden."""
+    if "helper_expansion" not in package.get("available_operations", []):
+        raise ValueError("helper expansion is unavailable in this reviewer package")
+    prefixes = list(request.get("prefixes", []))
+    if len(prefixes) != 1:
+        raise ValueError("exactly one direct child must be requested")
+    boundary_id = str(request.get("boundary_id") or "")
+    requested = list(map(str, prefixes[0]))
+    runtime = package.get("runtime_evidence", {})
+    collapsed = {
+        (str(value["boundary_id"]), tuple(map(str, value["func_stack"])))
+        for value in runtime.get("collapsed_children", [])
+    }
+    if (boundary_id, tuple(requested)) not in collapsed:
+        raise ValueError("helper expansion must target a current collapsed direct child")
+    reverse_map = {reviewer: captured for captured, reviewer in boundary_map.items()}
+    if boundary_id not in reverse_map:
+        raise ValueError("helper expansion boundary is not assigned")
+    job = catalogue["jobs"][catalogue["assigned_job_id"]]
+    roots = {
+        str(value["boundary_id"]): tuple(map(str, stack_normalizer(value["matched_prefix"])))
+        for value in job["realized_boundaries"]
+    }
+    visible_prefixes: dict[str, list[list[str]]] = {}
+    for reviewer_id, value in runtime.get("visible_evidence_by_boundary", {}).items():
+        captured_id = reverse_map[str(reviewer_id)]
+        visible_prefixes[captured_id] = [
+            list(map(str, prefix))
+            for prefix in value.get("visible_prefixes", [])
+            if tuple(map(str, prefix)) != roots[captured_id]
+        ]
+    visible_prefixes.setdefault(reverse_map[boundary_id], []).append(requested)
+    projection = dict(
+        projection_builder(
+            catalogue,
+            expanded_prefixes_by_boundary=visible_prefixes,
+        )
+    )
+    projection["collapsed_children"] = [
+        {**value, "boundary_id": boundary_map[str(value["boundary_id"])]}
+        for value in projection.get("collapsed_children", [])
+    ]
+    projection["visible_evidence_by_boundary"] = {
+        boundary_map[str(captured_id)]: value
+        for captured_id, value in projection.get("visible_evidence_by_boundary", {}).items()
+    }
+    projection.pop("projection_sha256", None)
+    projection["projection_sha256"] = _digest(_encode(projection))
+    old_nodes = {str(value["node_ref"]) for value in runtime.get("nodes", [])}
+    old_edges = {str(value["relationship_ref"]) for value in runtime.get("relationships", [])}
+    updated = deepcopy(dict(package))
+    updated["runtime_evidence"] = projection
+    package_validator(updated)
+    return updated, {
+        "operation": "helper_expansion",
+        "status": "completed",
+        "boundary_id": boundary_id,
+        "prefix": requested,
+        "nodes_added": [str(value["node_ref"]) for value in projection["nodes"] if str(value["node_ref"]) not in old_nodes],
+        "relationships_added": [str(value["relationship_ref"]) for value in projection["relationships"] if str(value["relationship_ref"]) not in old_edges],
+    }
+
+
+def actual_usage_record(
+    response: Mapping[str, Any], *, purpose: str, phase: str
+) -> dict[str, Any]:
+    usage = response.get("usage")
+    source = usage if isinstance(usage, Mapping) else response
+    fields = ("input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens")
+    result: dict[str, Any] = {"purpose": purpose, "phase": phase}
+    unavailable = []
+    for field in fields:
+        value = source.get(field)
+        result[field] = value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
+        if result[field] is None:
+            unavailable.append(field)
+    result["usage_status"] = "reported" if not unavailable else "partially_unavailable"
+    result["unavailable_fields"] = unavailable
+    return result
+
+
+def aggregate_actual_usage_records(calls: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
+    records = [dict(value) for value in calls]
+    result: dict[str, Any] = {"calls": records}
+    for field, output in (
+        ("input_tokens", "cumulative_actual_input_tokens"),
+        ("cached_input_tokens", "cumulative_actual_cached_input_tokens"),
+        ("output_tokens", "cumulative_actual_output_tokens"),
+        ("reasoning_tokens", "cumulative_actual_reasoning_tokens"),
+        ("total_tokens", "cumulative_actual_total_tokens"),
+    ):
+        values = [value.get(field) for value in records]
+        result[output] = sum(values) if all(isinstance(value, int) and not isinstance(value, bool) for value in values) else None
+    result["usage_complete"] = all(not value.get("unavailable_fields") for value in records)
+    return result
+
+
+def run_catalogue_follow_ups(
+    *,
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    initial_response: Mapping[str, Any],
+    reviewer: Callable[[Mapping[str, Any]], Mapping[str, Any]],
+    operation: Callable[[Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]], tuple[dict[str, Any], dict[str, Any]]],
+    phase: str,
+) -> dict[str, Any]:
+    """Process permitted unique requests in order, then score the latest receipt."""
+    current_package = deepcopy(dict(package))
+    response = dict(initial_response)
+    calls = [actual_usage_record(response, purpose="initial_review" if phase == "initial_review" else "repaired_run_review", phase=phase)]
+    call_records = [
+        {
+            key: deepcopy(response.get(key))
+            for key in ("request_sha256", "call_ids", "retry_lineage", "attempt_count")
+            if response.get(key) is not None
+        }
+    ]
+    events = []
+    follow_ups = 0
+    available = {str(value) for value in package.get("available_operations", [])}
+    seen: set[str] = set()
+    pending: list[tuple[dict[str, Any], str | None]] = []
+
+    def enqueue(requests: Iterable[Any]) -> None:
+        for value in requests:
+            if not isinstance(value, Mapping):
+                raise ValueError("operation request must be an object")
+            request = dict(value)
+            operation_name = str(request.get("operation") or "")
+            request_sha256 = _digest(_encode(request))
+            rejection = None
+            if operation_name not in available:
+                rejection = "rejected_unavailable_operation"
+            elif request_sha256 in seen:
+                rejection = "rejected_duplicate_request"
+            else:
+                seen.add(request_sha256)
+            pending.append((request, rejection))
+
+    def rejected_event(
+        request: Mapping[str, Any], status: str
+    ) -> dict[str, Any]:
+        return {
+            "operation": str(request.get("operation") or ""),
+            "status": status,
+            "request_sha256": _digest(_encode(request)),
+            "evidence": [],
+            "nodes_added": [],
+            "relationships_added": [],
+        }
+
+    enqueue(response.get("follow_up_requests", []))
+    while pending:
+        request, rejection = pending.pop(0)
+        if rejection is not None:
+            events.append(rejected_event(request, rejection))
+            continue
+        if follow_ups >= 3:
+            events.append(rejected_event(request, "rejected_limit_exhausted"))
+            continue
+        current_package, event = operation(catalogue, current_package, request)
+        events.append(event)
+        follow_ups += 1
+        response = dict(reviewer({"reviewer_package": current_package, "operation_response": event}))
+        calls.append(actual_usage_record(response, purpose=f"{event['operation']}_follow_up", phase=phase))
+        call_records.append(
+            {
+                key: deepcopy(response.get(key))
+                for key in ("request_sha256", "call_ids", "retry_lineage", "attempt_count")
+                if response.get(key) is not None
+            }
+        )
+        enqueue(response.get("follow_up_requests", []))
+    return {
+        "package": current_package,
+        "response": response,
+        "operation_events": events,
+        "operation_follow_up_count": follow_ups,
+        "usage": aggregate_actual_usage_records(calls),
+        "call_records": call_records,
+    }
 OPERATION_SEQUENCE = (
     "capture",
     "package_created",
@@ -672,6 +1044,161 @@ def production_launcher_sha256(production_launcher: Callable[..., Any]) -> str:
     except (OSError, TypeError) as exc:
         raise RuntimeError("production launcher source is unavailable for hashing") from exc
     return _digest(source.encode("utf-8"))
+
+
+ARTIFACT_PYTHON_LAUNCH_POLICY = {
+    "backend": "bubblewrap",
+    "network": "unshared",
+    "filesystem": "requested-artifact-read-only",
+    "subprocesses": "rlimit-nproc-zero-and-no-imports",
+    "environment": "clean-fixed",
+    "trusted_startup_cpu_allowance": "measured_before_user_expression",
+    "user_expression_cpu_seconds": 2,
+    "cumulative_cpu_limit_rounding": "ceil",
+    "hard_cpu_grace_seconds": 1,
+    "memory_bytes": 536870912,
+    "output_bytes": 1000000,
+    "total_wall_timeout_seconds": 10,
+    "unrestricted_fallback": False,
+}
+ARTIFACT_PYTHON_LAUNCH_POLICY_SHA256 = _digest(
+    _encode(ARTIFACT_PYTHON_LAUNCH_POLICY)
+)
+
+_ARTIFACT_PYTHON_WORKER = """
+import json
+import math
+import resource
+import pandas as pd
+
+resource.setrlimit(resource.RLIMIT_DATA, (536870912, 536870912))
+resource.setrlimit(resource.RLIMIT_FSIZE, (1000000, 1000000))
+resource.setrlimit(resource.RLIMIT_NPROC, (0, 0))
+resource.setrlimit(resource.RLIMIT_NOFILE, (16, 16))
+artifact = json.loads(open('/evidence/artifact.json', encoding='utf-8').read())
+code = json.loads(open('/evidence/code.json', encoding='utf-8').read())['code']
+df = pd.DataFrame(artifact['rows'], columns=artifact['columns']).copy(deep=True)
+startup = resource.getrusage(resource.RUSAGE_SELF)
+startup_cpu_seconds = startup.ru_utime + startup.ru_stime
+soft_cpu_seconds = math.ceil(startup_cpu_seconds + 2)
+resource.setrlimit(resource.RLIMIT_CPU, (soft_cpu_seconds, soft_cpu_seconds + 1))
+safe = {
+    'abs': abs, 'all': all, 'any': any, 'bool': bool, 'dict': dict,
+    'enumerate': enumerate, 'float': float, 'int': int, 'len': len,
+    'list': list, 'max': max, 'min': min, 'range': range, 'round': round,
+    'set': set, 'sorted': sorted, 'str': str, 'sum': sum, 'tuple': tuple,
+}
+result = eval(compile(code, '<artifact-python>', 'eval'), {'__builtins__': safe, 'df': df}, {})
+def clean(value):
+    if hasattr(value, 'item'):
+        value = value.item()
+    if isinstance(value, dict):
+        return {str(key): clean(child) for key, child in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [clean(child) for child in value]
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    return str(value)
+print(json.dumps(clean(result), ensure_ascii=False, sort_keys=True, separators=(',', ':')))
+"""
+
+
+def _validate_artifact_python_expression(code: str) -> None:
+    if not code or len(code) > 2_000:
+        raise ValueError("python inspection code must contain 1-2000 characters")
+    try:
+        tree = ast.parse(code, mode="eval")
+    except SyntaxError as exc:
+        raise ValueError("python inspection must be one expression") from exc
+    forbidden_names = {
+        "breakpoint", "compile", "delattr", "dir", "eval", "exec", "getattr",
+        "globals", "help", "input", "locals", "memoryview", "open", "setattr",
+        "type", "vars", "__import__", "os", "sys", "subprocess", "pathlib",
+        "socket", "builtins", "environ",
+    }
+    forbidden_attributes = {
+        "eval", "query", "pipe", "to_clipboard", "to_csv", "to_excel",
+        "to_feather", "to_gbq", "to_hdf", "to_html", "to_json", "to_latex",
+        "to_markdown", "to_orc", "to_parquet", "to_pickle", "to_sql",
+        "to_stata", "to_xml",
+    }
+    for item in ast.walk(tree):
+        if isinstance(item, (ast.Import, ast.ImportFrom, ast.Lambda, ast.NamedExpr, ast.Await, ast.Yield, ast.YieldFrom)):
+            raise ValueError("python inspection contains a forbidden construct")
+        if isinstance(item, ast.Name) and item.id in forbidden_names:
+            raise ValueError(f"python inspection contains forbidden name: {item.id}")
+        if isinstance(item, ast.Attribute) and (
+            item.attr.startswith("_")
+            or item.attr in forbidden_attributes
+            or item.attr.startswith("read_")
+        ):
+            raise ValueError(f"python inspection contains forbidden attribute: {item.attr}")
+
+
+def artifact_python_launcher(
+    branch_root: Path,
+    request: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    """Execute an already materialized one-artifact branch; never fall back."""
+    completed = run_python_in_branch(
+        branch_root,
+        ["/venv/bin/python", "-I", "/evidence/worker.py"],
+        role="authored_python",
+        venv_root=Path(str(request["venv_root"])),
+        timeout_seconds=10,
+    )
+    if completed.returncode != 0:
+        raise ValueError("python inspection failed inside the signed production sandbox")
+    if len(completed.stdout.encode()) > 1_000_000 or len(completed.stderr.encode()) > 1_000_000:
+        raise ValueError("python inspection exceeded its output limit")
+    result = json.loads(completed.stdout)
+    return {"result": result, "result_sha256": _digest(_encode(result))}
+
+
+artifact_python_launcher.production_launcher = True
+artifact_python_launcher.launcher_sha256 = production_launcher_sha256(artifact_python_launcher)
+artifact_python_launcher.launch_policy_sha256 = ARTIFACT_PYTHON_LAUNCH_POLICY_SHA256
+artifact_python_launcher.sandbox_backend = "bubblewrap"
+artifact_python_launcher.sandbox_backend_version = "bubblewrap 0.9.0"
+
+
+def signed_catalogue_python_executor(
+    *,
+    gate: Mapping[str, Any],
+    expected_gate_sha256: str,
+    repo_root: Path,
+) -> Callable[[Mapping[str, Any], str], Mapping[str, Any]]:
+    verify_signed_isolation_gate(
+        gate,
+        artifact_python_launcher,
+        expected_gate_sha256=expected_gate_sha256,
+        expected_launch_policy_sha256=ARTIFACT_PYTHON_LAUNCH_POLICY_SHA256,
+    )
+    venv_root = (repo_root / ".venv").resolve(strict=True)
+
+    def execute(node: Mapping[str, Any], code: str) -> Mapping[str, Any]:
+        if node.get("artifact_kind") != "table":
+            raise ValueError("python inspection requires a captured table")
+        _validate_artifact_python_expression(code)
+        with tempfile.TemporaryDirectory(prefix="corrected-artifact-") as temporary:
+            staging = Path(temporary) / "staging"
+            staging.mkdir()
+            (staging / "artifact.json").write_bytes(_encode(node["artifact_content"]))
+            (staging / "code.json").write_bytes(_encode({"code": code}))
+            (staging / "worker.py").write_text(_ARTIFACT_PYTHON_WORKER, encoding="utf-8")
+            branch = Path(temporary) / "branch"
+            materialize_opaque_branch(
+                branch,
+                allowlist={
+                    "artifact.json": staging / "artifact.json",
+                    "code.json": staging / "code.json",
+                    "worker.py": staging / "worker.py",
+                },
+                manifest_identity={"purpose": "artifact-python"},
+            )
+            return artifact_python_launcher(branch, {"venv_root": str(venv_root)})
+
+    return execute
 
 
 def _usage(result: Mapping[str, Any]) -> tuple[int | None, int | None, float]:

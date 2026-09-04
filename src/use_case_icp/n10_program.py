@@ -58,6 +58,16 @@ N13_AUTHORIZATION = Path(
     "N13_v2_2_review_ledger_collision_correction_and_package_reuse_authorization.json"
 )
 N13_AUTHORIZATION_SHA256 = "sha256:f94952ae30f1045b74a199dd95bc502df1d5f08a26b205ecd09d7c9129828400"
+N14_TASK = Path(
+    "instructions_between_agent_types/developer/current/"
+    "N14_corrected_four_instance_finish_gate_freeze_and_run.email.md"
+)
+N14_TASK_SHA256 = "sha256:45b28eb60a78523908cf94efc6de11ecdd8551ec1c4bb2debb25b7f41b083056"
+N14_AUTHORIZATION = Path(
+    "instructions_between_agent_types/overseer/decisions/"
+    "N14_corrected_four_instance_execution_authorization.json"
+)
+N14_AUTHORIZATION_SHA256 = "sha256:725b0e8f6d8b2f65cf568f56c279e7cb38145706787480dfcc5f369f5bc9ea7e"
 N13_ORIGINAL_SOURCE_TREE_SHA256 = "sha256:3e0338d5a60c72f116b686ae3f644adc12935e0cfdefaacd23d8e1e2d78d4a4f"
 N13_CORRECTION_RELATIVE = Path("post-freeze-controller-correction.json")
 N13_TEST_OUTPUT_DIR = "post-freeze-verification"
@@ -146,16 +156,22 @@ def validate_n10_bindings(repo_root: Path) -> dict[str, Any]:
         (repo_root / "instructions_between_agent_types/developer/current").glob("*.email.md"),
         key=lambda path: path.stat().st_mtime_ns,
     )
-    if current.resolve() != (repo_root / N13_TASK).resolve():
-        raise ValueError(f"N13 is no longer the latest developer task: {current.name}")
-    if sha256_file(current) != N13_TASK_SHA256:
-        raise ValueError("N13 controlling task hash mismatch")
+    if current.resolve() != (repo_root / N14_TASK).resolve():
+        raise ValueError(f"N14 is no longer the latest developer task: {current.name}")
+    if sha256_file(current) != N14_TASK_SHA256:
+        raise ValueError("N14 current task hash mismatch")
+    if sha256_file(repo_root / N14_AUTHORIZATION) != N14_AUTHORIZATION_SHA256:
+        raise ValueError("N14 current authorization hash mismatch")
+    if sha256_file(repo_root / N13_TASK) != N13_TASK_SHA256:
+        raise ValueError("N13 retained task hash mismatch")
     if sha256_file(repo_root / N13_AUTHORIZATION) != N13_AUTHORIZATION_SHA256:
         raise ValueError("N13 controlling authorization hash mismatch")
     original = _validate_n12_bindings(repo_root)
     return {
         "task_sha256": N13_TASK_SHA256,
         "authorization_sha256": N13_AUTHORIZATION_SHA256,
+        "current_task_sha256": N14_TASK_SHA256,
+        "current_authorization_sha256": N14_AUTHORIZATION_SHA256,
         "n12_task_sha256": original["task_sha256"],
         "n12_authorization_sha256": original["authorization_sha256"],
         "protocol_content_sha256": original["protocol_content_sha256"],

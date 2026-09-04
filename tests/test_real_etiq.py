@@ -6,8 +6,9 @@ import unittest
 from pathlib import Path
 
 from use_case_icp.etiq_executor import EXPECTED_ETIQ_VERSION, EtiqExecutor
+from use_case_icp.fault_injection import inject, resolve_captured_fault_nodes
 from use_case_icp.records import AgentRequest, GeneratedFile, GeneratedPipeline, RootJobState
-from use_case_icp.review import build_review_units
+from use_case_icp.review import build_review_units, frame_name
 from use_case_icp.job_store import JobStore
 
 
@@ -65,6 +66,53 @@ result = rank(collected)
             self.assertIn("rank", unit_by_name)
             self.assertFalse(unit_by_name["collect"].boundary_health.degraded)
             self.assertFalse(unit_by_name["rank"].boundary_health.degraded)
+
+    def test_fault_site_resolves_against_a_real_etiq_snapshot(self) -> None:
+        source = """import pandas as pd
+
+def target(payload):
+    values = [payload["value"], payload["value"] + 1]
+    return pd.DataFrame({"value": values})
+
+result = target({"value": 1})
+"""
+        clean = GeneratedPipeline(
+            "pipeline.py",
+            [GeneratedFile("pipeline.py", source)],
+            [
+                {
+                    "function_name": "target",
+                    "role": "fixture",
+                    "expected_inputs": [],
+                    "expected_outputs": [],
+                }
+            ],
+        )
+        injected = inject(clean, "truncate_sequence", target="target")
+        with tempfile.TemporaryDirectory() as temporary:
+            store = JobStore(Path(temporary) / "jobs")
+            store.initialize_job(AgentRequest("product", "audience"), RootJobState("job-fault"))
+            execution = EtiqExecutor(store).execute(
+                job_id="job-fault",
+                segment_id="segment-fault",
+                stage="market_demand",
+                run_id="run-fault",
+                pipeline=injected.pipeline,
+            )
+
+        resolved = resolve_captured_fault_nodes(injected, execution.snapshot)
+        self.assertTrue(execution.reviewable)
+        self.assertEqual(resolved.ground_truth.injected_function, "target")
+        self.assertEqual(resolved.ground_truth.primary_localisation_truth, "injected_function")
+        self.assertTrue(resolved.ground_truth.captured_fault_node_refs)
+        node_by_ref = {node.node_ref: node for node in execution.snapshot.nodes}
+        self.assertTrue(
+            all(
+                "target"
+                in {frame_name(frame) for frame in node_by_ref[node_ref].func_stack}
+                for node_ref in resolved.ground_truth.captured_fault_node_refs
+            )
+        )
 
 
 if __name__ == "__main__":

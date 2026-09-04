@@ -6,10 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "use-case-icp"
 version = "0.1.0"
 description = "Local-first Codex and Etiq workflow for use-case and ICP research"
-authors = [{ name = "raluca07" }]
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["jsonschema>=4.26"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
@@ -23,3 +22,7 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["outputs", ".tools", ".venv"]

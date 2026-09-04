@@ -24,7 +24,7 @@ A small local workflow that runs fresh Codex sessions for segmentation, market-d
 
 ## Setup
 
-The core uses only Python 3.12's standard library. A real run additionally needs the Codex CLI to be authenticated and Etiq installed:
+The core uses Python 3.12 plus `jsonschema`. A real run additionally needs the Codex CLI to be authenticated and Etiq installed:
 
 ```bash
 python3 -m venv .venv
@@ -39,6 +39,23 @@ Etiq is pinned to the stable
 from PyPI. It can also be installed with `pip install -e '.[etiq]'`.
 
 Without installation, run commands from the repository with `PYTHONPATH=src`.
+
+## Fault-localisation experiment
+
+Attempt 026 is the latest corrected four-instance run under protocol 2.2. It
+completed all 192 scheduled initial reviews and 43 of 96 repair traces before
+stopping fail-closed when a real-Etiq recapture was not reviewable. It is
+published as terminal-incomplete: no completed analysis, replay, or successful
+terminal closure is claimed.
+
+The curated Git publication contains the frozen packages, completed review and
+repair records, referenced provider responses, selected repaired pipelines,
+terminal records, derived descriptive summaries, and exact checksums. Raw
+provider requests and ledgers, authentication state, caches, logs, duplicated
+workspaces, and other large transient files remain excluded.
+
+See the [Attempt 026 publication](outputs/fault-experiments-v2-2-n10/attempt-026-publication-001/README.md)
+for its scope, limitations, and verification instructions.
 
 ## Run
 

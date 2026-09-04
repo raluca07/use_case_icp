@@ -231,6 +231,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     n10.set_defaults(action="fault_experiment_v2_2_n10")
 
+    corrected = subparsers.add_parser(
+        "fault-experiment-corrected-four",
+        help="qualify or freeze the append-only corrected four-instance experiment",
+    )
+    corrected.add_argument("operation", choices=("close-024", "qualify", "freeze", "verify", "live"))
+    corrected.add_argument(
+        "--attempt-root",
+        default="outputs/fault-experiments-v2-2-n10/attempt-025",
+    )
+    corrected.add_argument("--tester-gate")
+    corrected.set_defaults(action="fault_experiment_corrected_four")
+
     server = subparsers.add_parser("serve", help="serve the local dashboard")
     server.add_argument("--host", default="127.0.0.1")
     server.add_argument("--port", type=int, default=8000)
@@ -541,6 +553,104 @@ def main(argv: list[str] | None = None) -> int:
         print(status_path)
         status = json.loads(status_path.read_text())
         return 0 if status.get("status") in {"ready", "completed_experiment_and_analysis"} else 1
+    if args.action == "fault_experiment_corrected_four":
+        from .corrected_experiment import (
+            build_corrected_attempt,
+            freeze_corrected_attempt,
+            production_callbacks,
+            record_attempt_024_incomplete,
+            run_corrected_lifecycle,
+            verify_frozen_attempt,
+            write_readiness_report,
+        )
+
+        try:
+            tester_gate = None
+            if args.tester_gate:
+                gate_path = Path(args.tester_gate)
+                if not gate_path.is_absolute():
+                    gate_path = repo_root / gate_path
+                tester_gate = json.loads(gate_path.read_text())
+            if args.operation == "close-024":
+                attempt_root = Path(args.attempt_root)
+                if not attempt_root.is_absolute():
+                    attempt_root = repo_root / attempt_root
+                print(record_attempt_024_incomplete(repo_root, attempt_root))
+            elif args.operation == "qualify":
+                result = build_corrected_attempt(repo_root, tester_gate=tester_gate)
+                attempt_root = Path(args.attempt_root)
+                if not attempt_root.is_absolute():
+                    attempt_root = repo_root / attempt_root
+                readiness_path = write_readiness_report(
+                    repo_root, attempt_root, tester_gate=tester_gate
+                )
+                print(
+                    json.dumps(
+                        {
+                            "qualification": result["qualification"],
+                            "zero_model_lifecycle": result["zero_model_lifecycle"],
+                            "counts": {
+                                "packages": len(result["packages"]),
+                                "initial_reviews": len(result["schedule"]["review_trials"]),
+                                "repair_traces": len(result["schedule"]["repair_traces"]),
+                            },
+                            "readiness_report": str(readiness_path),
+                        },
+                        indent=2,
+                    )
+                )
+                if result["zero_model_lifecycle"].get("status") != "passed":
+                    return 1
+            elif args.operation == "freeze":
+                attempt_root = Path(args.attempt_root)
+                if not attempt_root.is_absolute():
+                    attempt_root = repo_root / attempt_root
+                print(freeze_corrected_attempt(repo_root, attempt_root, tester_gate=tester_gate))
+            elif args.operation == "verify":
+                attempt_root = Path(args.attempt_root)
+                if not attempt_root.is_absolute():
+                    attempt_root = repo_root / attempt_root
+                print(
+                    json.dumps(
+                        verify_frozen_attempt(
+                            repo_root, attempt_root, tester_gate=tester_gate
+                        ),
+                        indent=2,
+                    )
+                )
+            else:
+                if tester_gate is None:
+                    raise RuntimeError(
+                        "live execution requires --tester-gate with the current signed Tester artifact"
+                    )
+                attempt_root = Path(args.attempt_root)
+                if not attempt_root.is_absolute():
+                    attempt_root = repo_root / attempt_root
+                reviewer, repairer, rerunner = production_callbacks(
+                    repo_root, attempt_root
+                )
+                terminal_path = run_corrected_lifecycle(
+                    repo_root,
+                    attempt_root,
+                    reviewer=reviewer,
+                    repairer=repairer,
+                    rerunner=rerunner,
+                    tester_gate=tester_gate,
+                )
+                print(terminal_path)
+                terminal = json.loads(terminal_path.read_text())
+                return (
+                    0
+                    if terminal.get("status") == "completed_experiment_and_analysis"
+                    else 1
+                )
+        except Exception as exc:
+            print(
+                f"Corrected four-instance experiment failed: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            return 1
+        return 0
     if args.action == "run":
         codex = CodexRunner(
             store,

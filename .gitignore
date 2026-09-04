@@ -3,35 +3,85 @@ __pycache__/
 .pytest_cache/
 .venv/
 outputs/
+
+# Internal planning, agent coordination, and working documentation
+instructions_between_agent_types/
+docs/blogpost/archive/
 docs/experiments/**/raw-job/
 
 # Secrets and local configuration
 .env
 .env.*
 !.env.example
+.envrc
+.direnv/
 *.pem
 *.key
 *.p12
 *.pfx
 credentials*.json
+client_secret*.json
+service-account*.json
+service_account*.json
 secrets/
+.secrets/
+.netrc
+.npmrc
+.pypirc
+.aws/
+.azure/
+.config/gcloud/
+.codex/
+.git-credentials
+.ssh/
+.docker/
+.kube/
+*.jks
+*.keystore
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+# Local tool and agent state
+.tools/
 
 # Packaging
 *.egg-info/
+.eggs/
+*.egg
+*.whl
 build/
 dist/
+/venv/
+/env/
 
 # Test, type-checker, and lint output
 .coverage
+.coverage.*
+coverage.json
 coverage.xml
 htmlcov/
 .mypy_cache/
 .ruff_cache/
 .tox/
 .nox/
+.ipynb_checkpoints/
+node_modules/
+.cache/
 
 # Editors and operating systems
 .vscode/
 .idea/
 .DS_Store
+Thumbs.db
+Desktop.ini
 .~lock.*#
+*.swp
+*.swo
+*.tmp
+*.log
+*.bak
+*.orig
+*.rej
+*~

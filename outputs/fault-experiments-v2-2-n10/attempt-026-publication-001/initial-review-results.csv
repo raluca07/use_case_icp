@@ -1,0 +1,17 @@
+condition,source_setting,review_records,detection,localisation,false_positives,review_input_tokens,review_cached_input_tokens,review_output_tokens,review_reasoning_tokens,review_logical_calls
+current_run,source_absent,12,5/6,3/6,3/6,204264,119296,13524,,12
+current_run,source_present,12,6/6,5/6,1/6,231192,109056,14086,,12
+etiq_empty,source_absent,12,5/6,3/6,3/6,205208,139776,13825,,12
+etiq_empty,source_present,12,5/6,4/6,0/6,232145,139776,14208,,12
+etiq_full,source_absent,12,5/6,4/6,3/6,741218,154240,19372,,15
+etiq_full,source_present,12,6/6,4/6,2/6,649626,139776,15280,,12
+etiq_random_matched,source_absent,12,6/6,4/6,2/6,490343,152832,17628,,14
+etiq_random_matched,source_present,12,5/6,3/6,1/6,451275,129536,15237,,12
+etiq_selected_adaptive,source_absent,12,5/6,4/6,3/6,720468,232960,26057,,20
+etiq_selected_adaptive,source_present,12,6/6,4/6,2/6,479775,120704,16657,,13
+etiq_selected_fixed,source_absent,12,5/6,3/6,2/6,418486,107008,14346,,12
+etiq_selected_fixed,source_present,12,6/6,4/6,1/6,548580,174720,19614,,15
+history_empty,source_absent,12,5/6,3/6,3/6,204264,119296,14105,,12
+history_empty,source_present,12,6/6,6/6,1/6,231197,139776,14152,,12
+history_full,source_absent,12,4/6,3/6,2/6,213702,98816,14170,,12
+history_full,source_present,12,6/6,5/6,1/6,240636,139776,14852,,12

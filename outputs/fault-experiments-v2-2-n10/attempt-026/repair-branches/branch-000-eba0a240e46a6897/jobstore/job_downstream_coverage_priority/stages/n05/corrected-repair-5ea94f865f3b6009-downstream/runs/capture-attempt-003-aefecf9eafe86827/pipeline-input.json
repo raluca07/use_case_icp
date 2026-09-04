@@ -1,0 +1,45 @@
+{
+  "capabilities": [
+    {
+      "capability_id": "cap-handoff",
+      "need": "trace exact artifact handoffs between jobs"
+    },
+    {
+      "capability_id": "cap-inspect",
+      "need": "inspect bounded intermediate table values"
+    },
+    {
+      "capability_id": "cap-frontier",
+      "need": "resume from a verified trusted frontier"
+    },
+    {
+      "capability_id": "cap-localize",
+      "need": "localize a transformation to one function"
+    },
+    {
+      "capability_id": "cap-compare",
+      "need": "compare selected and complete runtime evidence"
+    },
+    {
+      "capability_id": "cap-ledger",
+      "need": "preserve immutable review attempts"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "rank": 1,
+      "record_id": "n06-r07",
+      "source_id": "s07",
+      "source_weight": 3
+    }
+  ],
+  "needs": [
+    {
+      "demand_score": 4,
+      "need": "recompute downstream jobs after an upstream repair",
+      "record_id": "n06-r07",
+      "source_id": "s07",
+      "source_weight": 3
+    }
+  ]
+}
