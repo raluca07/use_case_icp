@@ -8,6 +8,7 @@ the Attempt 023 directory.
 from __future__ import annotations
 
 from copy import deepcopy
+import ast
 import hashlib
 import inspect
 import json
@@ -36,7 +37,13 @@ from .fault_operations import (
     production_launcher_sha256,
 )
 from .review import frame_name
-from .n05_program import _pipeline_payload, load_preflight_inputs
+from .fault_v21 import static_definitions
+from .n05_program import (
+    _pipeline_payload,
+    derive_review_evidence,
+    execute_two_job_chain,
+    load_preflight_inputs,
+)
 from .n05_runner import (
     copy_codex_auth,
     copy_etiq_worker_runtime,
@@ -57,7 +64,7 @@ from .n07_program import (
     _rerun_dependency_suffix,
     _source_for_scope,
 )
-from .records import jsonable
+from .records import GeneratedFile, GeneratedPipeline, jsonable
 from .repair import source_scope, validate_repair_scope
 
 
@@ -85,6 +92,73 @@ N15_CAPTURE_FILE_SHA256 = {
     "instance-04": "sha256:95a58bcaddb0ea8d70a1db37ce0db609764c7880799c72126941c9a1e337d3d7",
     "instance-12": "sha256:a4c4a6b00023e0d493bb45b754d799936f32658178ac53a9cac5fe57536ec736",
 }
+ATTEMPT_028 = Path("outputs/fault-experiments-v2-2-n10/attempt-028")
+ATTEMPT_029 = Path("outputs/fault-experiments-v2-2-n10/attempt-029")
+ATTEMPT_030 = Path("outputs/fault-experiments-v2-2-n10/attempt-030")
+ATTEMPT_031 = Path("outputs/fault-experiments-v2-2-n10/attempt-031")
+ATTEMPT_032 = Path("outputs/fault-experiments-v2-2-n10/attempt-032")
+N16_TASK = Path("instructions_between_agent_types/developer/current/N16_nested_adaptive_disclosure_addendum.email.md")
+N16_TASK_SHA256 = "sha256:604988c3fbb7c53109ad78a1225f3fc93ea1a27d8a3454163636861b53dc387f"
+N16_AUTHORITY = Path("instructions_between_agent_types/overseer/decisions/N16_nested_adaptive_disclosure_addendum_authorization.json")
+N16_AUTHORITY_SHA256 = "sha256:271bdaa4abd9f44121ba6d19faf1206185780218c09569e1e65090a73b500dd1"
+N17_TASK = Path("instructions_between_agent_types/developer/current/N17_corrected_nested_adaptive_execution.email.md")
+N17_TASK_SHA256 = "sha256:b631a9428920193f3f430c529758ef6ecc137f78c24ea37301d597e726110b9b"
+N17_AUTHORITY = Path("instructions_between_agent_types/overseer/decisions/N17_corrected_nested_adaptive_execution_authorization.json")
+N17_AUTHORITY_SHA256 = "sha256:72397c419da0418559b129af2fd0b427d872a44353b2a216e8a2413e2f0fd5de"
+N17A_TASK = Path("instructions_between_agent_types/developer/current/N17A_provider_supported_schema_resume.email.md")
+N17A_TASK_SHA256 = "sha256:d7d3f19fbb2fa9a4c4b0604bcad2b2cb236b86ec1622c8667bbed3091087c0bf"
+N17A_AUTHORITY = Path("instructions_between_agent_types/overseer/decisions/N17A_provider_supported_six_boundary_schema_authorization.json")
+N17A_AUTHORITY_SHA256 = "sha256:5eafb7fc939e0dff477dbead1bdaca6faa5b1af28ce03d45b741088ee8bfce5a"
+N17B_TASK = Path("instructions_between_agent_types/developer/current/N17B_fresh_post_quota_adaptive_execution.email.md")
+N17B_TASK_SHA256 = "sha256:a1ba8be1c1ae136af29d9c7576282987808f828f06d7a4c82f8a97aef919d76d"
+N17B_AUTHORITY = Path("instructions_between_agent_types/overseer/decisions/N17B_fresh_post_quota_adaptive_execution_authorization.json")
+N17B_AUTHORITY_SHA256 = "sha256:b243e4f43340752806011e0f2d3b61a45f244862b8ea1815b04469a3ece1323b"
+N17B_SOURCE_FREEZE_FILE_SHA256 = "sha256:a4aea7afefe3d9b7b63d06e17ca9c4ee6f983547f1890e41fc29014446cc6550"
+N17B_SOURCE_FREEZE_SHA256 = "sha256:730e8296a34f78779ed3d8ff5e54f19efb04821506ddf35cd1f04fd4fd73d226"
+N17B_ORDINARY_SCHEMA_SHA256 = "sha256:67619397e786b9fa1f8d75ba1bcf91d97b61a44cf8c4089bbbf7fc34bccc8da7"
+N17B_REQUIRED_SCHEMA_SHA256 = "sha256:53fe7a06a68f59d212828aa5b1188b5266b1aa1c0e4f833e6503f76ece3adfc9"
+N18_TASK = Path("instructions_between_agent_types/developer/current/N18_downstream_first_adaptive_vs_no_graph.email.md")
+N18_TASK_SHA256 = "sha256:126fccada3e20f65118d6dd695309e85f5958a5a223c8564bc655c492a3e330b"
+N18_AUTHORITY = Path("instructions_between_agent_types/overseer/decisions/N18_downstream_first_adaptive_vs_no_graph_authorization.json")
+N18_AUTHORITY_SHA256 = "sha256:ff8fe555238095b9fa06f6f8cce0e0c19a8e730f5882a95377db854b0ce569f1"
+N18_SOURCE_FREEZE_SHA256 = "sha256:96c241b09fbc26b00d560a4cd42c59a9d53a7556fbcb0cf7e77c6e358bd513b7"
+N18_SOURCE_PACKAGE_TREE_SHA256 = "sha256:f72d67bf9ab700cca53636051f1bf3ca9de120d3ca3c4d40733530713ccedb98"
+N16_PROMPT = Path("prompts/v2_2/n16_nested_adaptive_review.md")
+N16_RESPONSE_SCHEMA = Path("schemas/v2_2/n16_nested_adaptive_review.schema.json")
+N16_REQUIRED_RESPONSE_SCHEMA = Path("schemas/v2_2/n16_nested_adaptive_required_one.schema.json")
+N16_MODES = ("compact_fixed", "adaptive_voluntary", "adaptive_required_one")
+N18_MODES = (
+    "current_run",
+    "etiq_empty",
+    "compact_fixed",
+    "adaptive_voluntary",
+    "adaptive_required_one",
+)
+N16_INSTANCES = ("n16-nested-fault", "n16-clean-control")
+N17_CAPTURE_FILE_SHA256 = {
+    "n16-clean-control": "sha256:265a48537c4fa6c946b185c5a133fd655a308c56a76e7911b42b0849c0d6025b",
+    "n16-nested-fault": "sha256:6bf6fff8868fae03d07bbf871f11cbfa702d407bd5fd3ece74b9527c979e50e6",
+}
+N17_CAPTURE_SHA256 = {
+    "n16-clean-control": "sha256:61aefc03c9986ee3676dfb39d88417241c317e7b398c4f331187ffda74d128fc",
+    "n16-nested-fault": "sha256:a93ce8e7f28b6d4fa729066d1228dcac01950499df40697b89874d7d0a6b3145",
+}
+N17_CATALOGUE_SHA256 = {
+    "n16-clean-control": "sha256:af5666200e69f00c49654d0e63636f7c434c0671168cbb79ff61a306bfd166c5",
+    "n16-nested-fault": "sha256:f9c4a61ade4796923017160e4dfa566e02482bd3c5b8cad3ac153a4abec00ec6",
+}
+N17_MUTATION_FILE_SHA256 = "sha256:8485e61a07c90700e8a6bf8147e3c0cf5263c5b557a8e4113f9e866c5a8f5466"
+N16_TASK_TEXT = (
+    "Determine whether the supplied two-job execution violates the declared "
+    "deterministic program contract. Start from the downstream result, trace "
+    "across the handoffs when warranted, and return one top root-cause boundary "
+    "in either job or no suspect."
+)
+N18_TASK_TEXT = (
+    "Start from the downstream result, inspect the downstream pipeline, trace "
+    "the exact handoffs upstream, assess all six declared boundaries across both "
+    "jobs, and return one top root-cause boundary in either job or no suspect."
+)
 N15_PROTECTED_FILE_SHA256 = {
     "src/use_case_icp/n05_runner.py": "sha256:25ba9749a212aef9d8a23513e4e1014985291708a0517e6d20f1f4469ed85bee",
     "src/use_case_icp/n07_program.py": "sha256:d338cc22ce881b2c9bae46a105f227b9aae5f563fde17b177a3435286beec34f",
@@ -252,7 +326,10 @@ def _verify_capture(capture: Mapping[str, Any]) -> None:
 def assigned_job_id(capture: Mapping[str, Any]) -> str:
     _verify_capture(capture)
     instance_id = str(capture["instance_id"])
-    position = 0 if SELECTED_INSTANCES[instance_id] == "upstream" else 1
+    if instance_id in N16_INSTANCES:
+        position = 1
+    else:
+        position = 0 if SELECTED_INSTANCES[instance_id] == "upstream" else 1
     return str(capture["job_ids"][position])
 
 
@@ -974,7 +1051,7 @@ def _controller_key_paths(value: Any, path: str = "$") -> list[str]:
             for found in _controller_key_paths(child, f"{path}[{index}]")
         ]
     if isinstance(value, str) and (
-        value in set(EVIDENCE_MODES) | set(SOURCE_SETTINGS)
+        value in set(EVIDENCE_MODES) | set(N16_MODES) | set(SOURCE_SETTINGS)
         or value.startswith(("trial-", "repair-", "brn-", "cfg-"))
     ):
         return [path]
@@ -2743,6 +2820,8 @@ def _provider_call(
     model_request: Mapping[str, Any],
     controller_parent_id: str,
     source_codex_home: Path | None = None,
+    review_prompt: Path | None = None,
+    review_schema: Path | None = None,
 ) -> dict[str, Any]:
     """Run one schema-constrained call in a fresh opaque Codex branch."""
     if kind not in {"review", "repair"}:
@@ -2750,8 +2829,12 @@ def _provider_call(
     leaks = _controller_key_paths(model_request)
     if leaks:
         raise ValueError(f"provider request contains controller-only identifiers: {leaks}")
-    prompt_relative = REVIEW_PROMPT if kind == "review" else REPAIR_PROMPT
-    schema_relative = REVIEW_SCHEMA if kind == "review" else REPAIR_SCHEMA
+    prompt_relative = (
+        review_prompt or REVIEW_PROMPT if kind == "review" else REPAIR_PROMPT
+    )
+    schema_relative = (
+        review_schema or REVIEW_SCHEMA if kind == "review" else REPAIR_SCHEMA
+    )
     prompt_template = (repo_root / prompt_relative).read_text(encoding="utf-8")
     prompt = (
         prompt_template
@@ -5040,3 +5123,2941 @@ def n15_production_reviewer(repo_root: Path, attempt_root: Path) -> Callable[...
         )
 
     return reviewer
+
+
+# N16: targeted compact-anchor nested-disclosure addendum.
+
+
+def _verify_n16_authority(repo_root: Path) -> dict[str, Any]:
+    for relative, expected in (
+        (N16_TASK, N16_TASK_SHA256),
+        (N16_AUTHORITY, N16_AUTHORITY_SHA256),
+    ):
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N16 authority input changed: {relative}")
+    for relative, expected in N15_PROTECTED_FILE_SHA256.items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise RuntimeError(f"N16 protected boundary changed: {relative}")
+    gate = _read_json(repo_root / N15_HISTORICAL_GATE)
+    current = {
+        "artifact_python_worker_sha256": sha256(_ARTIFACT_PYTHON_WORKER.encode()),
+        "production_launcher_sha256": production_launcher_sha256(artifact_python_launcher),
+        "launch_policy_sha256": ARTIFACT_PYTHON_LAUNCH_POLICY_SHA256,
+        "protocol_content_hash": PROTOCOL_CONTENT_HASH,
+        "model_configuration": {"model": PROVIDER_MODEL, "reasoning_effort": PROVIDER_REASONING_EFFORT},
+    }
+    for key, value in current.items():
+        if gate.get(key) != value:
+            raise RuntimeError(f"N16 isolation boundary changed: {key}")
+    return current
+
+
+def _verify_n17_authority(repo_root: Path) -> dict[str, Any]:
+    for relative, expected in (
+        (N17_TASK, N17_TASK_SHA256),
+        (N17_AUTHORITY, N17_AUTHORITY_SHA256),
+    ):
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N17 authority input changed: {relative}")
+    for relative, expected in N15_PROTECTED_FILE_SHA256.items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise RuntimeError(f"N17 protected boundary changed: {relative}")
+    gate = _read_json(repo_root / N15_HISTORICAL_GATE)
+    current = {
+        "artifact_python_worker_sha256": sha256(_ARTIFACT_PYTHON_WORKER.encode()),
+        "production_launcher_sha256": production_launcher_sha256(artifact_python_launcher),
+        "launch_policy_sha256": ARTIFACT_PYTHON_LAUNCH_POLICY_SHA256,
+        "protocol_content_hash": PROTOCOL_CONTENT_HASH,
+        "model_configuration": {
+            "model": PROVIDER_MODEL,
+            "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        },
+    }
+    for key, value in current.items():
+        if gate.get(key) != value:
+            raise RuntimeError(f"N17 isolation boundary changed: {key}")
+    return current
+
+
+def _verify_n17a_authority(repo_root: Path) -> dict[str, Any]:
+    for relative, expected in (
+        (N17A_TASK, N17A_TASK_SHA256),
+        (N17A_AUTHORITY, N17A_AUTHORITY_SHA256),
+    ):
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N17A authority input changed: {relative}")
+    for relative, expected in N15_PROTECTED_FILE_SHA256.items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise RuntimeError(f"N17A protected boundary changed: {relative}")
+    gate = _read_json(repo_root / N15_HISTORICAL_GATE)
+    current = {
+        "artifact_python_worker_sha256": sha256(_ARTIFACT_PYTHON_WORKER.encode()),
+        "production_launcher_sha256": production_launcher_sha256(artifact_python_launcher),
+        "launch_policy_sha256": ARTIFACT_PYTHON_LAUNCH_POLICY_SHA256,
+        "protocol_content_hash": PROTOCOL_CONTENT_HASH,
+        "model_configuration": {
+            "model": PROVIDER_MODEL,
+            "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        },
+    }
+    for key, value in current.items():
+        if gate.get(key) != value:
+            raise RuntimeError(f"N17A isolation boundary changed: {key}")
+    return current
+
+
+def _verify_n17b_authority(repo_root: Path) -> dict[str, Any]:
+    for relative, expected in (
+        (N17B_TASK, N17B_TASK_SHA256),
+        (N17B_AUTHORITY, N17B_AUTHORITY_SHA256),
+        (N16_PROMPT, "sha256:eb360f8a8ec988b67df4bbf37d5a1d9f02be328ec0ba8976a9bfcd8b3932848d"),
+        (N16_RESPONSE_SCHEMA, N17B_ORDINARY_SCHEMA_SHA256),
+        (N16_REQUIRED_RESPONSE_SCHEMA, N17B_REQUIRED_SCHEMA_SHA256),
+    ):
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N17B authority input changed: {relative}")
+    source_freeze_path = repo_root / ATTEMPT_030 / "experiment-freeze.json"
+    if sha256(source_freeze_path.read_bytes()) != N17B_SOURCE_FREEZE_FILE_SHA256:
+        raise ValueError("N17B source freeze file changed")
+    if _verified_self_hash(_read_json(source_freeze_path), "freeze_sha256") != N17B_SOURCE_FREEZE_SHA256:
+        raise ValueError("N17B source freeze logical hash changed")
+    return _verify_n17a_authority(repo_root)
+
+
+def _verify_n18_authority(repo_root: Path) -> dict[str, Any]:
+    for relative, expected in (
+        (N18_TASK, N18_TASK_SHA256),
+        (N18_AUTHORITY, N18_AUTHORITY_SHA256),
+        (N16_PROMPT, "sha256:eb360f8a8ec988b67df4bbf37d5a1d9f02be328ec0ba8976a9bfcd8b3932848d"),
+        (N16_RESPONSE_SCHEMA, N17B_ORDINARY_SCHEMA_SHA256),
+        (N16_REQUIRED_RESPONSE_SCHEMA, N17B_REQUIRED_SCHEMA_SHA256),
+    ):
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N18 authority input changed: {relative}")
+    source = repo_root / ATTEMPT_031
+    if _verified_self_hash(
+        _read_json(source / "experiment-freeze.json"), "freeze_sha256"
+    ) != N18_SOURCE_FREEZE_SHA256:
+        raise ValueError("N18 source freeze changed")
+    if sha256(_tree_hashes(source / "packages")) != N18_SOURCE_PACKAGE_TREE_SHA256:
+        raise ValueError("N18 source package tree changed")
+    terminal = _read_json(source / "terminal-state.json")
+    if terminal.get("status") != "completed_experiment_and_analysis":
+        raise ValueError("N18 source attempt is not complete")
+    return _verify_n17b_authority(repo_root)
+
+
+def _nested_attempt_context(repo_root: Path, target: Path) -> dict[str, Any]:
+    if target == (repo_root / ATTEMPT_028).resolve():
+        return {
+            "label": "N16",
+            "attempt": "attempt-028",
+            "authority_path": N16_AUTHORITY,
+            "authority_sha256": N16_AUTHORITY_SHA256,
+            "task_path": N16_TASK,
+            "task_sha256": N16_TASK_SHA256,
+            "isolation_bindings": _verify_n16_authority(repo_root),
+            "preserved_attempts": ("attempt-023", "attempt-025", "attempt-026", "attempt-027"),
+        }
+    if target == (repo_root / ATTEMPT_029).resolve():
+        return {
+            "label": "N17",
+            "attempt": "attempt-029",
+            "authority_path": N17_AUTHORITY,
+            "authority_sha256": N17_AUTHORITY_SHA256,
+            "task_path": N17_TASK,
+            "task_sha256": N17_TASK_SHA256,
+            "isolation_bindings": _verify_n17_authority(repo_root),
+            "preserved_attempts": ("attempt-027", "attempt-028"),
+        }
+    if target == (repo_root / ATTEMPT_030).resolve():
+        return {
+            "label": "N17A",
+            "attempt": "attempt-030",
+            "authority_path": N17A_AUTHORITY,
+            "authority_sha256": N17A_AUTHORITY_SHA256,
+            "task_path": N17A_TASK,
+            "task_sha256": N17A_TASK_SHA256,
+            "isolation_bindings": _verify_n17a_authority(repo_root),
+            "preserved_attempts": ("attempt-029",),
+        }
+    if target == (repo_root / ATTEMPT_031).resolve():
+        return {
+            "label": "N17B",
+            "attempt": "attempt-031",
+            "authority_path": N17B_AUTHORITY,
+            "authority_sha256": N17B_AUTHORITY_SHA256,
+            "task_path": N17B_TASK,
+            "task_sha256": N17B_TASK_SHA256,
+            "isolation_bindings": _verify_n17b_authority(repo_root),
+            "preserved_attempts": ("attempt-029", "attempt-030"),
+        }
+    if target == (repo_root / ATTEMPT_032).resolve():
+        return {
+            "label": "N18",
+            "attempt": "attempt-032",
+            "authority_path": N18_AUTHORITY,
+            "authority_sha256": N18_AUTHORITY_SHA256,
+            "task_path": N18_TASK,
+            "task_sha256": N18_TASK_SHA256,
+            "isolation_bindings": _verify_n18_authority(repo_root),
+            "preserved_attempts": ("attempt-031",),
+        }
+    raise ValueError("nested Adaptive execution is authorized only for Attempts 028 through 032")
+
+
+def _n16_clean_base(repo_root: Path) -> tuple[dict[str, GeneratedPipeline], dict[str, Any]]:
+    instances, _, _ = _load_pre_review_state(repo_root / SOURCE_ATTEMPT)
+    base = next(value for value in instances if value["instance_id"] == "instance-04")
+    source_capture = _read_json(_capture_paths(repo_root / SOURCE_ATTEMPT)["instance-04"])
+    order = list(map(str, source_capture["job_ids"]))
+    jobs = {job_id: deepcopy(base["clean_jobs"][job_id]) for job_id in order}
+    if sha256(_pipeline_payload(jobs[order[0]])) != sha256(
+        _pipeline_payload(base["clean_jobs"][order[0]])
+    ):
+        raise ValueError("N16 clean instance-04 source changed")
+    return jobs, source_capture
+
+
+def _n16_nested_mutation(
+    clean_jobs: Mapping[str, GeneratedPipeline], upstream_job_id: str
+) -> tuple[dict[str, GeneratedPipeline], dict[str, Any]]:
+    """Replace the loop's preserved `need` value with `source_id` at one AST site."""
+    pipeline = clean_jobs[upstream_job_id]
+    source_file = pipeline.files[0]
+    tree = ast.parse(source_file.content, filename=source_file.path)
+    function = next(
+        node
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "select_demand"
+    )
+    loop = next(node for node in function.body if isinstance(node, ast.For))
+    candidates = []
+    for node in ast.walk(loop):
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+            continue
+        if (
+            node.func.attr == "get"
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "row"
+            and node.args
+            and isinstance(node.args[0], ast.Constant)
+            and node.args[0].value == "need"
+        ):
+            candidates.append(node.args[0])
+    candidates.sort(key=lambda value: (value.lineno, value.col_offset))
+    if len(candidates) != 1:
+        raise ValueError("N16 deterministic nested mutation site is not unique")
+    target = candidates[0]
+    lines = source_file.content.splitlines(keepends=True)
+    line = lines[target.lineno - 1]
+    original = line[target.col_offset : target.end_col_offset]
+    if ast.literal_eval(original) != "need":
+        raise ValueError("N16 AST span does not contain the expected field")
+    lines[target.lineno - 1] = (
+        line[: target.col_offset] + '"source_id"' + line[target.end_col_offset :]
+    )
+    mutant_source = "".join(lines)
+    compile(mutant_source, source_file.path, "exec")
+    mutant_pipeline = GeneratedPipeline(
+        entry_file=pipeline.entry_file,
+        files=[
+            GeneratedFile(item.path, mutant_source if item.path == source_file.path else item.content)
+            for item in pipeline.files
+        ],
+        review_boundaries=deepcopy(pipeline.review_boundaries),
+    )
+    target_identity = next(
+        value
+        for value in static_definitions(upstream_job_id, mutant_pipeline)
+        if value["qualified_function_name"] == "select_demand"
+    )
+    for boundary in mutant_pipeline.review_boundaries:
+        if boundary.get("qualified_function_name") == "select_demand":
+            boundary["function_source_sha256"] = target_identity["function_source_sha256"]
+    mutant_pipeline.validate()
+    mutant_jobs = {job_id: deepcopy(value) for job_id, value in clean_jobs.items()}
+    mutant_jobs[upstream_job_id] = mutant_pipeline
+    site = {
+        "operator": "replace_loop_preserved_need_with_source_id",
+        "job_id": upstream_job_id,
+        "source_path": source_file.path,
+        "qualified_function_name": "select_demand",
+        "ast_site_kind": "Constant",
+        "original_span": {
+            "start_line": target.lineno,
+            "end_line": target.end_lineno,
+            "start_column": target.col_offset,
+            "end_column": target.end_col_offset,
+        },
+        "mutant_span": {
+            "start_line": target.lineno,
+            "end_line": target.end_lineno,
+            "start_column": target.col_offset,
+            "end_column": target.col_offset + len('"source_id"'),
+        },
+        "original_snippet": original,
+        "mutant_snippet": '"source_id"',
+        "candidate_index": 0,
+        "candidate_count": 1,
+        "oracle_used_for_site_ordering": False,
+    }
+    return mutant_jobs, site
+
+
+def _n16_capture_from_execution(
+    instance_id: str,
+    jobs: Mapping[str, GeneratedPipeline],
+    execution: Mapping[str, Any],
+) -> dict[str, Any]:
+    return _capture_rerun(instance_id, jobs, execution, f"{instance_id}-canonical")
+
+
+def _n16_child_prefix(
+    catalogue: Mapping[str, Any], job_id: str, function_name: str
+) -> tuple[str, ...]:
+    boundary = next(
+        value
+        for value in catalogue["jobs"][job_id]["realized_boundaries"]
+        if value["function_name"] == function_name
+    )
+    root = canonical_stack(boundary["matched_prefix"])
+    direct = sorted(
+        {
+            canonical_stack(prefix)
+            for prefix in boundary["helper_prefixes"]
+            if canonical_stack(prefix)[:-1] == root
+            and any(
+                canonical_stack(node.get("func_stack", [])) == canonical_stack(prefix)
+                for node in catalogue["jobs"][job_id]["nodes"]
+            )
+        }
+    )
+    if len(direct) != 1:
+        raise ValueError("N16 target boundary lacks one exact captured direct child")
+    return direct[0]
+
+
+def _n16_source_bundle(jobs: Mapping[str, GeneratedPipeline]) -> list[dict[str, Any]]:
+    return [
+        {
+            "job_id": job_id,
+            "files": [{"path": item.path, "content": item.content} for item in pipeline.files],
+        }
+        for job_id, pipeline in jobs.items()
+    ]
+
+
+def prepare_n16_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    """Execute and capture the accepted clean/mutant pair exactly once."""
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_028).resolve()
+    if target != (repo_root / ATTEMPT_028).resolve():
+        raise ValueError("N16 preparation is authorized only for Attempt 028")
+    _verify_n16_authority(repo_root)
+    existing = sorted((target / "captures").glob("*.json"))
+    if existing:
+        if len(existing) != 2:
+            raise ValueError("N16 has a partial prepared capture set")
+        captures = {str(_read_json(path)["instance_id"]): _read_json(path) for path in existing}
+        for value in captures.values():
+            _verify_capture(value)
+        return {"status": "prepared", "captures": captures, "reused": True}
+    clean_jobs, source_capture = _n16_clean_base(repo_root)
+    upstream, downstream = list(map(str, source_capture["job_ids"]))
+    mutant_jobs, site = _n16_nested_mutation(clean_jobs, upstream)
+    scenario = load_preflight_inputs(repo_root, EXPERIMENT_ROOT)
+    executions = {}
+    jobs_by_instance = {
+        "n16-clean-control": clean_jobs,
+        "n16-nested-fault": mutant_jobs,
+    }
+    for index, instance_id in enumerate(N16_INSTANCES):
+        jobs = jobs_by_instance[instance_id]
+        branch = target / "capture-branches" / instance_id
+        materialize_opaque_branch(
+            branch,
+            allowlist={name: repo_root / EXPERIMENT_ROOT / name for name in ("scenario.json", "corpus.json", "capabilities.json", "oracles.json")},
+            manifest_identity={"purpose": "n16-canonical-capture", "instance": instance_id},
+        )
+        copy_etiq_worker_runtime(branch, repo_root / "src")
+        execution = execute_two_job_chain(
+            branch,
+            repo_root=repo_root,
+            jobs=jobs,
+            scenario=scenario,
+            run_index=index,
+            stage=f"n16-{instance_id}",
+        )
+        execution.update(derive_review_evidence(execution, jobs=jobs, scenario=scenario))
+        executions[instance_id] = execution
+    if not executions["n16-clean-control"]["oracle"]["passed"]:
+        raise ValueError("N16 clean chain failed its frozen oracle")
+    mutant_oracle = executions["n16-nested-fault"]["oracle"]
+    if mutant_oracle["passed"] or mutant_oracle["failed_check_names"] != ["top_need"]:
+        raise ValueError("N16 nested mutation is not the intended plausible oracle-effective fault")
+    captures = {
+        instance_id: _n16_capture_from_execution(
+            instance_id, jobs_by_instance[instance_id], executions[instance_id]
+        )
+        for instance_id in N16_INSTANCES
+    }
+    catalogues = {key: build_disclosure_catalogue(value) for key, value in captures.items()}
+    clean_prefix = _n16_child_prefix(catalogues["n16-clean-control"], upstream, "select_demand")
+    mutant_prefix = _n16_child_prefix(catalogues["n16-nested-fault"], upstream, "select_demand")
+    if clean_prefix != mutant_prefix:
+        raise ValueError("N16 mutation changed the exact captured child prefix")
+    selected_boundary = next(
+        value
+        for value in catalogues["n16-nested-fault"]["jobs"][upstream]["realized_boundaries"]
+        if value["function_name"] == "select_demand"
+    )
+    child_nodes = [
+        node
+        for node in catalogues["n16-nested-fault"]["jobs"][upstream]["nodes"]
+        if canonical_stack(node.get("func_stack", [])) == mutant_prefix
+    ]
+    if not child_nodes:
+        raise ValueError("N16 mutated child scope has no actual captured nodes")
+    truth_binding = next(
+        value
+        for value in _n16_binding_rows(catalogues["n16-nested-fault"])
+        if value["job_id"] == upstream and value["function_name"] == "select_demand"
+    )
+    truth_group = next(
+        value
+        for value in _n16_group_rows(
+            catalogues["n16-nested-fault"], upstream, selected_boundary,
+            canonical_stack(selected_boundary["matched_prefix"]),
+        )
+        if value["captured_prefix"] == list(mutant_prefix)
+    )
+    mutation = {
+        **site,
+        "realized_boundary_id": selected_boundary["boundary_id"],
+        "reviewer_boundary_id": truth_binding["reviewer_boundary_id"],
+        "child_group_id": truth_group["child_group_id"],
+        "captured_child_prefix": list(mutant_prefix),
+        "captured_child_node_count": len(child_nodes),
+        "mutated_statement_executed_in_child_scope": True,
+        "execution_proof": {
+            "loop_iteration_state_count": len(child_nodes),
+            "mutant_upstream_need_values_sha256": sha256(
+                [value["need"] for value in captures["n16-nested-fault"]["jobs"][upstream]["output"]["needs"]]
+            ),
+            "clean_upstream_need_values_sha256": sha256(
+                [value["need"] for value in captures["n16-clean-control"]["jobs"][upstream]["output"]["needs"]]
+            ),
+        },
+        "validation": {
+            "exactly_one_ast_site_changed": True,
+            "compiles": True,
+            "both_jobs_executed": True,
+            "schemas_preserved": all(mutant_oracle["checks"][key] for key in ("upstream_schema", "downstream_schema")),
+            "handoffs_preserved": all(x["producer_sha256"] == x["consumer_sha256"] for x in captures["n16-nested-fault"]["handoffs"]),
+            "plausible_nonempty_result": bool(captures["n16-nested-fault"]["jobs"][downstream]["output"]["priorities"]),
+            "clean_oracle_passed": True,
+            "mutant_final_oracle_failed": True,
+        },
+    }
+    mutation["mutation_sha256"] = sha256(mutation)
+    for instance_id in N16_INSTANCES:
+        capture = captures[instance_id]
+        _write_immutable(target / "captures" / f"{instance_id}.json", capture)
+        _write_immutable(target / "source-bundles" / f"{instance_id}.json", {"source_bundle": _n16_source_bundle(jobs_by_instance[instance_id])})
+        record = {
+            "schema_version": "n16-instance-1",
+            "instance_id": instance_id,
+            "designation": "nested_fault" if instance_id == "n16-nested-fault" else "matched_clean_control",
+            "base_attempt": "attempt-023",
+            "base_instance": "instance-04",
+            "base_capture_file_sha256": N15_CAPTURE_FILE_SHA256["instance-04"],
+            "source_sha256": deepcopy(capture["source_sha256"]),
+            "capture_sha256": capture["capture_sha256"],
+            "oracle": deepcopy(executions[instance_id]["oracle"]),
+            "mutation": deepcopy(mutation) if instance_id == "n16-nested-fault" else None,
+        }
+        record["instance_sha256"] = sha256(record)
+        _write_immutable(target / "instances" / f"{instance_id}.json", record)
+    _write_immutable(target / "qualification/n16-nested-mutation.json", mutation)
+    return {"status": "prepared", "captures": captures, "reused": False, "mutation": mutation}
+
+
+def prepare_n17_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    """Copy the hash-bound N17 scientific inputs without re-execution."""
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_029).resolve()
+    if target == (repo_root / ATTEMPT_029).resolve():
+        _verify_n17_authority(repo_root)
+        source = (repo_root / ATTEMPT_028).resolve()
+    elif target == (repo_root / ATTEMPT_030).resolve():
+        _verify_n17a_authority(repo_root)
+        source = (repo_root / ATTEMPT_029).resolve()
+    elif target == (repo_root / ATTEMPT_031).resolve():
+        _verify_n17b_authority(repo_root)
+        source = (repo_root / ATTEMPT_030).resolve()
+    else:
+        raise ValueError("N17 preparation is authorized only for Attempts 029 through 031")
+    mutation_path = source / "qualification/n16-nested-mutation.json"
+    if sha256(mutation_path.read_bytes()) != N17_MUTATION_FILE_SHA256:
+        raise ValueError("N17 source mutation file changed")
+    existing = sorted((target / "captures").glob("*.json"))
+    if existing:
+        if len(existing) != 2:
+            raise ValueError("N17 has a partial prepared capture set")
+        captures = {
+            str(_read_json(path)["instance_id"]): _read_json(path) for path in existing
+        }
+        for instance_id, capture in captures.items():
+            source_capture = source / "captures" / f"{instance_id}.json"
+            target_capture = target / "captures" / f"{instance_id}.json"
+            if (
+                sha256(source_capture.read_bytes()) != N17_CAPTURE_FILE_SHA256[instance_id]
+                or source_capture.read_bytes() != target_capture.read_bytes()
+            ):
+                raise ValueError("N17 prepared capture file changed")
+            if capture["capture_sha256"] != N17_CAPTURE_SHA256[instance_id]:
+                raise ValueError("N17 prepared capture hash changed")
+            _verify_capture(capture)
+            catalogue = _read_json(target / "catalogues" / f"{instance_id}.json")
+            verify_catalogue(catalogue)
+            if catalogue["catalogue_sha256"] != N17_CATALOGUE_SHA256[instance_id]:
+                raise ValueError("N17 prepared catalogue hash changed")
+            for folder in ("catalogues", "source-bundles", "instances"):
+                if (
+                    (source / folder / f"{instance_id}.json").read_bytes()
+                    != (target / folder / f"{instance_id}.json").read_bytes()
+                ):
+                    raise ValueError(f"N17 prepared {folder} input changed")
+        if mutation_path.read_bytes() != (
+            target / "qualification/n16-nested-mutation.json"
+        ).read_bytes():
+            raise ValueError("N17 prepared mutation input changed")
+        return {"status": "prepared", "captures": captures, "reused": True}
+    for instance_id in N16_INSTANCES:
+        capture_path = source / "captures" / f"{instance_id}.json"
+        if sha256(capture_path.read_bytes()) != N17_CAPTURE_FILE_SHA256[instance_id]:
+            raise ValueError("N17 source capture file changed")
+        capture = _read_json(capture_path)
+        if capture["capture_sha256"] != N17_CAPTURE_SHA256[instance_id]:
+            raise ValueError("N17 source capture logical hash changed")
+        _verify_capture(capture)
+        catalogue = _read_json(source / "catalogues" / f"{instance_id}.json")
+        verify_catalogue(catalogue)
+        if catalogue["catalogue_sha256"] != N17_CATALOGUE_SHA256[instance_id]:
+            raise ValueError("N17 source catalogue logical hash changed")
+        for folder in ("captures", "catalogues", "source-bundles", "instances"):
+            value = _read_json(source / folder / f"{instance_id}.json")
+            _write_immutable(target / folder / f"{instance_id}.json", value)
+    _write_immutable(
+        target / "qualification/n16-nested-mutation.json",
+        _read_json(mutation_path),
+    )
+    captures = {
+        instance_id: _read_json(target / "captures" / f"{instance_id}.json")
+        for instance_id in N16_INSTANCES
+    }
+    return {"status": "prepared", "captures": captures, "reused": True}
+
+
+def _n16_binding_rows(catalogue: Mapping[str, Any]) -> list[dict[str, Any]]:
+    rows = []
+    order = list(map(str, catalogue["job_order"]))
+    for job_id in reversed(order):
+        for boundary in catalogue["jobs"][job_id]["realized_boundaries"]:
+            identity = boundary["static_identity"]
+            reviewer_id = f"bnd-{sha256(['n16', job_id, identity['qualified_function_name']])[7:23]}"
+            rows.append(
+                {
+                    "job_id": job_id,
+                    "job_position": "downstream" if job_id == order[-1] else "upstream",
+                    "captured_boundary_id": str(boundary["boundary_id"]),
+                    "reviewer_boundary_id": reviewer_id,
+                    "function_name": str(boundary["function_name"]),
+                    "qualified_function_name": str(identity["qualified_function_name"]),
+                }
+            )
+    if len(rows) != 6 or len({x["reviewer_boundary_id"] for x in rows}) != 6:
+        raise ValueError("N16 requires six unique two-job boundaries")
+    return rows
+
+
+def _n16_group_rows(
+    catalogue: Mapping[str, Any],
+    job_id: str,
+    boundary: Mapping[str, Any],
+    parent_prefix: tuple[str, ...],
+) -> list[dict[str, Any]]:
+    binding = next(
+        value
+        for value in _n16_binding_rows(catalogue)
+        if value["job_id"] == job_id
+        and value["captured_boundary_id"] == str(boundary["boundary_id"])
+    )
+    prefixes = sorted(
+        {
+            canonical_stack(prefix)
+            for prefix in boundary["helper_prefixes"]
+            if canonical_stack(prefix)[:-1] == parent_prefix
+        }
+    )
+    result = []
+    for prefix in prefixes:
+        exact_nodes = [
+            node
+            for node in catalogue["jobs"][job_id]["nodes"]
+            if canonical_stack(node.get("func_stack", [])) == prefix
+        ]
+        if not exact_nodes:
+            continue
+        result.append(
+            {
+                "boundary_id": binding["reviewer_boundary_id"],
+                "child_group_id": f"grp-{sha256(['n16', job_id, binding['reviewer_boundary_id'], list(prefix)])[7:23]}",
+                "job_id": job_id,
+                "captured_type": str(prefix[-1]).split(",#", 1)[0],
+                "captured_prefix": list(prefix),
+                "node_count": len(exact_nodes),
+            }
+        )
+    return result
+
+
+def n16_compact_projection(catalogue: Mapping[str, Any]) -> dict[str, Any]:
+    anchors = []
+    collapsed = []
+    bindings = _n16_binding_rows(catalogue)
+    for binding in bindings:
+        job_id = binding["job_id"]
+        boundary = next(
+            value
+            for value in catalogue["jobs"][job_id]["realized_boundaries"]
+            if str(value["boundary_id"]) == binding["captured_boundary_id"]
+        )
+        root = canonical_stack(boundary["matched_prefix"])
+        groups = _n16_group_rows(catalogue, job_id, boundary, root)
+        public_groups = [
+            {key: deepcopy(value) for key, value in group.items() if key != "captured_prefix"}
+            for group in groups
+        ]
+        collapsed.extend(public_groups)
+        anchors.append(
+            {
+                "anchor_id": f"anc-{sha256(['n16', job_id, binding['reviewer_boundary_id']])[7:23]}",
+                "boundary_id": binding["reviewer_boundary_id"],
+                "job_id": job_id,
+                "job_position": binding["job_position"],
+                "function_identity": {
+                    "qualified_function_name": boundary["static_identity"]["qualified_function_name"],
+                    "source_path": boundary["static_identity"]["source_path"],
+                    "start_line": boundary["static_identity"].get("start_line"),
+                    "end_line": boundary["static_identity"].get("end_line"),
+                },
+                "executed": True,
+                "interface": {
+                    "expected_inputs": deepcopy(boundary["expected_inputs"]),
+                    "expected_outputs": deepcopy(boundary["expected_outputs"]),
+                    "captured_input_edge_count": len(boundary["input_relationship_refs"]),
+                    "captured_output_edge_count": len(boundary["output_relationship_refs"]),
+                },
+                "incident_handoff_ids": [
+                    str(value["handoff_id"])
+                    for value in catalogue["handoffs"]
+                    if job_id in {str(value["upstream_job_id"]), str(value["downstream_job_id"])}
+                ],
+                "eligible_child_groups": public_groups,
+            }
+        )
+    result = {
+        "job_evidence_order": list(reversed(catalogue["job_order"])),
+        "anchors": anchors,
+        "nodes": [],
+        "relationships": [],
+        "handoffs": deepcopy(list(catalogue["handoffs"])),
+        "collapsed_child_groups": collapsed,
+        "disclosed_child_groups": [],
+        "collapsed_children": deepcopy(collapsed),
+        "visible_evidence_by_boundary": {},
+    }
+    result["projection_sha256"] = sha256(result)
+    return result
+
+
+def _n16_common_base(
+    catalogue: Mapping[str, Any], neutral_base: Mapping[str, Any]
+) -> dict[str, Any]:
+    common = _n15_common_base(catalogue, neutral_base)
+    upstream, downstream = list(map(str, catalogue["job_order"]))
+    binding_by_pair = {
+        (x["job_id"], x["function_name"]): x for x in _n16_binding_rows(catalogue)
+    }
+    declarations = []
+    for job_id in (downstream, upstream):
+        for boundary in catalogue["jobs"][job_id]["realized_boundaries"]:
+            binding = binding_by_pair[(job_id, str(boundary["function_name"]))]
+            declarations.append(
+                {
+                    "boundary_id": binding["reviewer_boundary_id"],
+                    "job_id": job_id,
+                    "job_position": binding["job_position"],
+                    "function_name": str(boundary["function_name"]),
+                    "role": str(boundary["role"]),
+                    "expected_inputs": deepcopy(boundary["expected_inputs"]),
+                    "expected_outputs": deepcopy(boundary["expected_outputs"]),
+                }
+            )
+    common["review_task"] = N16_TASK_TEXT
+    common["behavioural_criteria"] = [
+        "Treat the supplied corpus and capabilities as stipulated test inputs.",
+        "Select every qualifying demand row and preserve record_id, need, demand_score, source_id, and source_weight fields.",
+        "Preserve both exact upstream-to-downstream handoffs.",
+        "Map capabilities to needs without changing the stipulated need text.",
+        "Order unsupported needs first and otherwise preserve upstream ranking.",
+        "Produce the deterministic top-need recommendation and decision required by the execution contract.",
+    ]
+    common["top_level"] = {
+        "input": deepcopy(catalogue["jobs"][upstream]["input"]),
+        "final_output": deepcopy(catalogue["jobs"][downstream]["output"]),
+    }
+    common["assigned_job"] = {
+        "job_id": downstream,
+        "observation_point": "downstream",
+        "input": deepcopy(catalogue["jobs"][downstream]["input"]),
+        "output": deepcopy(catalogue["jobs"][downstream]["output"]),
+        "stdout": str(catalogue["jobs"][downstream]["stdout"]),
+        "stderr": str(catalogue["jobs"][downstream]["stderr"]),
+    }
+    common["semantic_declarations"] = declarations
+    common["section"]["assigned_boundary_ids"] = [x["boundary_id"] for x in declarations]
+    common["review_scope_sequence"] = [
+        {"kind": "job_boundaries", "job_id": downstream, "boundary_ids": [x["boundary_id"] for x in declarations if x["job_id"] == downstream]},
+        {"kind": "handoffs", "handoffs": common["review_scope_sequence"][1]["handoffs"]},
+        {"kind": "job_boundaries", "job_id": upstream, "boundary_ids": [x["boundary_id"] for x in declarations if x["job_id"] == upstream]},
+    ]
+    return common
+
+
+def build_n16_review_package(
+    catalogue: Mapping[str, Any],
+    *,
+    evidence_mode: str,
+    source_setting: str,
+    neutral_base: Mapping[str, Any],
+    source_bundle: list[dict[str, Any]],
+) -> dict[str, Any]:
+    if evidence_mode not in N16_MODES or source_setting not in SOURCE_SETTINGS:
+        raise ValueError("unknown N16 condition")
+    projection = n16_compact_projection(catalogue)
+    operations = [] if evidence_mode == "compact_fixed" else ["helper_expansion"]
+    action_contract = {
+        "exactly_one_next_action": True,
+        "permitted_actions": [
+            *(["helper_expansion"] if evidence_mode != "compact_fixed" else []),
+            "finalize",
+        ],
+        "first_action_must_expand_one_model_selected_child_group": evidence_mode == "adaptive_required_one",
+        "maximum_completed_follow_ups": 3,
+        "batch_actions_prohibited": True,
+    }
+    package: dict[str, Any] = {
+        "schema_version": "corrected-four-instance-package-2",
+        "common_base": _n16_common_base(catalogue, neutral_base),
+        "available_operations": operations,
+        "action_contract": action_contract,
+        "prior_task_records": [],
+        "runtime_evidence": projection,
+        "allowed_evidence_refs": sorted(
+            {
+                *[x["boundary_id"] for x in projection["anchors"]],
+                *[x["anchor_id"] for x in projection["anchors"]],
+                *[x["child_group_id"] for x in projection["collapsed_child_groups"]],
+                *[str(x["handoff_id"]) for x in projection["handoffs"]],
+            }
+        ),
+    }
+    if source_setting == "source_present":
+        if len(source_bundle) != 2:
+            raise ValueError("N16 Source Present requires both source files")
+        package["source_bundle"] = deepcopy(source_bundle)
+    _validate_schema(package, PACKAGE_SCHEMA)
+    return package
+
+
+def n16_schedule() -> dict[str, Any]:
+    packages = [
+        {
+            "instance_id": instance_id,
+            "evidence_mode": mode,
+            "source_setting": source,
+            "branch_id": f"brn-{sha256(['n16', instance_id, mode, source])[7:23]}",
+        }
+        for instance_id in N16_INSTANCES
+        for mode in N16_MODES
+        for source in SOURCE_SETTINGS
+    ]
+    reviews = [
+        {
+            **package,
+            "repetition": repetition,
+            "trial_id": f"trial-{sha256(['n16', package['branch_id'], repetition])[7:23]}",
+        }
+        for package in packages
+        for repetition in range(1, 4)
+    ]
+    if (len(packages), len(reviews)) != (12, 36):
+        raise AssertionError("N16 matrix changed")
+    return {"packages": packages, "review_trials": reviews, "repair_traces": []}
+
+
+def n17b_schedule() -> dict[str, Any]:
+    packages = n16_schedule()["packages"]
+    by_condition = {
+        (value["instance_id"], value["evidence_mode"], value["source_setting"]): value
+        for value in packages
+    }
+    reviews = []
+    local_block = 0
+    for repetition in range(1, 4):
+        sources = SOURCE_SETTINGS if repetition % 2 else tuple(reversed(SOURCE_SETTINGS))
+        for source_index, source in enumerate(sources):
+            instances = N16_INSTANCES if (repetition + source_index) % 2 else tuple(reversed(N16_INSTANCES))
+            for instance_id in instances:
+                rotation = local_block % len(N16_MODES)
+                modes = N16_MODES[rotation:] + N16_MODES[:rotation]
+                for mode_position, mode in enumerate(modes, start=1):
+                    package = by_condition[(instance_id, mode, source)]
+                    reviews.append({
+                        **package,
+                        "repetition": repetition,
+                        "trial_id": f"trial-{sha256(['n17b', package['branch_id'], repetition])[7:23]}",
+                        "schedule_position": len(reviews) + 1,
+                        "local_block": local_block + 1,
+                        "mode_position": mode_position,
+                    })
+                local_block += 1
+    if len(reviews) != 36 or len({value["trial_id"] for value in reviews}) != 36:
+        raise AssertionError("N17B balanced schedule changed")
+    return {"packages": packages, "review_trials": reviews, "repair_traces": []}
+
+
+def prepare_n18_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    """Reuse Attempt 031 scientific inputs byte-for-byte without execution."""
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_032).resolve()
+    if target != (repo_root / ATTEMPT_032).resolve():
+        raise ValueError("N18 preparation is authorized only for Attempt 032")
+    _verify_n18_authority(repo_root)
+    source = (repo_root / ATTEMPT_031).resolve()
+    names = tuple(N16_INSTANCES)
+    for folder in ("captures", "catalogues", "source-bundles", "instances"):
+        for instance_id in names:
+            source_path = source / folder / f"{instance_id}.json"
+            target_path = target / folder / f"{instance_id}.json"
+            if target_path.exists():
+                if source_path.read_bytes() != target_path.read_bytes():
+                    raise ValueError(f"N18 prepared {folder} input changed")
+            else:
+                _write_immutable(target_path, _read_json(source_path))
+    source_mutation = source / "qualification/n16-nested-mutation.json"
+    target_mutation = target / "qualification/n16-nested-mutation.json"
+    if target_mutation.exists():
+        if source_mutation.read_bytes() != target_mutation.read_bytes():
+            raise ValueError("N18 prepared mutation input changed")
+    else:
+        _write_immutable(target_mutation, _read_json(source_mutation))
+    captures = {
+        instance_id: _read_json(target / "captures" / f"{instance_id}.json")
+        for instance_id in names
+    }
+    catalogues = {
+        instance_id: _read_json(target / "catalogues" / f"{instance_id}.json")
+        for instance_id in names
+    }
+    for instance_id in names:
+        if captures[instance_id]["capture_sha256"] != N17_CAPTURE_SHA256[instance_id]:
+            raise ValueError("N18 capture logical hash changed")
+        if catalogues[instance_id]["catalogue_sha256"] != N17_CATALOGUE_SHA256[instance_id]:
+            raise ValueError("N18 catalogue logical hash changed")
+        _verify_capture(captures[instance_id])
+        verify_catalogue(catalogues[instance_id])
+    return {"status": "prepared", "captures": captures, "catalogues": catalogues, "reused": True}
+
+
+def _n18_common_base(
+    catalogue: Mapping[str, Any], neutral_base: Mapping[str, Any]
+) -> dict[str, Any]:
+    common = _n16_common_base(catalogue, neutral_base)
+    upstream, downstream = list(map(str, catalogue["job_order"]))
+    common["review_task"] = N18_TASK_TEXT
+    common["job_executions"] = [
+        {
+            "job_id": job_id,
+            "job_position": "downstream" if job_id == downstream else "upstream",
+            "input": deepcopy(catalogue["jobs"][job_id]["input"]),
+            "output": deepcopy(catalogue["jobs"][job_id]["output"]),
+            "stdout": str(catalogue["jobs"][job_id]["stdout"]),
+            "stderr": str(catalogue["jobs"][job_id]["stderr"]),
+        }
+        for job_id in (downstream, upstream)
+    ]
+    common["exact_handoffs"] = deepcopy(list(catalogue["handoffs"]))
+    common["review_scope_sequence"][1]["handoffs"] = deepcopy(
+        list(catalogue["handoffs"])
+    )
+    return common
+
+
+def _n18_compact_projection(catalogue: Mapping[str, Any]) -> dict[str, Any]:
+    projection = n16_compact_projection(catalogue)
+    projection["handoffs"] = []
+    projection.pop("projection_sha256", None)
+    projection["projection_sha256"] = sha256(projection)
+    return projection
+
+
+def _n18_empty_projection(catalogue: Mapping[str, Any]) -> dict[str, Any]:
+    projection = {
+        "job_evidence_order": list(reversed(catalogue["job_order"])),
+        "anchors": [],
+        "nodes": [],
+        "relationships": [],
+        "handoffs": [],
+        "collapsed_child_groups": [],
+        "disclosed_child_groups": [],
+        "collapsed_children": [],
+        "visible_evidence_by_boundary": {},
+    }
+    projection["projection_sha256"] = sha256(projection)
+    return projection
+
+
+def build_n18_review_package(
+    catalogue: Mapping[str, Any],
+    *,
+    evidence_mode: str,
+    source_setting: str,
+    neutral_base: Mapping[str, Any],
+    source_bundle: list[dict[str, Any]],
+) -> dict[str, Any]:
+    if evidence_mode not in N18_MODES or source_setting not in SOURCE_SETTINGS:
+        raise ValueError("unknown N18 condition")
+    common = _n18_common_base(catalogue, neutral_base)
+    adaptive = evidence_mode in {"adaptive_voluntary", "adaptive_required_one"}
+    package: dict[str, Any] = {
+        "schema_version": "corrected-four-instance-package-2",
+        "common_base": common,
+        "available_operations": ["helper_expansion"] if adaptive else [],
+        "action_contract": {
+            "exactly_one_next_action": True,
+            "permitted_actions": [*( ["helper_expansion"] if adaptive else []), "finalize"],
+            "first_action_must_expand_one_model_selected_child_group": evidence_mode == "adaptive_required_one",
+            "maximum_completed_follow_ups": 3,
+            "batch_actions_prohibited": True,
+        },
+        "prior_task_records": [],
+    }
+    if evidence_mode == "etiq_empty":
+        package["runtime_evidence"] = _n18_empty_projection(catalogue)
+    elif evidence_mode in {"compact_fixed", "adaptive_voluntary", "adaptive_required_one"}:
+        package["runtime_evidence"] = _n18_compact_projection(catalogue)
+    common_refs = {
+        *[str(value["boundary_id"]) for value in common["semantic_declarations"]],
+        *[str(value["handoff_id"]) for value in common["exact_handoffs"]],
+    }
+    graph = package.get("runtime_evidence", {})
+    package["allowed_evidence_refs"] = sorted(
+        common_refs
+        | {str(value["anchor_id"]) for value in graph.get("anchors", [])}
+        | {str(value["child_group_id"]) for value in graph.get("collapsed_child_groups", [])}
+    )
+    if source_setting == "source_present":
+        if len(source_bundle) != 2:
+            raise ValueError("N18 Source Present requires both complete source files")
+        package["source_bundle"] = deepcopy(source_bundle)
+    _validate_schema(package, PACKAGE_SCHEMA)
+    return package
+
+
+def n18_schedule() -> dict[str, Any]:
+    packages = [
+        {
+            "instance_id": instance_id,
+            "evidence_mode": mode,
+            "source_setting": source,
+            "branch_id": f"brn-{sha256(['n18', instance_id, mode, source])[7:23]}",
+        }
+        for instance_id in N16_INSTANCES
+        for mode in N18_MODES
+        for source in SOURCE_SETTINGS
+    ]
+    by_condition = {
+        (value["instance_id"], value["evidence_mode"], value["source_setting"]): value
+        for value in packages
+    }
+    reviews = []
+    local_block = 0
+    for repetition in range(1, 4):
+        sources = SOURCE_SETTINGS if repetition % 2 else tuple(reversed(SOURCE_SETTINGS))
+        for source_index, source in enumerate(sources):
+            instances = N16_INSTANCES if (repetition + source_index) % 2 else tuple(reversed(N16_INSTANCES))
+            for instance_id in instances:
+                rotation = local_block % len(N18_MODES)
+                modes = N18_MODES[rotation:] + N18_MODES[:rotation]
+                for mode_position, mode in enumerate(modes, start=1):
+                    condition = by_condition[(instance_id, mode, source)]
+                    reviews.append({
+                        **condition,
+                        "repetition": repetition,
+                        "trial_id": f"trial-{sha256(['n18', condition['branch_id'], repetition])[7:23]}",
+                        "schedule_position": len(reviews) + 1,
+                        "local_block": local_block + 1,
+                        "mode_position": mode_position,
+                    })
+                local_block += 1
+    if len(packages) != 20 or len(reviews) != 60 or len({x["trial_id"] for x in reviews}) != 60:
+        raise AssertionError("N18 matrix changed")
+    return {"packages": packages, "review_trials": reviews, "repair_traces": []}
+
+
+def qualify_n18_packages(
+    packages: Iterable[Mapping[str, Any]],
+    catalogues: Mapping[str, Mapping[str, Any]],
+    schedule: Mapping[str, Any],
+) -> dict[str, Any]:
+    values = list(packages)
+    if (len(catalogues), len(values), len(schedule["review_trials"]), len(schedule["repair_traces"])) != (2, 20, 60, 0):
+        raise ValueError("N18 count invariant failed")
+    by_condition = {
+        (
+            value["controller_condition"]["instance_id"],
+            value["controller_condition"]["evidence_mode"],
+            value["controller_condition"]["source_setting"],
+        ): value["reviewer_package"]
+        for value in values
+    }
+    checks = 0
+    for instance_id in N16_INSTANCES:
+        for source in SOURCE_SETTINGS:
+            pair = {mode: by_condition[(instance_id, mode, source)] for mode in N18_MODES}
+            if len({canonical_json(value["common_base"]) for value in pair.values()}) != 1:
+                raise ValueError("N18 common base differs across modes")
+            current = pair["current_run"]
+            empty = pair["etiq_empty"]
+            fixed = pair["compact_fixed"]
+            voluntary = pair["adaptive_voluntary"]
+            required = pair["adaptive_required_one"]
+            if "runtime_evidence" in current or current["available_operations"]:
+                raise ValueError("N18 Current exposes graph evidence or operations")
+            empty_graph = empty.get("runtime_evidence", {})
+            if empty["available_operations"] or any(empty_graph.get(key) for key in (
+                "anchors", "collapsed_child_groups", "nodes", "relationships", "handoffs"
+            )):
+                raise ValueError("N18 Empty exposes graph evidence or operations")
+            for package in (fixed, voluntary, required):
+                graph = package["runtime_evidence"]
+                if len(graph["anchors"]) != 6 or graph["nodes"] or graph["relationships"] or graph["handoffs"]:
+                    raise ValueError("N18 compact graph is not six anchors with no disclosed internals")
+            if len({canonical_json(x["runtime_evidence"]) for x in (fixed, voluntary, required)}) != 1:
+                raise ValueError("N18 Fixed and Adaptive initial graph evidence differs")
+            if _differing_top_level_keys(current, empty) != {"runtime_evidence"}:
+                raise ValueError("N18 Current and Empty differ outside graph framing")
+            if _differing_top_level_keys(empty, fixed) != {"runtime_evidence", "allowed_evidence_refs"}:
+                raise ValueError("N18 Empty and Fixed differ outside graph evidence")
+            checks += 5
+        for mode in N18_MODES:
+            present = by_condition[(instance_id, mode, "source_present")]
+            absent = by_condition[(instance_id, mode, "source_absent")]
+            if _differing_top_level_keys(present, absent) != {"source_bundle"}:
+                raise ValueError("N18 source pair differs outside its source bundle")
+            checks += 1
+    for record in values:
+        package = record["reviewer_package"]
+        common = package["common_base"]
+        if [x["job_position"] for x in common["job_executions"]] != ["downstream", "upstream"]:
+            raise ValueError("N18 package is not downstream-first")
+        if len(common["exact_handoffs"]) != 2 or len(common["section"]["assigned_boundary_ids"]) != 6:
+            raise ValueError("N18 common execution scope is incomplete")
+        if _controller_key_paths(render_provider_request(package)):
+            raise ValueError("N18 model request leaks controller condition")
+        visible = canonical_json(render_provider_request(package)).decode("utf-8")
+        if any(f'"{key}"' in visible for key in ("mutation", "oracle", "designation", "truth", "instance_id")):
+            raise ValueError("N18 model request leaks hidden truth")
+        checks += 1
+    return {
+        "status": "passed",
+        "model_calls": 0,
+        "capture_count": 2,
+        "catalogue_count": 2,
+        "package_count": 20,
+        "review_count": 60,
+        "repair_count": 0,
+        "comparison_count": checks,
+    }
+
+
+def build_n18_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_032).resolve()
+    prepared = prepare_n18_attempt(repo_root, target)
+    catalogues = prepared["catalogues"]
+    source_bundles = {
+        instance_id: _read_json(target / "source-bundles" / f"{instance_id}.json")["source_bundle"]
+        for instance_id in N16_INSTANCES
+    }
+    neutral = _legacy_package(repo_root / SOURCE_ATTEMPT, "instance-04", "job_upstream_demand_provenance")
+    schedule = n18_schedule()
+    packages = []
+    for condition in schedule["packages"]:
+        catalogue = catalogues[condition["instance_id"]]
+        reviewer_package = build_n18_review_package(
+            catalogue,
+            evidence_mode=condition["evidence_mode"],
+            source_setting=condition["source_setting"],
+            neutral_base=neutral,
+            source_bundle=source_bundles[condition["instance_id"]],
+        )
+        record = {
+            "schema_version": "n18-frozen-package-1",
+            "controller_condition": deepcopy(condition),
+            "source_capture_sha256": catalogue["source_capture_sha256"],
+            "catalogue_sha256": catalogue["catalogue_sha256"],
+            "reviewer_package": reviewer_package,
+        }
+        record["package_sha256"] = sha256(record)
+        packages.append(record)
+    qualification = qualify_n18_packages(packages, catalogues, schedule)
+    return {
+        "captures": prepared["captures"],
+        "catalogues": catalogues,
+        "packages": packages,
+        "schedule": schedule,
+        "qualification": qualification,
+    }
+
+
+def build_n16_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_028).resolve()
+    if target in {
+        (repo_root / ATTEMPT_029).resolve(),
+        (repo_root / ATTEMPT_030).resolve(),
+        (repo_root / ATTEMPT_031).resolve(),
+    }:
+        prepared = prepare_n17_attempt(repo_root, target)
+    else:
+        prepared = prepare_n16_attempt(repo_root, target)
+    captures = prepared["captures"]
+    if target in {
+        (repo_root / ATTEMPT_029).resolve(),
+        (repo_root / ATTEMPT_030).resolve(),
+        (repo_root / ATTEMPT_031).resolve(),
+    }:
+        catalogues = {
+            key: _read_json(target / "catalogues" / f"{key}.json")
+            for key in N16_INSTANCES
+        }
+    else:
+        catalogues = {
+            key: build_disclosure_catalogue(value) for key, value in captures.items()
+        }
+    source_bundles = {
+        key: _read_json(target / "source-bundles" / f"{key}.json")["source_bundle"]
+        for key in N16_INSTANCES
+    }
+    schedule = n17b_schedule() if target == (repo_root / ATTEMPT_031).resolve() else n16_schedule()
+    packages = []
+    neutral = _legacy_package(repo_root / SOURCE_ATTEMPT, "instance-04", "job_upstream_demand_provenance")
+    source_records = None
+    if target == (repo_root / ATTEMPT_031).resolve():
+        _, _, source_records = _load_n16_frozen(repo_root / ATTEMPT_030)
+        source_records = {
+            (
+                value["controller_condition"]["instance_id"],
+                value["controller_condition"]["evidence_mode"],
+                value["controller_condition"]["source_setting"],
+            ): value
+            for value in source_records
+        }
+    for condition in schedule["packages"]:
+        if source_records is not None:
+            record = deepcopy(source_records[(
+                condition["instance_id"], condition["evidence_mode"], condition["source_setting"]
+            )])
+            if record["controller_condition"] != condition:
+                raise ValueError("N17B source package condition changed")
+            packages.append(record)
+            continue
+        catalogue = catalogues[condition["instance_id"]]
+        reviewer_package = build_n16_review_package(
+            catalogue,
+            evidence_mode=condition["evidence_mode"],
+            source_setting=condition["source_setting"],
+            neutral_base=neutral,
+            source_bundle=source_bundles[condition["instance_id"]],
+        )
+        record = {
+            "schema_version": (
+                "n17-frozen-package-1"
+                if target in {
+                    (repo_root / ATTEMPT_029).resolve(),
+                    (repo_root / ATTEMPT_030).resolve(),
+                    (repo_root / ATTEMPT_031).resolve(),
+                }
+                else "n16-frozen-package-1"
+            ),
+            "controller_condition": deepcopy(condition),
+            "source_capture_sha256": catalogue["source_capture_sha256"],
+            "catalogue_sha256": catalogue["catalogue_sha256"],
+            "reviewer_package": reviewer_package,
+        }
+        record["package_sha256"] = sha256(record)
+        packages.append(record)
+    qualification = qualify_n16_packages(packages, catalogues, schedule, target)
+    return {
+        "captures": captures,
+        "catalogues": catalogues,
+        "packages": packages,
+        "schedule": schedule,
+        "qualification": qualification,
+    }
+
+
+def qualify_n16_packages(
+    packages: Iterable[Mapping[str, Any]],
+    catalogues: Mapping[str, Mapping[str, Any]],
+    schedule: Mapping[str, Any],
+    attempt_root: Path,
+) -> dict[str, Any]:
+    values = list(packages)
+    if (len(catalogues), len(values), len(schedule["review_trials"]), len(schedule["repair_traces"])) != (2, 12, 36, 0):
+        raise ValueError("N16 count invariant failed")
+    by_condition = {
+        (x["controller_condition"]["instance_id"], x["controller_condition"]["evidence_mode"], x["controller_condition"]["source_setting"]): x["reviewer_package"]
+        for x in values
+    }
+    for record in values:
+        package = record["reviewer_package"]
+        projection = package["runtime_evidence"]
+        if len(projection["anchors"]) != 6 or projection["nodes"] or projection["relationships"]:
+            raise ValueError("N16 initial projection is not six compact anchors")
+        if any("artifact_content" in anchor or "node_sha256" in anchor for anchor in projection["anchors"]):
+            raise ValueError("N16 compact anchor leaks artifact or raw bookkeeping")
+        if _controller_key_paths(render_provider_request(package)):
+            raise ValueError("N16 model request leaks controller treatment identity")
+        visible = canonical_json(render_provider_request(package)).decode("utf-8")
+        if any(f'"{key}"' in visible for key in ("mutation", "oracle", "designation", "truth")):
+            raise ValueError("N16 model request leaks hidden truth")
+    for instance_id in N16_INSTANCES:
+        for source in SOURCE_SETTINGS:
+            runtime = [by_condition[(instance_id, mode, source)]["runtime_evidence"] for mode in N16_MODES]
+            if len({canonical_json(value) for value in runtime}) != 1:
+                raise ValueError("N16 initial evidence differs across arms")
+            fixed = by_condition[(instance_id, "compact_fixed", source)]
+            voluntary = by_condition[(instance_id, "adaptive_voluntary", source)]
+            required = by_condition[(instance_id, "adaptive_required_one", source)]
+            if fixed["available_operations"] or fixed["action_contract"]["permitted_actions"] != ["finalize"]:
+                raise ValueError("Compact Fixed advertises an unavailable operation")
+            for adaptive in (voluntary, required):
+                if adaptive["available_operations"] != ["helper_expansion"]:
+                    raise ValueError("Adaptive initially advertises an unavailable operation")
+                if "artifact_inspection" in adaptive["action_contract"]["permitted_actions"]:
+                    raise ValueError("Adaptive exposes artifact inspection before a node is visible")
+        for mode in N16_MODES:
+            present = by_condition[(instance_id, mode, "source_present")]
+            absent = by_condition[(instance_id, mode, "source_absent")]
+            if _differing_top_level_keys(present, absent) != {"source_bundle"}:
+                raise ValueError("N16 source pair differs outside source")
+    mutation = _read_json(attempt_root / "qualification/n16-nested-mutation.json")
+    if not all(mutation["validation"].values()):
+        raise ValueError("N16 nested mutation qualification changed")
+    return {
+        "status": "passed",
+        "model_calls": 0,
+        "capture_count": 2,
+        "catalogue_count": 2,
+        "package_count": 12,
+        "review_count": 36,
+        "repair_count": 0,
+        "compact_anchor_count_per_package": 6,
+        "fault_child_prefix": mutation["captured_child_prefix"],
+    }
+
+
+def _n16_group_target(
+    catalogue: Mapping[str, Any], boundary_id: str, child_group_id: str
+) -> tuple[dict[str, Any], dict[str, Any], tuple[str, ...]]:
+    binding = next(
+        (x for x in _n16_binding_rows(catalogue) if x["reviewer_boundary_id"] == boundary_id),
+        None,
+    )
+    if binding is None:
+        raise ValueError("unknown compact boundary ID")
+    boundary = next(
+        x
+        for x in catalogue["jobs"][binding["job_id"]]["realized_boundaries"]
+        if str(x["boundary_id"]) == binding["captured_boundary_id"]
+    )
+    prefixes = sorted(
+        {canonical_stack(value) for value in boundary["helper_prefixes"]},
+        key=lambda value: (len(value), value),
+    )
+    for prefix in prefixes:
+        group_id = f"grp-{sha256(['n16', binding['job_id'], boundary_id, list(prefix)])[7:23]}"
+        if group_id == child_group_id:
+            return binding, boundary, prefix
+    raise ValueError("unknown child-group ID for compact boundary")
+
+
+def expand_n16_child(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    *,
+    boundary_id: str,
+    child_group_id: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    if "helper_expansion" not in package.get("available_operations", []):
+        raise ValueError("helper expansion is unavailable")
+    runtime = package.get("runtime_evidence", {})
+    collapsed = {
+        (str(x["boundary_id"]), str(x["child_group_id"]))
+        for x in runtime.get("collapsed_child_groups", [])
+    }
+    if (boundary_id, child_group_id) not in collapsed:
+        raise ValueError("child group is unavailable or already disclosed")
+    binding, boundary, prefix = _n16_group_target(catalogue, boundary_id, child_group_id)
+    job = catalogue["jobs"][binding["job_id"]]
+    nodes = [
+        {**deepcopy(node), "job_id": binding["job_id"]}
+        for node in job["nodes"]
+        if canonical_stack(node.get("func_stack", [])) == prefix
+    ]
+    if not nodes:
+        raise ValueError("selected child group has no preserved captured nodes")
+    selected_refs = {str(node["node_ref"]) for node in nodes}
+    previously_visible = {
+        str(node["node_ref"]) for node in runtime.get("nodes", [])
+    }
+    parent_ref = str(boundary["matched_function_node_ref"])
+    edges = [
+        {**deepcopy(edge), "job_id": binding["job_id"]}
+        for edge in job["relationships"]
+        if (
+            str(edge["source_ref"]) in selected_refs
+            and str(edge["target_ref"]) in selected_refs
+        )
+        or (
+            {str(edge["source_ref"]), str(edge["target_ref"])}
+            & selected_refs
+            and {str(edge["source_ref"]), str(edge["target_ref"])}
+            & (previously_visible | {parent_ref})
+        )
+    ]
+    nested = _n16_group_rows(catalogue, binding["job_id"], boundary, prefix)
+    public_nested = [
+        {key: deepcopy(value) for key, value in group.items() if key != "captured_prefix"}
+        for group in nested
+    ]
+    updated = deepcopy(dict(package))
+    projection = deepcopy(dict(runtime))
+    projection["nodes"] = list(projection.get("nodes", [])) + nodes
+    known_edges = {str(x["relationship_ref"]) for x in projection.get("relationships", [])}
+    projection["relationships"] = list(projection.get("relationships", [])) + [
+        edge for edge in edges if str(edge["relationship_ref"]) not in known_edges
+    ]
+    projection["collapsed_child_groups"] = [
+        deepcopy(value)
+        for value in projection.get("collapsed_child_groups", [])
+        if (str(value["boundary_id"]), str(value["child_group_id"]))
+        != (boundary_id, child_group_id)
+    ] + public_nested
+    projection["collapsed_children"] = deepcopy(projection["collapsed_child_groups"])
+    projection["disclosed_child_groups"] = list(
+        projection.get("disclosed_child_groups", [])
+    ) + [
+        {
+            "boundary_id": boundary_id,
+            "child_group_id": child_group_id,
+            "job_id": binding["job_id"],
+            "node_count": len(nodes),
+            "eligible_child_groups": public_nested,
+        }
+    ]
+    projection.pop("projection_sha256", None)
+    projection["projection_sha256"] = sha256(projection)
+    updated["runtime_evidence"] = projection
+    has_visible_artifact = any(node.get("artifact_content") is not None for node in nodes)
+    available_operations = ["artifact_inspection"] if has_visible_artifact else []
+    if projection["collapsed_child_groups"]:
+        available_operations = ["helper_expansion", *available_operations]
+    updated["available_operations"] = available_operations
+    updated["action_contract"]["permitted_actions"] = [
+        *available_operations,
+        "finalize",
+    ]
+    updated["allowed_evidence_refs"] = sorted(
+        set(map(str, updated["allowed_evidence_refs"]))
+        | selected_refs
+        | {str(x["relationship_ref"]) for x in edges}
+        | {str(x["child_group_id"]) for x in public_nested}
+    )
+    _validate_schema(updated, PACKAGE_SCHEMA)
+    return updated, {
+        "operation": "helper_expansion",
+        "status": "completed",
+        "boundary_id": boundary_id,
+        "child_group_id": child_group_id,
+        "resolved_job_id": binding["job_id"],
+        "nodes_added": sorted(selected_refs),
+        "relationships_added": sorted(str(x["relationship_ref"]) for x in edges),
+        "available_child_groups_added": [str(x["child_group_id"]) for x in public_nested],
+    }
+
+
+def _n16_action_request(response: Mapping[str, Any]) -> dict[str, Any] | None:
+    action = response.get("next_action")
+    if not isinstance(action, Mapping):
+        raise ValueError("N16 response lacks exactly one next action")
+    name = str(action.get("action") or "")
+    boundary_id = str(action.get("boundary_id") or "")
+    child_group_id = str(action.get("child_group_id") or "")
+    requests = list(action.get("requests", []))
+    if name == "finalize":
+        if boundary_id or child_group_id or requests:
+            raise ValueError("finalize action must not contain an operation target")
+        return None
+    if name == "helper_expansion":
+        if not boundary_id or not child_group_id or requests:
+            raise ValueError("helper expansion requires exactly one boundary and child group")
+        return {
+            "operation": name,
+            "boundary_id": boundary_id,
+            "child_group_id": child_group_id,
+        }
+    if name == "artifact_inspection":
+        if boundary_id or child_group_id or not 1 <= len(requests) <= 2:
+            raise ValueError("artifact inspection requires one or two visible-node requests")
+        return {"operation": name, "requests": deepcopy(requests)}
+    raise ValueError("unknown N16 next action")
+
+
+def perform_n16_operation(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    request: Mapping[str, Any],
+    *,
+    python_executor: Callable[[Mapping[str, Any], str], Mapping[str, Any]] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    operation = str(request.get("operation") or "")
+    try:
+        if operation not in package.get("available_operations", []):
+            raise ValueError("operation is unavailable")
+        if operation == "helper_expansion":
+            return expand_n16_child(
+                catalogue,
+                package,
+                boundary_id=str(request.get("boundary_id") or ""),
+                child_group_id=str(request.get("child_group_id") or ""),
+            )
+        if operation != "artifact_inspection":
+            raise ValueError("unknown operation")
+        evidence = []
+        for value in request.get("requests", []):
+            ref = str(value.get("node_ref") or "")
+            owner = next(
+                (
+                    str(node["job_id"])
+                    for node in package.get("runtime_evidence", {}).get("nodes", [])
+                    if str(node["node_ref"]) == ref
+                ),
+                None,
+            )
+            if owner is None:
+                raise ValueError("artifact inspection requires a currently visible node")
+            result = inspect_catalogue_artifact(
+                _catalogue_for_job(catalogue, owner),
+                package,
+                value,
+                python_executor=python_executor,
+            )
+            evidence.append({**result, "resolved_job_id": owner})
+        return deepcopy(dict(package)), {
+            "operation": operation,
+            "status": "completed",
+            "request_count": len(evidence),
+            "artifact_bytes_returned": sum(x["artifact_bytes_returned"] for x in evidence),
+            "returned_rows": sum(int(x.get("returned_rows", 0)) for x in evidence),
+            "returned_columns": sum(int(x.get("returned_columns", 0)) for x in evidence),
+            "returned_document_characters": sum(int(x.get("returned_document_characters", 0)) for x in evidence),
+            "full_data_requested": any(x.get("full_data_requested") is True for x in evidence),
+            "python_analysis_requested": any(x.get("python_analysis_requested") is True for x in evidence),
+            "evidence": evidence,
+            "nodes_added": [],
+            "relationships_added": [],
+        }
+    except (KeyError, TypeError, ValueError) as exc:
+        return deepcopy(dict(package)), {
+            "operation": operation,
+            "status": "rejected",
+            "error": str(exc),
+            "evidence": [],
+            "nodes_added": [],
+            "relationships_added": [],
+        }
+
+
+def run_n16_follow_up_loop(
+    *,
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    initial_response: Mapping[str, Any],
+    reviewer: Callable[..., Mapping[str, Any]],
+    controller_parent_id: str,
+    required_one: bool,
+    python_executor: Callable[[Mapping[str, Any], str], Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    current_package = deepcopy(dict(package))
+    response = dict(initial_response)
+    calls = [actual_usage_record(response, purpose="initial_review", phase="n16_review")]
+    call_records = [
+        {
+            key: deepcopy(response.get(key))
+            for key in ("request_sha256", "call_ids", "retry_lineage", "attempt_count")
+            if response.get(key) is not None
+        }
+    ]
+    events: list[dict[str, Any]] = []
+    completed_follow_ups = 0
+    completed_expansions = 0
+    seen: set[str] = set()
+    while True:
+        try:
+            request = _n16_action_request(response)
+        except ValueError as exc:
+            events.append({
+                "operation": "malformed_next_action",
+                "status": "rejected_malformed_request",
+                "error": str(exc),
+                "evidence": [],
+                "nodes_added": [],
+                "relationships_added": [],
+            })
+            break
+        if request is None:
+            if required_one and completed_expansions == 0:
+                events.append({
+                    "operation": "finalize",
+                    "status": "rejected_required_expansion_missing",
+                    "evidence": [],
+                    "nodes_added": [],
+                    "relationships_added": [],
+                })
+            break
+        request_hash = sha256(request)
+        if request_hash in seen:
+            events.append({
+                "operation": request["operation"],
+                "status": "rejected_duplicate_request",
+                "request_sha256": request_hash,
+                "evidence": [],
+                "nodes_added": [],
+                "relationships_added": [],
+            })
+            break
+        seen.add(request_hash)
+        if required_one and completed_expansions == 0 and request["operation"] != "helper_expansion":
+            events.append({
+                "operation": request["operation"],
+                "status": "rejected_required_expansion_missing",
+                "request_sha256": request_hash,
+                "evidence": [],
+                "nodes_added": [],
+                "relationships_added": [],
+            })
+            break
+        if completed_follow_ups >= 3:
+            events.append({
+                "operation": request["operation"],
+                "status": "rejected_limit_exhausted",
+                "request_sha256": request_hash,
+                "evidence": [],
+                "nodes_added": [],
+                "relationships_added": [],
+            })
+            break
+        next_package, event = perform_n16_operation(
+            catalogue, current_package, request, python_executor=python_executor
+        )
+        event["request_sha256"] = request_hash
+        events.append(event)
+        if event["status"] != "completed":
+            break
+        current_package = next_package
+        if event["operation"] == "helper_expansion":
+            completed_expansions += 1
+        completed_follow_ups += 1
+        response = dict(
+            _invoke_callback(
+                reviewer,
+                {
+                    "reviewer_package": current_package,
+                    "operation_response": event,
+                },
+                f"{controller_parent_id}-follow-up-{completed_follow_ups:02d}",
+            )
+        )
+        calls.append(
+            actual_usage_record(
+                response,
+                purpose=f"{event['operation']}_follow_up",
+                phase="n16_review",
+            )
+        )
+        call_records.append(
+            {
+                key: deepcopy(response.get(key))
+                for key in ("request_sha256", "call_ids", "retry_lineage", "attempt_count")
+                if response.get(key) is not None
+            }
+        )
+    if required_one and completed_expansions == 0:
+        raise RuntimeError("Required-One session did not complete a model-selected expansion")
+    return {
+        "package": current_package,
+        "response": response,
+        "operation_events": events,
+        "operation_follow_up_count": completed_follow_ups,
+        "completed_expansion_count": completed_expansions,
+        "usage": aggregate_actual_usage_records(calls),
+        "call_records": call_records,
+    }
+
+
+def validate_n16_reviewer_response(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    response: Mapping[str, Any],
+) -> dict[str, Any]:
+    validation = validate_reviewer_response(package, response)
+    selected = validation["selected_suspect_boundary_id"]
+    binding = next(
+        (x for x in _n16_binding_rows(catalogue) if x["reviewer_boundary_id"] == selected),
+        None,
+    )
+    return {
+        **validation,
+        "selected_job_id": binding["job_id"] if binding else None,
+        "selected_job_position": binding["job_position"] if binding else None,
+        "selected_function_name": binding["function_name"] if binding else None,
+    }
+
+
+def score_n16_top_suspect(
+    catalogue: Mapping[str, Any],
+    instance_record: Mapping[str, Any],
+    validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    mutation = instance_record.get("mutation")
+    if mutation is None:
+        detected = bool(validation["suspect_boundary_ids"])
+        return {
+            "designation": "matched_clean_control",
+            "fault_detected": detected,
+            "false_positive": detected,
+            "correct_job_localisation": False,
+            "exact_boundary_localisation": False,
+            "truth_job_id": None,
+            "truth_reviewer_boundary_id": None,
+            "truth_function_name": None,
+        }
+    truth_job = str(mutation["job_id"])
+    truth_boundary = str(mutation["reviewer_boundary_id"])
+    detected = bool(validation["suspect_boundary_ids"])
+    return {
+        "designation": "nested_fault",
+        "fault_detected": detected,
+        "false_positive": False,
+        "correct_job_localisation": validation.get("selected_job_id") == truth_job,
+        "exact_boundary_localisation": validation.get("selected_suspect_boundary_id") == truth_boundary,
+        "truth_job_id": truth_job,
+        "truth_reviewer_boundary_id": truth_boundary,
+        "truth_function_name": str(mutation["qualified_function_name"]),
+    }
+
+
+def _load_n16_frozen(
+    attempt_root: Path,
+) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    catalogues = {
+        path.stem: _read_json(path)
+        for path in sorted((attempt_root / "catalogues").glob("*.json"))
+    }
+    packages: dict[str, Any] = {}
+    records = []
+    for path in sorted((attempt_root / "controller-manifests").glob("*.json")):
+        manifest = _read_json(path)
+        reviewer_package = _read_json(attempt_root / manifest["reviewer_package_path"])
+        if sha256(reviewer_package) != manifest["reviewer_package_sha256"]:
+            raise ValueError("N16 frozen reviewer package changed")
+        record = {
+            **{
+                key: deepcopy(value)
+                for key, value in manifest.items()
+                if key not in {"reviewer_package_path", "reviewer_package_sha256"}
+            },
+            "reviewer_package": reviewer_package,
+        }
+        unsigned = deepcopy(record)
+        if unsigned.pop("package_sha256", None) != sha256(unsigned):
+            raise ValueError("N16 frozen package record changed")
+        packages[path.stem] = record
+        records.append(record)
+    return catalogues, packages, records
+
+
+def freeze_n16_attempt(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_028).resolve()
+    context = _nested_attempt_context(repo_root, target)
+    if (target / "experiment-freeze.json").exists():
+        raise ValueError(f"{context['attempt']} is already frozen")
+    if any((target / name).exists() for name in ("packages", "controller-manifests", "reviews")):
+        raise ValueError(f"{context['attempt']} contains pre-freeze scientific material")
+    preserved = {
+        name: sha256(_tree_hashes(repo_root / "outputs/fault-experiments-v2-2-n10" / name))
+        for name in context["preserved_attempts"]
+    }
+    built = build_n16_attempt(repo_root, target)
+    for instance_id, catalogue in built["catalogues"].items():
+        _write_immutable(target / "catalogues" / f"{instance_id}.json", catalogue)
+    for record in built["packages"]:
+        branch_id = str(record["controller_condition"]["branch_id"])
+        package_path = target / "packages" / branch_id / "reviewer-package.json"
+        _write_immutable(package_path, record["reviewer_package"])
+        manifest = {key: deepcopy(value) for key, value in record.items() if key != "reviewer_package"}
+        manifest["reviewer_package_path"] = f"packages/{branch_id}/reviewer-package.json"
+        manifest["reviewer_package_sha256"] = sha256(record["reviewer_package"])
+        _write_immutable(target / "controller-manifests" / f"{branch_id}.json", manifest)
+        if context["label"] == "N17B":
+            source_package = repo_root / ATTEMPT_030 / "packages" / branch_id / "reviewer-package.json"
+            source_manifest = repo_root / ATTEMPT_030 / "controller-manifests" / f"{branch_id}.json"
+            if source_package.read_bytes() != package_path.read_bytes() or source_manifest.read_bytes() != (
+                target / "controller-manifests" / f"{branch_id}.json"
+            ).read_bytes():
+                raise RuntimeError("N17B reused package payload or controller manifest changed")
+    _write_immutable(target / "review-design.json", {"review_trials": built["schedule"]["review_trials"]})
+    _write_immutable(target / "repair-design.json", {"repair_traces": []})
+    after = {
+        name: sha256(_tree_hashes(repo_root / "outputs/fault-experiments-v2-2-n10" / name))
+        for name in preserved
+    }
+    if after != preserved:
+        raise RuntimeError(f"a preserved attempt changed during {context['label']} freeze")
+    code_paths = (
+        Path("src/use_case_icp/corrected_experiment.py"),
+        Path("src/use_case_icp/__main__.py"),
+        Path("tests/test_corrected_experiment.py"),
+        N16_PROMPT,
+        N16_RESPONSE_SCHEMA,
+        N16_REQUIRED_RESPONSE_SCHEMA,
+    )
+    freeze = {
+        "schema_version": f"{context['label'].lower()}-nested-adaptive-freeze-1",
+        "status": "frozen_before_first_experimental_review",
+        "attempt": context["attempt"],
+        "source_attempt": {
+            "N16": "attempt-023",
+            "N17": "attempt-028",
+            "N17A": "attempt-029",
+            "N17B": "attempt-030",
+        }[context["label"]],
+        "authority": {
+            "path": context["authority_path"].as_posix(),
+            "sha256": context["authority_sha256"],
+        },
+        "task": {
+            "path": context["task_path"].as_posix(),
+            "sha256": context["task_sha256"],
+        },
+        "protected_boundaries": deepcopy(N15_PROTECTED_FILE_SHA256),
+        "isolation_bindings": context["isolation_bindings"],
+        "code_hashes": {path.as_posix(): sha256((repo_root / path).read_bytes()) for path in code_paths},
+        "preserved_attempt_tree_hashes": preserved,
+        "capture_hashes": {key: value["capture_sha256"] for key, value in built["captures"].items()},
+        "capture_file_hashes": {
+            key: sha256((target / "captures" / f"{key}.json").read_bytes())
+            for key in N16_INSTANCES
+        },
+        "source_bundle_file_hashes": {
+            key: sha256((target / "source-bundles" / f"{key}.json").read_bytes())
+            for key in N16_INSTANCES
+        },
+        "catalogue_hashes": {key: value["catalogue_sha256"] for key, value in built["catalogues"].items()},
+        "package_hashes": sorted(value["package_sha256"] for value in built["packages"]),
+        "review_design_sha256": sha256(built["schedule"]["review_trials"]),
+        "repair_design_sha256": sha256([]),
+        "mutation_file_sha256": sha256((target / "qualification/n16-nested-mutation.json").read_bytes()),
+        "expected_counts": {"captures": 2, "catalogues": 2, "packages": 12, "reviews": 36, "repairs": 0},
+        "qualification": built["qualification"],
+        "model": PROVIDER_MODEL,
+        "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        "experimental_review_records_at_freeze": 0,
+    }
+    freeze["freeze_sha256"] = sha256(freeze)
+    path = target / "experiment-freeze.json"
+    _write_immutable(path, freeze)
+    return path
+
+
+def verify_n16_frozen_attempt(
+    repo_root: Path, attempt_root: Path | None = None
+) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_028).resolve()
+    context = _nested_attempt_context(repo_root, target)
+    freeze = _read_json(target / "experiment-freeze.json")
+    observed = _verified_self_hash(freeze, "freeze_sha256")
+    expected_authority = {
+        "path": context["authority_path"].as_posix(),
+        "sha256": context["authority_sha256"],
+    }
+    if freeze.get("authority") != expected_authority:
+        raise ValueError(f"{context['label']} frozen authority changed")
+    for relative, expected in freeze["code_hashes"].items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N16 frozen code changed: {relative}")
+    for relative, expected in freeze["protected_boundaries"].items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N16 protected boundary changed: {relative}")
+    captures = {}
+    for instance_id in N16_INSTANCES:
+        capture_path = target / "captures" / f"{instance_id}.json"
+        if sha256(capture_path.read_bytes()) != freeze["capture_file_hashes"][instance_id]:
+            raise ValueError("N16 capture file changed")
+        captures[instance_id] = _read_json(capture_path)
+        _verify_capture(captures[instance_id])
+    catalogues, _, records = _load_n16_frozen(target)
+    for instance_id, catalogue in catalogues.items():
+        verify_catalogue(catalogue)
+        if catalogue["catalogue_sha256"] != freeze["catalogue_hashes"][instance_id]:
+            raise ValueError("N16 catalogue changed")
+    schedule = {
+        "packages": [deepcopy(record["controller_condition"]) for record in records],
+        "review_trials": _read_json(target / "review-design.json")["review_trials"],
+        "repair_traces": _read_json(target / "repair-design.json")["repair_traces"],
+    }
+    qualification = qualify_n16_packages(records, catalogues, schedule, target)
+    if sorted(x["package_sha256"] for x in records) != freeze["package_hashes"]:
+        raise ValueError("N16 package membership changed")
+    if sha256(schedule["review_trials"]) != freeze["review_design_sha256"] or sha256(schedule["repair_traces"]) != freeze["repair_design_sha256"]:
+        raise ValueError("N16 schedule changed")
+    return {
+        "status": "verified",
+        "freeze_sha256": observed,
+        "qualification": qualification,
+        "capture_count": 2,
+        "catalogue_count": 2,
+        "package_count": 12,
+        "review_count": 36,
+        "repair_count": 0,
+    }
+
+
+def create_n16_live_consumption(repo_root: Path, attempt_root: Path) -> Path:
+    context = _nested_attempt_context(repo_root.resolve(), attempt_root.resolve())
+    path = attempt_root / "live-consumption.json"
+    if path.is_file():
+        _verified_self_hash(_read_json(path), "consumption_sha256")
+        return path
+    if list((attempt_root / "reviews").glob("*.json")):
+        raise ValueError("N16 review exists before live authority consumption")
+    verified = verify_n16_frozen_attempt(repo_root, attempt_root)
+    record = {
+        "schema_version": f"{context['label'].lower()}-live-consumption-1",
+        "status": "live_authority_consumed_before_first_provider_call",
+        "authority": {
+            "path": context["authority_path"].as_posix(),
+            "sha256": context["authority_sha256"],
+        },
+        "freeze_sha256": verified["freeze_sha256"],
+        "package_tree_sha256": sha256(_tree_hashes(attempt_root / "packages")),
+        "controller_manifest_tree_sha256": sha256(_tree_hashes(attempt_root / "controller-manifests")),
+        "review_design_file_sha256": sha256((attempt_root / "review-design.json").read_bytes()),
+        "repair_design_file_sha256": sha256((attempt_root / "repair-design.json").read_bytes()),
+        "protected_file_hashes": deepcopy(N15_PROTECTED_FILE_SHA256),
+        "model": PROVIDER_MODEL,
+        "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        "expected_counts": {"packages": 12, "reviews": 36, "repairs": 0},
+    }
+    record["consumption_sha256"] = sha256(record)
+    _write_immutable(path, record)
+    return path
+
+
+def _n16_rate(values: list[Mapping[str, Any]], field: str) -> float:
+    return sum(bool(value[field]) for value in values) / len(values) if values else 0.0
+
+
+def _n16_contrast(
+    package_rows: list[dict[str, Any]], name: str, left: str, right: str
+) -> dict[str, Any]:
+    left_rows = [x for x in package_rows if x["evidence_mode"] == left]
+    right_rows = [x for x in package_rows if x["evidence_mode"] == right]
+    metrics = (
+        "fault_detection_rate",
+        "correct_job_localisation_rate",
+        "exact_boundary_localisation_rate",
+        "false_positive_rate",
+        "expansion_uptake_rate",
+        "mean_disclosed_nodes",
+        "mean_input_tokens",
+        "mean_cached_input_tokens",
+        "mean_output_tokens",
+    )
+    return {
+        "name": name,
+        "left": left,
+        "right": right,
+        **{
+            f"{metric}_difference": (
+                sum(float(x[metric]) for x in left_rows) / len(left_rows)
+                - sum(float(x[metric]) for x in right_rows) / len(right_rows)
+            )
+            for metric in metrics
+        },
+    }
+
+
+def _write_n16_analysis(
+    attempt_root: Path,
+    reviews: Mapping[tuple[str, int], Mapping[str, Any]],
+) -> Path:
+    is_n17 = attempt_root.name in {"attempt-029", "attempt-030", "attempt-031"}
+    rows = []
+    token_records = []
+    for record in reviews.values():
+        condition = record["controller_trial"]
+        events = record.get("operation_events", [])
+        expansions = [
+            event
+            for event in events
+            if event.get("operation") == "helper_expansion" and event.get("status") == "completed"
+        ]
+        usage = record["usage"]
+        rows.append({
+            **deepcopy(condition),
+            "designation": record["designation"],
+            "fault_detected": bool(record["fault_detected"]),
+            "false_positive": bool(record["false_positive"]),
+            "selected_job_id": record.get("selected_job_id"),
+            "selected_boundary_id": record.get("selected_suspect_boundary_id"),
+            "selected_function_name": record.get("selected_function_name"),
+            "correct_job_localisation": bool(record["correct_job_localisation"]),
+            "exact_boundary_localisation": bool(record["exact_boundary_localisation"]),
+            "completed_expansion_count": len(expansions),
+            "expanded_child_group_ids": [str(x["child_group_id"]) for x in expansions],
+            "expanded_group_contained_mutation": bool(record["expanded_group_contained_mutation"]),
+            "disclosed_node_count": int(record["disclosed_node_count"]),
+            "operation_events": deepcopy(events),
+            "input_tokens": int(usage.get("cumulative_actual_input_tokens") or 0),
+            "cached_input_tokens": int(usage.get("cumulative_actual_cached_input_tokens") or 0),
+            "output_tokens": int(usage.get("cumulative_actual_output_tokens") or 0),
+        })
+        token_records.extend(usage.get("calls", []))
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        grouped.setdefault(str(row["branch_id"]), []).append(row)
+    package_rows = []
+    for branch_id, values in sorted(grouped.items()):
+        first = values[0]
+        package_rows.append({
+            "branch_id": branch_id,
+            "instance_id": first["instance_id"],
+            "evidence_mode": first["evidence_mode"],
+            "source_setting": first["source_setting"],
+            "n": len(values),
+            "fault_detection_rate": _n16_rate(values, "fault_detected"),
+            "correct_job_localisation_rate": _n16_rate(values, "correct_job_localisation"),
+            "exact_boundary_localisation_rate": _n16_rate(values, "exact_boundary_localisation"),
+            "false_positive_rate": _n16_rate(values, "false_positive"),
+            "expansion_uptake_rate": sum(x["completed_expansion_count"] > 0 for x in values) / len(values),
+            "mutation_group_selection_rate": sum(x["expanded_group_contained_mutation"] for x in values) / len(values),
+            "mean_disclosed_nodes": sum(x["disclosed_node_count"] for x in values) / len(values),
+            "mean_input_tokens": sum(x["input_tokens"] for x in values) / len(values),
+            "mean_cached_input_tokens": sum(x["cached_input_tokens"] for x in values) / len(values),
+            "mean_output_tokens": sum(x["output_tokens"] for x in values) / len(values),
+        })
+    contrasts = [
+        _n16_contrast(package_rows, "voluntary_vs_fixed", "adaptive_voluntary", "compact_fixed"),
+        _n16_contrast(package_rows, "required_one_vs_fixed", "adaptive_required_one", "compact_fixed"),
+        _n16_contrast(package_rows, "required_one_vs_voluntary", "adaptive_required_one", "adaptive_voluntary"),
+    ]
+    for mode in N16_MODES:
+        present = [x for x in package_rows if x["evidence_mode"] == mode and x["source_setting"] == "source_present"]
+        absent = [x for x in package_rows if x["evidence_mode"] == mode and x["source_setting"] == "source_absent"]
+        contrasts.append({
+            "name": f"source_present_vs_absent__{mode}",
+            "left": "source_present",
+            "right": "source_absent",
+            **{
+                f"{metric}_difference": (
+                    sum(float(x[metric]) for x in present) / len(present)
+                    - sum(float(x[metric]) for x in absent) / len(absent)
+                )
+                for metric in (
+                    "fault_detection_rate", "correct_job_localisation_rate",
+                    "exact_boundary_localisation_rate", "false_positive_rate",
+                    "expansion_uptake_rate", "mean_disclosed_nodes",
+                    "mean_input_tokens", "mean_cached_input_tokens", "mean_output_tokens",
+                )
+            },
+        })
+    voluntary = [x for x in rows if x["evidence_mode"] == "adaptive_voluntary"]
+    required = [x for x in rows if x["evidence_mode"] == "adaptive_required_one"]
+    fault = [x for x in rows if x["designation"] == "nested_fault"]
+    controls = [x for x in rows if x["designation"] == "matched_clean_control"]
+    analysis = {
+        "schema_version": (
+            "n17-nested-adaptive-analysis-1"
+            if is_n17
+            else "n16-nested-adaptive-analysis-1"
+        ),
+        "scope_limitation": (
+            "Post-N15 corrected two-instance experiment with one nested-fault chain and one matched clean control. Attempt 028 was incomplete and is not pooled. The need-to-source_id corruption is visible in common input/output evidence, especially with source present, so localization may exhibit a ceiling."
+            if is_n17
+            else "Post-N15 targeted addendum with one nested-fault chain and one matched clean control; results are not pooled with Attempt 027."
+        ),
+        "review_count": len(rows),
+        "repair_trace_count": 0,
+        "nested_fault": {
+            "detection": {"numerator": sum(x["fault_detected"] for x in fault), "denominator": len(fault)},
+            "correct_job_localisation": {"numerator": sum(x["correct_job_localisation"] for x in fault), "denominator": len(fault)},
+            "exact_boundary_localisation": {"numerator": sum(x["exact_boundary_localisation"] for x in fault), "denominator": len(fault)},
+        },
+        "clean_control_false_positives": {"numerator": sum(x["false_positive"] for x in controls), "denominator": len(controls)},
+        "voluntary_expansion_uptake": {"numerator": sum(x["completed_expansion_count"] > 0 for x in voluntary), "denominator": len(voluntary)},
+        "required_one_expansion_completion": {"numerator": sum(x["completed_expansion_count"] > 0 for x in required), "denominator": len(required)},
+        "required_one_mutation_group_selection": {"numerator": sum(x["expanded_group_contained_mutation"] for x in required), "denominator": len(required)},
+        "contrasts": contrasts,
+        "package_averages": package_rows,
+        "rows": rows,
+        "raw_token_usage": token_records,
+        "actual_usage": aggregate_actual_usage_records(token_records),
+    }
+    analysis["analysis_sha256"] = sha256(analysis)
+    path = attempt_root / "analysis/summary.json"
+    _write_immutable(path, analysis)
+    return path
+
+
+def _n16_provider_review(
+    repo_root: Path,
+    attempt_root: Path,
+    model_request: Mapping[str, Any],
+    *,
+    controller_parent_id: str,
+    required_initial: bool = False,
+) -> dict[str, Any]:
+    return _provider_call(
+        repo_root,
+        attempt_root,
+        kind="review",
+        model_request=model_request,
+        controller_parent_id=controller_parent_id,
+        review_prompt=N16_PROMPT,
+        review_schema=(N16_REQUIRED_RESPONSE_SCHEMA if required_initial else N16_RESPONSE_SCHEMA),
+    )
+
+
+def _write_n16_results_handoff(repo_root: Path, attempt_root: Path) -> Path:
+    context = _nested_attempt_context(repo_root.resolve(), attempt_root.resolve())
+    freeze = _read_json(attempt_root / "experiment-freeze.json")
+    live = _read_json(attempt_root / "live-consumption.json")
+    analysis = _read_json(attempt_root / "analysis/summary.json")
+    replay = _read_json(attempt_root / "replay/reconciliation.json")
+    terminal = _read_json(attempt_root / "terminal-state.json")
+    handoff = {
+        "schema_version": f"{context['label'].lower()}-developer-results-handoff-1",
+        "status": terminal["status"],
+        "attempt": context["attempt"],
+        "scope_statement": analysis["scope_limitation"],
+        "authority": {
+            "path": context["authority_path"].as_posix(),
+            "sha256": context["authority_sha256"],
+        },
+        "checks": {
+            "focused_command": (
+                ".venv/bin/python -m unittest tests.test_corrected_experiment.N17CorrectedNestedAdaptiveTests"
+                if context["label"].startswith("N17")
+                else ".venv/bin/python -m unittest tests.test_corrected_experiment.N16NestedAdaptiveTests"
+            ),
+            "no_model_command": (
+                ".venv/bin/python -m use_case_icp fault-experiment-n17 build"
+                if context["label"].startswith("N17")
+                else ".venv/bin/python -m use_case_icp fault-experiment-n16 build"
+            ),
+            "no_model_result": "passed: 2 captures, 2 catalogues, 12 packages, 36 reviews, 0 repairs, 0 model calls",
+            "full_suite_run": False,
+            "zero_model_repair_lifecycle_run": False,
+            "post_live_verification": "passed",
+        },
+        "observed_counts": replay["observed_counts"],
+        "primary_results": {
+            "nested_fault": analysis["nested_fault"],
+            "clean_control_false_positives": analysis["clean_control_false_positives"],
+            "voluntary_expansion_uptake": analysis["voluntary_expansion_uptake"],
+            "required_one_expansion_completion": analysis["required_one_expansion_completion"],
+            "required_one_mutation_group_selection": analysis["required_one_mutation_group_selection"],
+        },
+        "raw_token_usage": analysis["actual_usage"],
+        "artifact_hashes": {
+            "freeze_logical_sha256": freeze["freeze_sha256"],
+            "freeze_file_sha256": sha256((attempt_root / "experiment-freeze.json").read_bytes()),
+            "live_consumption_logical_sha256": live["consumption_sha256"],
+            "live_consumption_file_sha256": sha256((attempt_root / "live-consumption.json").read_bytes()),
+            "analysis_logical_sha256": analysis["analysis_sha256"],
+            "analysis_file_sha256": sha256((attempt_root / "analysis/summary.json").read_bytes()),
+            "replay_logical_sha256": replay["replay_sha256"],
+            "replay_file_sha256": sha256((attempt_root / "replay/reconciliation.json").read_bytes()),
+            "terminal_logical_sha256": terminal["terminal_sha256"],
+            "terminal_file_sha256": sha256((attempt_root / "terminal-state.json").read_bytes()),
+            "review_tree_sha256": sha256(_tree_hashes(attempt_root / "reviews")),
+            "ledger_tree_sha256": sha256(_tree_hashes(attempt_root / "ledger")),
+            "package_tree_sha256": sha256(_tree_hashes(attempt_root / "packages")),
+        },
+        "code_hashes": deepcopy(freeze["code_hashes"]),
+        "protected_hashes_unchanged": deepcopy(freeze["protected_boundaries"]),
+        "preserved_attempt_tree_hashes": deepcopy(freeze["preserved_attempt_tree_hashes"]),
+        "result_locations": {
+            "analysis": (attempt_root / "analysis/summary.json").relative_to(repo_root).as_posix(),
+            "replay": (attempt_root / "replay/reconciliation.json").relative_to(repo_root).as_posix(),
+            "terminal": (attempt_root / "terminal-state.json").relative_to(repo_root).as_posix(),
+        },
+    }
+    handoff["handoff_sha256"] = sha256(handoff)
+    path = attempt_root / f"qualification/developer-{context['label'].lower()}-results-handoff.json"
+    _write_immutable(path, handoff)
+    return path
+
+
+def execute_n16_lifecycle(repo_root: Path, attempt_root: Path) -> Path:
+    repo_root = repo_root.resolve()
+    attempt_root = attempt_root.resolve()
+    context = _nested_attempt_context(repo_root, attempt_root)
+    verified = verify_n16_frozen_attempt(repo_root, attempt_root)
+    create_n16_live_consumption(repo_root, attempt_root)
+    catalogues, packages, records = _load_n16_frozen(attempt_root)
+    schedule = _read_json(attempt_root / "review-design.json")["review_trials"]
+    if len(schedule) != 36 or _read_json(attempt_root / "repair-design.json")["repair_traces"]:
+        raise ValueError("N16 frozen schedule changed")
+    gate = _read_json(repo_root / N15_HISTORICAL_GATE)
+    python_executor = signed_catalogue_python_executor(
+        gate=gate,
+        expected_gate_sha256=sha256(gate),
+        repo_root=repo_root,
+    )
+    instance_records = {
+        instance_id: _read_json(attempt_root / "instances" / f"{instance_id}.json")
+        for instance_id in N16_INSTANCES
+    }
+    mutation = _read_json(attempt_root / "qualification/n16-nested-mutation.json")
+    reviews: dict[tuple[str, int], dict[str, Any]] = {}
+    for trial in schedule:
+        path = attempt_root / "reviews" / f"{trial['trial_id']}.json"
+        if path.is_file():
+            record = _read_json(path)
+            _verified_self_hash(record, "review_sha256")
+            if record.get("controller_trial") != trial or record.get("status") != "complete":
+                raise ValueError("N16 partial review record is invalid")
+        else:
+            package_record = packages[str(trial["branch_id"])]
+            package = package_record["reviewer_package"]
+            required = trial["evidence_mode"] == "adaptive_required_one"
+            initial = _n16_provider_review(
+                repo_root,
+                attempt_root,
+                render_provider_request(package),
+                controller_parent_id=str(trial["trial_id"]),
+                required_initial=required,
+            )
+
+            def follow_up(
+                request: Mapping[str, Any], *, controller_parent_id: str = ""
+            ) -> Mapping[str, Any]:
+                return _n16_provider_review(
+                    repo_root,
+                    attempt_root,
+                    request,
+                    controller_parent_id=controller_parent_id,
+                )
+
+            followed = run_n16_follow_up_loop(
+                catalogue=catalogues[str(trial["instance_id"])],
+                package=package,
+                initial_response=initial,
+                reviewer=follow_up,
+                controller_parent_id=str(trial["trial_id"]),
+                required_one=required,
+                python_executor=python_executor,
+            )
+            validation = validate_n16_reviewer_response(
+                catalogues[str(trial["instance_id"])],
+                followed["package"],
+                followed["response"],
+            )
+            score = score_n16_top_suspect(
+                catalogues[str(trial["instance_id"])],
+                instance_records[str(trial["instance_id"])],
+                validation,
+            )
+            completed_groups = [
+                str(event["child_group_id"])
+                for event in followed["operation_events"]
+                if event.get("operation") == "helper_expansion" and event.get("status") == "completed"
+            ]
+            record = {
+                "schema_version": "n16-nested-adaptive-review-1",
+                "controller_trial": deepcopy(trial),
+                "package_sha256": package_record["package_sha256"],
+                "receipt": validation["receipt"],
+                "selected_suspect_boundary_id": validation["selected_suspect_boundary_id"],
+                "selected_job_id": validation["selected_job_id"],
+                "selected_job_position": validation["selected_job_position"],
+                "selected_function_name": validation["selected_function_name"],
+                **score,
+                "operation_events": followed["operation_events"],
+                "completed_expansion_count": followed["completed_expansion_count"],
+                "expanded_child_group_ids": completed_groups,
+                "expanded_group_contained_mutation": (
+                    trial["instance_id"] == "n16-nested-fault"
+                    and mutation["child_group_id"] in completed_groups
+                ),
+                "disclosed_node_count": len(followed["package"]["runtime_evidence"]["nodes"]),
+                "call_records": followed["call_records"],
+                "usage": followed["usage"],
+                "status": "complete",
+            }
+            record["review_sha256"] = sha256(record)
+            _write_immutable(path, record)
+        reviews[(str(trial["branch_id"]), int(trial["repetition"]))] = record
+    if len(reviews) != 36:
+        raise ValueError("N16 review count is incomplete")
+    required_records = [
+        value
+        for value in reviews.values()
+        if value["controller_trial"]["evidence_mode"] == "adaptive_required_one"
+    ]
+    if len(required_records) != 12 or any(value["completed_expansion_count"] < 1 for value in required_records):
+        raise RuntimeError("N16 Required-One expansion completion invariant failed")
+    call_ids = [
+        str(call_id)
+        for record in reviews.values()
+        for call in record.get("call_records", [])
+        for call_id in call.get("call_ids", [])
+    ]
+    if not call_ids or len(call_ids) != len(set(call_ids)):
+        raise ValueError("N16 scientific call lineage is empty or duplicated")
+    for call_id in call_ids:
+        verify_record(attempt_root / "ledger", record_type="call-attempt", record_id=call_id)
+    analysis_path = _write_n16_analysis(attempt_root, reviews)
+    analysis = _read_json(analysis_path)
+    replay = {
+        "schema_version": f"{context['label'].lower()}-nested-adaptive-replay-1",
+        "freeze_sha256": verified["freeze_sha256"],
+        "review_hashes": sorted(value["review_sha256"] for value in reviews.values()),
+        "observed_counts": {
+            "captures": 2,
+            "catalogues": len(catalogues),
+            "packages": len(records),
+            "reviews": len(reviews),
+            "repairs": 0,
+            "logical_provider_calls": sum(len(value.get("call_records", [])) for value in reviews.values()),
+            "provider_attempt_call_ids": len(call_ids),
+            "completed_helper_expansions": sum(value["completed_expansion_count"] for value in reviews.values()),
+            "disclosed_nodes": sum(value["disclosed_node_count"] for value in reviews.values()),
+        },
+        "all_record_hashes_recomputed": True,
+        "duplicate_logical_calls": False,
+        "required_one_sessions_complete": len(required_records) == 12,
+    }
+    replay["replay_sha256"] = sha256(replay)
+    _write_immutable(attempt_root / "replay/reconciliation.json", replay)
+    terminal = {
+        "schema_version": f"{context['label'].lower()}-nested-adaptive-terminal-1",
+        "status": "completed_experiment_and_analysis",
+        "package_count": 12,
+        "review_count": 36,
+        "repair_trace_count": 0,
+        "analysis_sha256": analysis["analysis_sha256"],
+        "replay_sha256": replay["replay_sha256"],
+    }
+    terminal["terminal_sha256"] = sha256(terminal)
+    terminal_path = attempt_root / "terminal-state.json"
+    _write_immutable(terminal_path, terminal)
+    _write_n16_results_handoff(repo_root, attempt_root)
+    return terminal_path
+
+
+def run_n16_lifecycle(repo_root: Path, attempt_root: Path) -> Path:
+    try:
+        return execute_n16_lifecycle(repo_root, attempt_root)
+    except Exception as exc:
+        label = {
+            "attempt-029": "n17",
+            "attempt-030": "n17a",
+            "attempt-031": "n17b",
+        }.get(attempt_root.resolve().name, "n16")
+        terminal = {
+            "schema_version": f"{label}-nested-adaptive-terminal-1",
+            "status": "terminal_incomplete",
+            "failure_stage": f"{label}_resumable_lifecycle",
+            "error": f"{type(exc).__name__}: {exc}",
+            "completed_review_records": len(list((attempt_root / "reviews").glob("*.json"))),
+            "completed_repair_records": 0,
+        }
+        terminal["terminal_sha256"] = sha256(terminal)
+        path = attempt_root / "terminal" / f"terminal-incomplete-{terminal['terminal_sha256'][7:23]}.json"
+        _write_immutable(path, terminal)
+        return path
+
+
+def build_n17_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    return build_n16_attempt(repo_root, attempt_root or repo_root / ATTEMPT_029)
+
+
+def freeze_n17_attempt(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    return freeze_n16_attempt(repo_root, attempt_root or repo_root / ATTEMPT_029)
+
+
+def verify_n17_frozen_attempt(
+    repo_root: Path, attempt_root: Path | None = None
+) -> dict[str, Any]:
+    return verify_n16_frozen_attempt(repo_root, attempt_root or repo_root / ATTEMPT_029)
+
+
+def run_n17_lifecycle(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    return run_n16_lifecycle(repo_root, attempt_root or repo_root / ATTEMPT_029)
+
+
+def build_n17b_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    return build_n16_attempt(repo_root, attempt_root or repo_root / ATTEMPT_031)
+
+
+def freeze_n17b_attempt(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    return freeze_n16_attempt(repo_root, attempt_root or repo_root / ATTEMPT_031)
+
+
+def verify_n17b_frozen_attempt(
+    repo_root: Path, attempt_root: Path | None = None
+) -> dict[str, Any]:
+    return verify_n16_frozen_attempt(repo_root, attempt_root or repo_root / ATTEMPT_031)
+
+
+def run_n17b_lifecycle(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    return run_n16_lifecycle(repo_root, attempt_root or repo_root / ATTEMPT_031)
+
+
+def freeze_n18_attempt(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_032).resolve()
+    context = _nested_attempt_context(repo_root, target)
+    if (target / "experiment-freeze.json").exists():
+        raise ValueError("attempt-032 is already frozen")
+    if any((target / name).exists() for name in ("packages", "controller-manifests", "reviews")):
+        raise ValueError("attempt-032 contains pre-freeze scientific material")
+    preserved = sha256(_tree_hashes(repo_root / ATTEMPT_031))
+    built = build_n18_attempt(repo_root, target)
+    for record in built["packages"]:
+        branch_id = str(record["controller_condition"]["branch_id"])
+        package_path = target / "packages" / branch_id / "reviewer-package.json"
+        _write_immutable(package_path, record["reviewer_package"])
+        manifest = {key: deepcopy(value) for key, value in record.items() if key != "reviewer_package"}
+        manifest["reviewer_package_path"] = f"packages/{branch_id}/reviewer-package.json"
+        manifest["reviewer_package_sha256"] = sha256(record["reviewer_package"])
+        _write_immutable(target / "controller-manifests" / f"{branch_id}.json", manifest)
+    _write_immutable(target / "review-design.json", {"review_trials": built["schedule"]["review_trials"]})
+    _write_immutable(target / "repair-design.json", {"repair_traces": []})
+    if sha256(_tree_hashes(repo_root / ATTEMPT_031)) != preserved:
+        raise RuntimeError("Attempt 031 changed during N18 freeze")
+    code_paths = (
+        Path("src/use_case_icp/corrected_experiment.py"),
+        Path("src/use_case_icp/__main__.py"),
+        Path("tests/test_corrected_experiment.py"),
+        N16_PROMPT,
+        N16_RESPONSE_SCHEMA,
+        N16_REQUIRED_RESPONSE_SCHEMA,
+    )
+    freeze = {
+        "schema_version": "n18-downstream-first-adaptive-freeze-1",
+        "status": "frozen_before_first_experimental_review",
+        "attempt": "attempt-032",
+        "source_attempt": "attempt-031",
+        "source_freeze_sha256": N18_SOURCE_FREEZE_SHA256,
+        "source_package_tree_sha256": N18_SOURCE_PACKAGE_TREE_SHA256,
+        "authority": {"path": context["authority_path"].as_posix(), "sha256": context["authority_sha256"]},
+        "task": {"path": context["task_path"].as_posix(), "sha256": context["task_sha256"]},
+        "protected_boundaries": deepcopy(N15_PROTECTED_FILE_SHA256),
+        "isolation_bindings": context["isolation_bindings"],
+        "code_hashes": {path.as_posix(): sha256((repo_root / path).read_bytes()) for path in code_paths},
+        "preserved_attempt_tree_hashes": {"attempt-031": preserved},
+        "capture_hashes": {key: value["capture_sha256"] for key, value in built["captures"].items()},
+        "capture_file_hashes": {key: sha256((target / "captures" / f"{key}.json").read_bytes()) for key in N16_INSTANCES},
+        "source_bundle_file_hashes": {key: sha256((target / "source-bundles" / f"{key}.json").read_bytes()) for key in N16_INSTANCES},
+        "catalogue_hashes": {key: value["catalogue_sha256"] for key, value in built["catalogues"].items()},
+        "package_hashes": sorted(value["package_sha256"] for value in built["packages"]),
+        "common_base_hashes": sorted({sha256(value["reviewer_package"]["common_base"]) for value in built["packages"]}),
+        "review_design_sha256": sha256(built["schedule"]["review_trials"]),
+        "repair_design_sha256": sha256([]),
+        "mutation_file_sha256": sha256((target / "qualification/n16-nested-mutation.json").read_bytes()),
+        "expected_counts": {"captures": 2, "catalogues": 2, "packages": 20, "reviews": 60, "repairs": 0},
+        "qualification": built["qualification"],
+        "model": PROVIDER_MODEL,
+        "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        "experimental_review_records_at_freeze": 0,
+    }
+    freeze["freeze_sha256"] = sha256(freeze)
+    path = target / "experiment-freeze.json"
+    _write_immutable(path, freeze)
+    return path
+
+
+def verify_n18_frozen_attempt(
+    repo_root: Path, attempt_root: Path | None = None
+) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_032).resolve()
+    context = _nested_attempt_context(repo_root, target)
+    freeze = _read_json(target / "experiment-freeze.json")
+    observed = _verified_self_hash(freeze, "freeze_sha256")
+    if freeze.get("authority") != {"path": context["authority_path"].as_posix(), "sha256": context["authority_sha256"]}:
+        raise ValueError("N18 frozen authority changed")
+    for relative, expected in freeze["code_hashes"].items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N18 frozen code changed: {relative}")
+    for relative, expected in freeze["protected_boundaries"].items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N18 protected boundary changed: {relative}")
+    if sha256(_tree_hashes(repo_root / ATTEMPT_031)) != freeze["preserved_attempt_tree_hashes"]["attempt-031"]:
+        raise ValueError("N18 source attempt changed")
+    catalogues, _, records = _load_n16_frozen(target)
+    schedule = {
+        "packages": [deepcopy(value["controller_condition"]) for value in records],
+        "review_trials": _read_json(target / "review-design.json")["review_trials"],
+        "repair_traces": _read_json(target / "repair-design.json")["repair_traces"],
+    }
+    qualification = qualify_n18_packages(records, catalogues, schedule)
+    if sorted(value["package_sha256"] for value in records) != freeze["package_hashes"]:
+        raise ValueError("N18 package membership changed")
+    if sha256(schedule["review_trials"]) != freeze["review_design_sha256"] or sha256(schedule["repair_traces"]) != freeze["repair_design_sha256"]:
+        raise ValueError("N18 schedule changed")
+    return {
+        "status": "verified",
+        "freeze_sha256": observed,
+        "qualification": qualification,
+        "capture_count": 2,
+        "catalogue_count": 2,
+        "package_count": 20,
+        "review_count": 60,
+        "repair_count": 0,
+    }
+
+
+def create_n18_live_consumption(repo_root: Path, attempt_root: Path) -> Path:
+    path = attempt_root / "live-consumption.json"
+    if path.exists():
+        _verified_self_hash(_read_json(path), "consumption_sha256")
+        return path
+    if list((attempt_root / "reviews").glob("*.json")):
+        raise ValueError("N18 review exists before live authority consumption")
+    verified = verify_n18_frozen_attempt(repo_root, attempt_root)
+    record = {
+        "schema_version": "n18-live-consumption-1",
+        "status": "live_authority_consumed_before_first_provider_call",
+        "authority": {"path": N18_AUTHORITY.as_posix(), "sha256": N18_AUTHORITY_SHA256},
+        "freeze_sha256": verified["freeze_sha256"],
+        "package_tree_sha256": sha256(_tree_hashes(attempt_root / "packages")),
+        "controller_manifest_tree_sha256": sha256(_tree_hashes(attempt_root / "controller-manifests")),
+        "review_design_file_sha256": sha256((attempt_root / "review-design.json").read_bytes()),
+        "protected_file_hashes": deepcopy(N15_PROTECTED_FILE_SHA256),
+        "model": PROVIDER_MODEL,
+        "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        "expected_counts": {"packages": 20, "reviews": 60, "repairs": 0},
+    }
+    record["consumption_sha256"] = sha256(record)
+    _write_immutable(path, record)
+    return path
+
+
+def _n18_summary(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
+    fault = [value for value in rows if value["designation"] == "nested_fault"]
+    control = [value for value in rows if value["designation"] == "matched_clean_control"]
+    calls = [call for value in rows for call in value["raw_calls"]]
+    return {
+        "reviews": len(rows),
+        "provider_calls": len(calls),
+        "fault_detection": {"numerator": sum(x["fault_detected"] for x in fault), "denominator": len(fault)},
+        "correct_upstream_job": {"numerator": sum(x["correct_job_localisation"] for x in fault), "denominator": len(fault)},
+        "exact_select_demand": {"numerator": sum(x["exact_boundary_localisation"] for x in fault), "denominator": len(fault)},
+        "control_false_positives": {"numerator": sum(x["false_positive"] for x in control), "denominator": len(control)},
+        "expanded_sessions": sum(x["completed_expansion_count"] > 0 for x in rows),
+        "mutation_child_selections": sum(x["expanded_group_contained_mutation"] for x in fault),
+        "disclosed_nodes": sum(x["disclosed_node_count"] for x in rows),
+        "disclosed_relationships": sum(x["disclosed_relationship_count"] for x in rows),
+        "artifact_operations": sum(x["artifact_operation_count"] for x in rows),
+        "input_tokens": sum(int(x.get("input_tokens") or 0) for x in calls),
+        "cached_input_tokens": sum(int(x.get("cached_input_tokens") or 0) for x in calls),
+        "output_tokens": sum(int(x.get("output_tokens") or 0) for x in calls),
+    }
+
+
+def _n18_rate(summary: Mapping[str, Any], key: str) -> float:
+    value = summary[key]
+    return value["numerator"] / value["denominator"] if value["denominator"] else 0.0
+
+
+def _write_n18_analysis(
+    attempt_root: Path, reviews: Mapping[tuple[str, int], Mapping[str, Any]]
+) -> Path:
+    rows = []
+    raw_calls = []
+    for record in reviews.values():
+        trial = record["controller_trial"]
+        calls = []
+        for index, call in enumerate(record["usage"].get("calls", []), start=1):
+            tagged = {"trial_id": trial["trial_id"], "call_index": index, **deepcopy(call)}
+            calls.append(tagged)
+            raw_calls.append(tagged)
+        rows.append({
+            **deepcopy(trial),
+            "designation": record["designation"],
+            "fault_detected": bool(record["fault_detected"]),
+            "false_positive": bool(record["false_positive"]),
+            "correct_job_localisation": bool(record["correct_job_localisation"]),
+            "exact_boundary_localisation": bool(record["exact_boundary_localisation"]),
+            "pre_expansion_selected_boundary_id": record.get("pre_expansion_selected_boundary_id"),
+            "final_selected_boundary_id": record.get("selected_suspect_boundary_id"),
+            "final_selected_job_id": record.get("selected_job_id"),
+            "completed_expansion_count": record["completed_expansion_count"],
+            "expanded_child_group_ids": deepcopy(record["expanded_child_group_ids"]),
+            "expanded_group_contained_mutation": bool(record["expanded_group_contained_mutation"]),
+            "disclosed_node_count": record["disclosed_node_count"],
+            "disclosed_relationship_count": record["disclosed_relationship_count"],
+            "artifact_operation_count": record["artifact_operation_count"],
+            "operation_events": deepcopy(record["operation_events"]),
+            "raw_calls": calls,
+        })
+    arm_source = {
+        f"{mode}__{source}": _n18_summary([
+            row for row in rows if row["evidence_mode"] == mode and row["source_setting"] == source
+        ])
+        for source in ("source_absent", "source_present")
+        for mode in N18_MODES
+    }
+    arms = {
+        mode: _n18_summary([row for row in rows if row["evidence_mode"] == mode])
+        for mode in N18_MODES
+    }
+    contrast_pairs = (
+        ("current_vs_etiq_empty", "current_run", "etiq_empty"),
+        ("etiq_empty_vs_compact_fixed", "etiq_empty", "compact_fixed"),
+        ("current_vs_adaptive_voluntary", "current_run", "adaptive_voluntary"),
+        ("current_vs_adaptive_required_one", "current_run", "adaptive_required_one"),
+        ("compact_fixed_vs_adaptive_voluntary", "compact_fixed", "adaptive_voluntary"),
+        ("compact_fixed_vs_adaptive_required_one", "compact_fixed", "adaptive_required_one"),
+    )
+    contrasts = []
+    for source in ("source_absent", "source_present"):
+        for name, left, right in contrast_pairs:
+            left_summary = arm_source[f"{left}__{source}"]
+            right_summary = arm_source[f"{right}__{source}"]
+            contrasts.append({
+                "name": name,
+                "source_setting": source,
+                "left": left,
+                "right": right,
+                "fault_detection_rate_difference_right_minus_left": _n18_rate(right_summary, "fault_detection") - _n18_rate(left_summary, "fault_detection"),
+                "correct_job_rate_difference_right_minus_left": _n18_rate(right_summary, "correct_upstream_job") - _n18_rate(left_summary, "correct_upstream_job"),
+                "exact_boundary_rate_difference_right_minus_left": _n18_rate(right_summary, "exact_select_demand") - _n18_rate(left_summary, "exact_select_demand"),
+                "control_false_positive_rate_difference_right_minus_left": _n18_rate(right_summary, "control_false_positives") - _n18_rate(left_summary, "control_false_positives"),
+            })
+    selected_distribution: dict[str, int] = {}
+    for row in rows:
+        key = str(row["final_selected_boundary_id"] or "no_suspect")
+        selected_distribution[key] = selected_distribution.get(key, 0) + 1
+    analysis = {
+        "schema_version": "n18-downstream-first-adaptive-analysis-1",
+        "scope_limitation": "One frozen upstream select_demand fault pipeline and one matched clean control; repeated reviews do not establish performance across upstream fault classes.",
+        "primary_population": "source_absent",
+        "review_count": len(rows),
+        "repair_trace_count": 0,
+        "overall": _n18_summary(rows),
+        "arm_summaries": arms,
+        "arm_source_summaries": arm_source,
+        "contrasts_source_absent_first": contrasts,
+        "selected_boundary_distribution": selected_distribution,
+        "pre_expansion_vs_final": [
+            {
+                "trial_id": row["trial_id"],
+                "pre": row["pre_expansion_selected_boundary_id"],
+                "final": row["final_selected_boundary_id"],
+                "expanded_child_group_ids": row["expanded_child_group_ids"],
+            }
+            for row in rows if row["completed_expansion_count"]
+        ],
+        "voluntary_expansion_uptake": {
+            "numerator": sum(row["completed_expansion_count"] > 0 for row in rows if row["evidence_mode"] == "adaptive_voluntary"),
+            "denominator": sum(row["evidence_mode"] == "adaptive_voluntary" for row in rows),
+        },
+        "required_one_expansion_completion": {
+            "numerator": sum(row["completed_expansion_count"] > 0 for row in rows if row["evidence_mode"] == "adaptive_required_one"),
+            "denominator": sum(row["evidence_mode"] == "adaptive_required_one" for row in rows),
+        },
+        "rows": sorted(rows, key=lambda value: value["schedule_position"]),
+        "raw_per_call_tokens": raw_calls,
+        "actual_usage": aggregate_actual_usage_records(raw_calls),
+    }
+    analysis["analysis_sha256"] = sha256(analysis)
+    path = attempt_root / "analysis/summary.json"
+    _write_immutable(path, analysis)
+    return path
+
+
+def _write_n18_markdown(repo_root: Path, attempt_root: Path) -> Path:
+    analysis = _read_json(attempt_root / "analysis/summary.json")
+    replay = _read_json(attempt_root / "replay/reconciliation.json")
+    lines = [
+        "# Attempt 032 — downstream-first Adaptive versus no graph",
+        "",
+        "Generated from the immutable Attempt-032 freeze, all 60 raw review records, operation ledgers, replay reconciliation, and completed terminal.",
+        "",
+        "## Status and scope",
+        "",
+        "| Item | Result |",
+        "|---|---|",
+        "| Terminal | `completed_experiment_and_analysis` |",
+        "| Packages | 20 |",
+        "| Reviews | 60/60 |",
+        "| Repairs | 0, by design |",
+        f"| Provider calls | {replay['observed_counts']['logical_provider_calls']} |",
+        "| Instances | One upstream `select_demand` fault and one matched clean control |",
+        "| Primary population | Source absent |",
+        "",
+        "Every arm started at the same downstream result, received both jobs' actual execution records and two exact-hash handoffs, and assessed the same six downstream-first boundaries. Only graph framing, compact graph evidence, and Adaptive operations varied.",
+        "",
+        "## Source-absent primary results",
+        "",
+        "| Mode | Fault detected | Correct upstream job | Exact `select_demand` | Control FP | Expansions | Calls | Input | Cached | Output |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    labels = {
+        "current_run": "Current / no graph",
+        "etiq_empty": "Etiq Empty",
+        "compact_fixed": "Compact Fixed",
+        "adaptive_voluntary": "Adaptive Voluntary",
+        "adaptive_required_one": "Adaptive Required-One",
+    }
+    for source in ("source_absent", "source_present"):
+        if source == "source_present":
+            lines += [
+                "",
+                "## Source-present interaction",
+                "",
+                "| Mode | Fault detected | Correct upstream job | Exact `select_demand` | Control FP | Expansions | Calls | Input | Cached | Output |",
+                "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+            ]
+        for mode in N18_MODES:
+            value = analysis["arm_source_summaries"][f"{mode}__{source}"]
+            detection = value["fault_detection"]
+            job = value["correct_upstream_job"]
+            exact = value["exact_select_demand"]
+            fp = value["control_false_positives"]
+            lines.append(
+                f"| {labels[mode]} | {detection['numerator']}/{detection['denominator']} | "
+                f"{job['numerator']}/{job['denominator']} | {exact['numerator']}/{exact['denominator']} | "
+                f"{fp['numerator']}/{fp['denominator']} | {value['expanded_sessions']} | "
+                f"{value['provider_calls']} | {value['input_tokens']} | {value['cached_input_tokens']} | {value['output_tokens']} |"
+            )
+    lines += [
+        "",
+        "## Prespecified contrasts",
+        "",
+        "Differences below are right minus left and are descriptive, not population estimates.",
+        "",
+        "| Source | Contrast | Detection | Correct job | Exact boundary | Control FP |",
+        "|---|---|---:|---:|---:|---:|",
+    ]
+    for value in analysis["contrasts_source_absent_first"]:
+        lines.append(
+            f"| {value['source_setting']} | {value['name']} | "
+            f"{value['fault_detection_rate_difference_right_minus_left']:.3f} | "
+            f"{value['correct_job_rate_difference_right_minus_left']:.3f} | "
+            f"{value['exact_boundary_rate_difference_right_minus_left']:.3f} | "
+            f"{value['control_false_positive_rate_difference_right_minus_left']:.3f} |"
+        )
+    lines += [
+        "",
+        "## Adaptive operations",
+        "",
+        f"Voluntary uptake: {analysis['voluntary_expansion_uptake']['numerator']}/{analysis['voluntary_expansion_uptake']['denominator']}. Required-One completion: {analysis['required_one_expansion_completion']['numerator']}/{analysis['required_one_expansion_completion']['denominator']}.",
+        "",
+        "| Trial | Pre-expansion suspect | Final suspect | Expanded child groups |",
+        "|---|---|---|---|",
+    ]
+    for value in analysis["pre_expansion_vs_final"]:
+        groups = ", ".join(value["expanded_child_group_ids"]) or "—"
+        lines.append(f"| {value['trial_id']} | {value['pre'] or 'none'} | {value['final'] or 'none'} | {groups} |")
+    lines += [
+        "",
+        "## All 60 individual results",
+        "",
+        "| Position | Trial | Instance | Mode | Source | Rep | Detected/FP | Selected boundary | Nodes | Relationships | Artifact ops | Calls | Input | Cached | Output |",
+        "|---:|---|---|---|---|---:|---|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for row in analysis["rows"]:
+        calls = row["raw_calls"]
+        outcome = "detected" if row["fault_detected"] else "FP" if row["false_positive"] else "clean/miss"
+        lines.append(
+            f"| {row['schedule_position']} | {row['trial_id']} | {row['instance_id']} | {row['evidence_mode']} | "
+            f"{row['source_setting']} | {row['repetition']} | {outcome} | {row['final_selected_boundary_id'] or 'none'} | "
+            f"{row['disclosed_node_count']} | {row['disclosed_relationship_count']} | {row['artifact_operation_count']} | "
+            f"{len(calls)} | {sum(int(x.get('input_tokens') or 0) for x in calls)} | "
+            f"{sum(int(x.get('cached_input_tokens') or 0) for x in calls)} | {sum(int(x.get('output_tokens') or 0) for x in calls)} |"
+        )
+    lines += [
+        "",
+        "## Integrity and limitations",
+        "",
+        "- All package, review, operation and call-attempt hashes were replayed; Required-One completion was checked from operation records.",
+        "- Attempt 031 remained unchanged and no Attempt-031 request or response was reused.",
+        "- Cached input is included within input and must not be added to it.",
+        "- This is one frozen upstream fault pipeline and one matched control. It answers the question for this fault but does not establish performance across upstream fault classes.",
+        "- Repetitions are fresh reviewer calls over the same two pipelines, not independent pipeline instances.",
+        "",
+        "## Bound artifacts",
+        "",
+        "- `outputs/fault-experiments-v2-2-n10/attempt-032/experiment-freeze.json`",
+        "- `outputs/fault-experiments-v2-2-n10/attempt-032/live-consumption.json`",
+        "- `outputs/fault-experiments-v2-2-n10/attempt-032/analysis/summary.json`",
+        "- `outputs/fault-experiments-v2-2-n10/attempt-032/replay/reconciliation.json`",
+        "- `outputs/fault-experiments-v2-2-n10/attempt-032/terminal-state.json`",
+        "- `outputs/fault-experiments-v2-2-n10/attempt-032/qualification/developer-n18-results-handoff.json`",
+        "",
+    ]
+    path = repo_root / "docs/workshops/n18-downstream-first-adaptive-vs-no-graph-complete-findings.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    create_bytes_exclusive(path, "\n".join(lines).encode("utf-8"))
+    return path
+
+
+def _write_n18_results_handoff(repo_root: Path, attempt_root: Path) -> Path:
+    freeze = _read_json(attempt_root / "experiment-freeze.json")
+    live = _read_json(attempt_root / "live-consumption.json")
+    analysis = _read_json(attempt_root / "analysis/summary.json")
+    replay = _read_json(attempt_root / "replay/reconciliation.json")
+    terminal = _read_json(attempt_root / "terminal-state.json")
+    report = repo_root / "docs/workshops/n18-downstream-first-adaptive-vs-no-graph-complete-findings.md"
+    handoff = {
+        "schema_version": "n18-developer-results-handoff-1",
+        "status": terminal["status"],
+        "attempt": "attempt-032",
+        "authority": {"path": N18_AUTHORITY.as_posix(), "sha256": N18_AUTHORITY_SHA256},
+        "scope_statement": analysis["scope_limitation"],
+        "checks": {
+            "focused_command": ".venv/bin/python -m unittest tests.test_corrected_experiment.N18DownstreamFirstAdaptiveTests",
+            "no_model_command": ".venv/bin/python -m use_case_icp fault-experiment-n18 build",
+            "full_suite_run": False,
+            "repair_lifecycle_run": False,
+            "post_live_verification": "passed",
+        },
+        "observed_counts": replay["observed_counts"],
+        "primary_source_absent": {
+            key: value for key, value in analysis["arm_source_summaries"].items() if key.endswith("__source_absent")
+        },
+        "source_present": {
+            key: value for key, value in analysis["arm_source_summaries"].items() if key.endswith("__source_present")
+        },
+        "contrasts": analysis["contrasts_source_absent_first"],
+        "raw_token_usage": analysis["actual_usage"],
+        "artifact_hashes": {
+            "freeze_logical_sha256": freeze["freeze_sha256"],
+            "freeze_file_sha256": sha256((attempt_root / "experiment-freeze.json").read_bytes()),
+            "live_consumption_logical_sha256": live["consumption_sha256"],
+            "analysis_logical_sha256": analysis["analysis_sha256"],
+            "replay_logical_sha256": replay["replay_sha256"],
+            "terminal_logical_sha256": terminal["terminal_sha256"],
+            "review_tree_sha256": sha256(_tree_hashes(attempt_root / "reviews")),
+            "ledger_tree_sha256": sha256(_tree_hashes(attempt_root / "ledger")),
+            "package_tree_sha256": sha256(_tree_hashes(attempt_root / "packages")),
+            "report_file_sha256": sha256(report.read_bytes()),
+        },
+        "code_hashes": deepcopy(freeze["code_hashes"]),
+        "protected_hashes_unchanged": deepcopy(freeze["protected_boundaries"]),
+        "preserved_attempt_tree_hashes": deepcopy(freeze["preserved_attempt_tree_hashes"]),
+    }
+    handoff["handoff_sha256"] = sha256(handoff)
+    path = attempt_root / "qualification/developer-n18-results-handoff.json"
+    _write_immutable(path, handoff)
+    return path
+
+
+def execute_n18_lifecycle(repo_root: Path, attempt_root: Path) -> Path:
+    repo_root = repo_root.resolve()
+    attempt_root = attempt_root.resolve()
+    verified = verify_n18_frozen_attempt(repo_root, attempt_root)
+    create_n18_live_consumption(repo_root, attempt_root)
+    catalogues, packages, records = _load_n16_frozen(attempt_root)
+    schedule = _read_json(attempt_root / "review-design.json")["review_trials"]
+    if len(schedule) != 60 or _read_json(attempt_root / "repair-design.json")["repair_traces"]:
+        raise ValueError("N18 frozen schedule changed")
+    gate = _read_json(repo_root / N15_HISTORICAL_GATE)
+    python_executor = signed_catalogue_python_executor(gate=gate, expected_gate_sha256=sha256(gate), repo_root=repo_root)
+    instance_records = {
+        instance_id: _read_json(attempt_root / "instances" / f"{instance_id}.json")
+        for instance_id in N16_INSTANCES
+    }
+    mutation = _read_json(attempt_root / "qualification/n16-nested-mutation.json")
+    reviews: dict[tuple[str, int], dict[str, Any]] = {}
+    for trial in schedule:
+        path = attempt_root / "reviews" / f"{trial['trial_id']}.json"
+        if path.exists():
+            record = _read_json(path)
+            _verified_self_hash(record, "review_sha256")
+            if record.get("controller_trial") != trial or record.get("status") != "complete":
+                raise ValueError("N18 partial review record is invalid")
+        else:
+            package_record = packages[str(trial["branch_id"])]
+            package = package_record["reviewer_package"]
+            required = trial["evidence_mode"] == "adaptive_required_one"
+            initial = _n16_provider_review(
+                repo_root,
+                attempt_root,
+                render_provider_request(package),
+                controller_parent_id=str(trial["trial_id"]),
+                required_initial=required,
+            )
+            pre_validation = validate_n16_reviewer_response(
+                catalogues[str(trial["instance_id"])], package, initial
+            )
+
+            def follow_up(request: Mapping[str, Any], *, controller_parent_id: str = "") -> Mapping[str, Any]:
+                return _n16_provider_review(repo_root, attempt_root, request, controller_parent_id=controller_parent_id)
+
+            followed = run_n16_follow_up_loop(
+                catalogue=catalogues[str(trial["instance_id"])],
+                package=package,
+                initial_response=initial,
+                reviewer=follow_up,
+                controller_parent_id=str(trial["trial_id"]),
+                required_one=required,
+                python_executor=python_executor,
+            )
+            validation = validate_n16_reviewer_response(
+                catalogues[str(trial["instance_id"])], followed["package"], followed["response"]
+            )
+            score = score_n16_top_suspect(
+                catalogues[str(trial["instance_id"])], instance_records[str(trial["instance_id"])], validation
+            )
+            completed_groups = [
+                str(event["child_group_id"])
+                for event in followed["operation_events"]
+                if event.get("operation") == "helper_expansion" and event.get("status") == "completed"
+            ]
+            runtime = followed["package"].get("runtime_evidence", {})
+            record = {
+                "schema_version": "n18-downstream-first-review-1",
+                "controller_trial": deepcopy(trial),
+                "package_sha256": package_record["package_sha256"],
+                "receipt": validation["receipt"],
+                "pre_expansion_selected_boundary_id": pre_validation["selected_suspect_boundary_id"],
+                "pre_expansion_selected_job_id": pre_validation["selected_job_id"],
+                "selected_suspect_boundary_id": validation["selected_suspect_boundary_id"],
+                "selected_job_id": validation["selected_job_id"],
+                "selected_job_position": validation["selected_job_position"],
+                "selected_function_name": validation["selected_function_name"],
+                **score,
+                "operation_events": followed["operation_events"],
+                "completed_expansion_count": followed["completed_expansion_count"],
+                "expanded_child_group_ids": completed_groups,
+                "expanded_group_contained_mutation": trial["instance_id"] == "n16-nested-fault" and mutation["child_group_id"] in completed_groups,
+                "disclosed_node_count": len(runtime.get("nodes", [])),
+                "disclosed_relationship_count": len(runtime.get("relationships", [])),
+                "artifact_operation_count": sum(event.get("operation") == "artifact_inspection" and event.get("status") == "completed" for event in followed["operation_events"]),
+                "call_records": followed["call_records"],
+                "usage": followed["usage"],
+                "status": "complete",
+            }
+            record["review_sha256"] = sha256(record)
+            _write_immutable(path, record)
+        reviews[(str(trial["branch_id"]), int(trial["repetition"]))] = record
+    if len(reviews) != 60:
+        raise ValueError("N18 review count is incomplete")
+    required_records = [value for value in reviews.values() if value["controller_trial"]["evidence_mode"] == "adaptive_required_one"]
+    if len(required_records) != 12 or any(value["completed_expansion_count"] < 1 for value in required_records):
+        raise RuntimeError("N18 Required-One expansion completion invariant failed")
+    call_ids = [
+        str(call_id)
+        for record in reviews.values()
+        for call in record.get("call_records", [])
+        for call_id in call.get("call_ids", [])
+    ]
+    if not call_ids or len(call_ids) != len(set(call_ids)):
+        raise ValueError("N18 scientific call lineage is empty or duplicated")
+    for call_id in call_ids:
+        verify_record(attempt_root / "ledger", record_type="call-attempt", record_id=call_id)
+    analysis = _read_json(_write_n18_analysis(attempt_root, reviews))
+    replay = {
+        "schema_version": "n18-downstream-first-replay-1",
+        "freeze_sha256": verified["freeze_sha256"],
+        "review_hashes": sorted(value["review_sha256"] for value in reviews.values()),
+        "observed_counts": {
+            "captures": 2,
+            "catalogues": len(catalogues),
+            "packages": len(records),
+            "reviews": len(reviews),
+            "repairs": 0,
+            "logical_provider_calls": sum(len(value.get("call_records", [])) for value in reviews.values()),
+            "provider_attempt_call_ids": len(call_ids),
+            "completed_helper_expansions": sum(value["completed_expansion_count"] for value in reviews.values()),
+            "disclosed_nodes": sum(value["disclosed_node_count"] for value in reviews.values()),
+            "disclosed_relationships": sum(value["disclosed_relationship_count"] for value in reviews.values()),
+            "artifact_operations": sum(value["artifact_operation_count"] for value in reviews.values()),
+        },
+        "all_record_hashes_recomputed": True,
+        "duplicate_logical_calls": False,
+        "required_one_sessions_complete": True,
+    }
+    replay["replay_sha256"] = sha256(replay)
+    _write_immutable(attempt_root / "replay/reconciliation.json", replay)
+    terminal = {
+        "schema_version": "n18-downstream-first-terminal-1",
+        "status": "completed_experiment_and_analysis",
+        "package_count": 20,
+        "review_count": 60,
+        "repair_trace_count": 0,
+        "analysis_sha256": analysis["analysis_sha256"],
+        "replay_sha256": replay["replay_sha256"],
+    }
+    terminal["terminal_sha256"] = sha256(terminal)
+    terminal_path = attempt_root / "terminal-state.json"
+    _write_immutable(terminal_path, terminal)
+    _write_n18_markdown(repo_root, attempt_root)
+    _write_n18_results_handoff(repo_root, attempt_root)
+    return terminal_path
+
+
+def run_n18_lifecycle(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    target = (attempt_root or repo_root / ATTEMPT_032).resolve()
+    try:
+        return execute_n18_lifecycle(repo_root, target)
+    except Exception as exc:
+        terminal = {
+            "schema_version": "n18-downstream-first-terminal-1",
+            "status": "terminal_incomplete",
+            "failure_stage": "n18_resumable_lifecycle",
+            "error": f"{type(exc).__name__}: {exc}",
+            "completed_review_records": len(list((target / "reviews").glob("*.json"))),
+            "completed_repair_records": 0,
+        }
+        terminal["terminal_sha256"] = sha256(terminal)
+        path = target / "terminal" / f"terminal-incomplete-{terminal['terminal_sha256'][7:23]}.json"
+        _write_immutable(path, terminal)
+        return path

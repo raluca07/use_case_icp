@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reviews", "next_action"],
+  "properties": {
+    "reviews": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/review"}
+    },
+    "next_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "boundary_id", "child_group_id", "requests"],
+      "properties": {
+        "action": {"enum": ["helper_expansion"]},
+        "boundary_id": {"type": "string", "minLength": 1},
+        "child_group_id": {"type": "string", "minLength": 1},
+        "requests": {"type": "array", "maxItems": 0, "items": {"type": "object", "additionalProperties": false, "properties": {}}}
+      }
+    }
+  },
+  "$defs": {
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_id", "decision", "decision_reason", "evidence_refs", "trust_level", "criteria_outcomes", "boundary_health_acknowledged", "expand_helper_prefixes", "inspect_artifacts", "suspect_node_refs"],
+      "properties": {
+        "unit_id": {
+          "enum": [
+            "bnd-1e72b7326f7d9fb7",
+            "bnd-a1863dcd10b85955",
+            "bnd-cf2d509dff45e2c4",
+            "bnd-8e4e0db29e4a3223",
+            "bnd-c4af215f98a887d0",
+            "bnd-14a3199979510fee"
+          ]
+        },
+        "decision": {"enum": ["trusted", "failed", "suspect", "superseded", "not_pipeline_step"]},
+        "decision_reason": {"type": "string"},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}},
+        "trust_level": {"type": ["string", "null"], "enum": ["trusted_for_reuse", "trusted_for_reporting", "provisionally_trusted", null]},
+        "criteria_outcomes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["criterion", "verdict", "evidence_refs"],
+            "properties": {
+              "criterion": {"type": "string"},
+              "verdict": {"enum": ["met", "not_met", "cannot_judge"]},
+              "evidence_refs": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "boundary_health_acknowledged": {"type": "boolean"},
+        "expand_helper_prefixes": {"type": "array", "maxItems": 0, "items": {"type": "array", "items": {"type": "string"}}},
+        "inspect_artifacts": {"type": "array", "maxItems": 0, "items": {"type": "object", "additionalProperties": false, "properties": {}}},
+        "suspect_node_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

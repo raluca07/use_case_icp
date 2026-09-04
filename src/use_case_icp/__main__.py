@@ -254,6 +254,50 @@ def build_parser() -> argparse.ArgumentParser:
     )
     n15.set_defaults(action="fault_experiment_n15")
 
+    n16 = subparsers.add_parser(
+        "fault-experiment-n16",
+        help="build, freeze, verify, or run the nested adaptive disclosure addendum",
+    )
+    n16.add_argument("operation", choices=("build", "freeze", "verify", "live"))
+    n16.add_argument(
+        "--attempt-root",
+        default="outputs/fault-experiments-v2-2-n10/attempt-028",
+    )
+    n16.set_defaults(action="fault_experiment_n16")
+
+    n17 = subparsers.add_parser(
+        "fault-experiment-n17",
+        help="build, freeze, verify, or run the corrected nested adaptive execution",
+    )
+    n17.add_argument("operation", choices=("build", "freeze", "verify", "live"))
+    n17.add_argument(
+        "--attempt-root",
+        default="outputs/fault-experiments-v2-2-n10/attempt-029",
+    )
+    n17.set_defaults(action="fault_experiment_n17")
+
+    n17b = subparsers.add_parser(
+        "fault-experiment-n17b",
+        help="build, freeze, verify, or run the fresh balanced nested adaptive execution",
+    )
+    n17b.add_argument("operation", choices=("build", "freeze", "verify", "live"))
+    n17b.add_argument(
+        "--attempt-root",
+        default="outputs/fault-experiments-v2-2-n10/attempt-031",
+    )
+    n17b.set_defaults(action="fault_experiment_n17b")
+
+    n18 = subparsers.add_parser(
+        "fault-experiment-n18",
+        help="build, freeze, verify, or run the downstream-first Adaptive comparison",
+    )
+    n18.add_argument("operation", choices=("build", "freeze", "verify", "live"))
+    n18.add_argument(
+        "--attempt-root",
+        default="outputs/fault-experiments-v2-2-n10/attempt-032",
+    )
+    n18.set_defaults(action="fault_experiment_n18")
+
     server = subparsers.add_parser("serve", help="serve the local dashboard")
     server.add_argument("--host", default="127.0.0.1")
     server.add_argument("--port", type=int, default=8000)
@@ -701,6 +745,85 @@ def main(argv: list[str] | None = None) -> int:
                 return 0 if terminal.get("status") == "completed_experiment_and_analysis" else 1
         except Exception as exc:
             print(f"N15 experiment failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+            return 1
+        return 0
+    if args.action in {"fault_experiment_n16", "fault_experiment_n17", "fault_experiment_n17b"}:
+        from .corrected_experiment import (
+            build_n16_attempt,
+            freeze_n16_attempt,
+            run_n16_lifecycle,
+            verify_n16_frozen_attempt,
+        )
+
+        attempt_root = Path(args.attempt_root)
+        if not attempt_root.is_absolute():
+            attempt_root = repo_root / attempt_root
+        try:
+            if args.operation == "build":
+                built = build_n16_attempt(repo_root, attempt_root)
+                print(json.dumps({
+                    "qualification": built["qualification"],
+                    "counts": {
+                        "captures": len(built["captures"]),
+                        "catalogues": len(built["catalogues"]),
+                        "packages": len(built["packages"]),
+                        "reviews": len(built["schedule"]["review_trials"]),
+                        "repairs": len(built["schedule"]["repair_traces"]),
+                    },
+                }, indent=2))
+            elif args.operation == "freeze":
+                print(freeze_n16_attempt(repo_root, attempt_root))
+            elif args.operation == "verify":
+                print(json.dumps(verify_n16_frozen_attempt(repo_root, attempt_root), indent=2))
+            else:
+                terminal_path = run_n16_lifecycle(repo_root, attempt_root)
+                print(terminal_path)
+                terminal = json.loads(terminal_path.read_text())
+                return 0 if terminal.get("status") == "completed_experiment_and_analysis" else 1
+        except Exception as exc:
+            label = {
+                "fault_experiment_n16": "N16",
+                "fault_experiment_n17": "N17",
+                "fault_experiment_n17b": "N17B",
+            }[args.action]
+            print(f"{label} experiment failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+            return 1
+        return 0
+    if args.action == "fault_experiment_n18":
+        from .corrected_experiment import (
+            build_n18_attempt,
+            freeze_n18_attempt,
+            run_n18_lifecycle,
+            verify_n18_frozen_attempt,
+        )
+
+        attempt_root = Path(args.attempt_root)
+        if not attempt_root.is_absolute():
+            attempt_root = repo_root / attempt_root
+        try:
+            if args.operation == "build":
+                built = build_n18_attempt(repo_root, attempt_root)
+                print(json.dumps({
+                    "qualification": built["qualification"],
+                    "counts": {
+                        "captures": len(built["captures"]),
+                        "catalogues": len(built["catalogues"]),
+                        "packages": len(built["packages"]),
+                        "reviews": len(built["schedule"]["review_trials"]),
+                        "repairs": len(built["schedule"]["repair_traces"]),
+                    },
+                }, indent=2))
+            elif args.operation == "freeze":
+                print(freeze_n18_attempt(repo_root, attempt_root))
+            elif args.operation == "verify":
+                print(json.dumps(verify_n18_frozen_attempt(repo_root, attempt_root), indent=2))
+            else:
+                terminal_path = run_n18_lifecycle(repo_root, attempt_root)
+                print(terminal_path)
+                terminal = json.loads(terminal_path.read_text())
+                return 0 if terminal.get("status") == "completed_experiment_and_analysis" else 1
+        except Exception as exc:
+            print(f"N18 experiment failed: {type(exc).__name__}: {exc}", file=sys.stderr)
             return 1
         return 0
     if args.action == "run":

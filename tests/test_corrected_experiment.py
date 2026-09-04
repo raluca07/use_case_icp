@@ -8,6 +8,8 @@ from pathlib import Path
 import unittest
 from unittest import mock
 
+from jsonschema import Draft202012Validator
+
 from use_case_icp.corrected_experiment import (
     EVIDENCE_MODES,
     N14B_AUTHORITY,
@@ -17,9 +19,14 @@ from use_case_icp.corrected_experiment import (
     aggregate_actual_usage,
     build_corrected_attempt,
     build_n15_attempt,
+    build_n16_attempt,
+    build_n17_attempt,
+    build_n18_review_package,
     build_disclosure_catalogue,
     build_review_package,
+    canonical_stack,
     expand_n15_helper,
+    expand_n16_child,
     canonical_json,
     dependency_suffix,
     execute_resumable_lifecycle,
@@ -28,16 +35,21 @@ from use_case_icp.corrected_experiment import (
     freeze_corrected_attempt,
     inspect_artifact,
     perform_operation,
+    perform_n16_operation,
     production_reviewer,
     record_attempt_024_incomplete,
     render_provider_request,
     run_corrected_lifecycle,
     run_follow_up_loop,
+    run_n16_follow_up_loop,
+    n17b_schedule,
+    n18_schedule,
     sha256,
     score_n15_top_suspect,
     usage_record,
     validate_visible_reference,
     validate_n15_reviewer_response,
+    validate_n16_reviewer_response,
     verify_frozen_attempt,
     write_zero_model_orchestration_report,
 )
@@ -1295,6 +1307,479 @@ class N15DownstreamFirstTests(unittest.TestCase):
         self.assertTrue(score["correct_job_localisation"])
         self.assertTrue(score["exact_boundary_localisation"])
         self.assertEqual(score["truth_function_name"], "normalize")
+
+
+class N16NestedAdaptiveTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.attempt = ROOT / "outputs/fault-experiments-v2-2-n10/attempt-028"
+        cls.built = build_n16_attempt(ROOT, cls.attempt)
+        cls.by_condition = {
+            (
+                value["controller_condition"]["instance_id"],
+                value["controller_condition"]["evidence_mode"],
+                value["controller_condition"]["source_setting"],
+            ): value["reviewer_package"]
+            for value in cls.built["packages"]
+        }
+
+    def test_n16_counts_and_nested_fault_qualification(self):
+        self.assertEqual(len(self.built["captures"]), 2)
+        self.assertEqual(len(self.built["catalogues"]), 2)
+        self.assertEqual(len(self.built["packages"]), 12)
+        self.assertEqual(len(self.built["schedule"]["review_trials"]), 36)
+        self.assertEqual(self.built["schedule"]["repair_traces"], [])
+        mutation = json.loads(
+            (self.attempt / "qualification/n16-nested-mutation.json").read_text()
+        )
+        self.assertTrue(mutation["mutated_statement_executed_in_child_scope"])
+        self.assertEqual(mutation["candidate_count"], 1)
+        self.assertFalse(mutation["oracle_used_for_site_ordering"])
+        self.assertTrue(all(mutation["validation"].values()))
+        fault = json.loads((self.attempt / "instances/n16-nested-fault.json").read_text())
+        clean = json.loads((self.attempt / "instances/n16-clean-control.json").read_text())
+        self.assertEqual(fault["oracle"]["failed_check_names"], ["top_need"])
+        self.assertTrue(clean["oracle"]["passed"])
+
+    def test_n16_initial_anchors_are_compact_identical_and_blind(self):
+        for instance_id in self.built["catalogues"]:
+            for source in ("source_present", "source_absent"):
+                packages = [
+                    self.by_condition[(instance_id, mode, source)]
+                    for mode in ("compact_fixed", "adaptive_voluntary", "adaptive_required_one")
+                ]
+                self.assertEqual(
+                    len({canonical_json(value["runtime_evidence"]) for value in packages}),
+                    1,
+                )
+                projection = packages[0]["runtime_evidence"]
+                self.assertEqual(len(projection["anchors"]), 6)
+                self.assertEqual(projection["nodes"], [])
+                self.assertEqual(projection["relationships"], [])
+                for package in packages:
+                    visible = canonical_json(render_provider_request(package)).decode()
+                    for forbidden in (
+                        '"mutation"', '"oracle"', '"truth"', '"evidence_mode"',
+                        '"branch_id"', '"trial_id"', '"repetition"', '"seed"',
+                    ):
+                        self.assertNotIn(forbidden, visible)
+
+    def test_n16_expansion_is_exact_and_required_one_is_enforced(self):
+        instance_id = "n16-nested-fault"
+        catalogue = self.built["catalogues"][instance_id]
+        package = self.by_condition[(instance_id, "adaptive_required_one", "source_absent")]
+        mutation = json.loads(
+            (self.attempt / "qualification/n16-nested-mutation.json").read_text()
+        )
+        expanded, event = expand_n16_child(
+            catalogue,
+            package,
+            boundary_id=mutation["reviewer_boundary_id"],
+            child_group_id=mutation["child_group_id"],
+        )
+        self.assertEqual(event["status"], "completed")
+        self.assertGreater(len(event["nodes_added"]), 0)
+        expected_prefix = tuple(mutation["captured_child_prefix"])
+        self.assertEqual(
+            {
+                canonical_stack(node["func_stack"])
+                for node in expanded["runtime_evidence"]["nodes"]
+            },
+            {expected_prefix},
+        )
+        self.assertNotIn(
+            mutation["child_group_id"],
+            {
+                value["child_group_id"]
+                for value in expanded["runtime_evidence"]["collapsed_child_groups"]
+            },
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "did not complete"):
+            run_n16_follow_up_loop(
+                catalogue=catalogue,
+                package=package,
+                initial_response={
+                    "next_action": {
+                        "action": "finalize", "boundary_id": "",
+                        "child_group_id": "", "requests": [],
+                    }
+                },
+                reviewer=mock.Mock(),
+                controller_parent_id="required-rejection",
+                required_one=True,
+            )
+
+        reviewer = mock.Mock(return_value={
+            "next_action": {
+                "action": "finalize", "boundary_id": "",
+                "child_group_id": "", "requests": [],
+            }
+        })
+        completed = run_n16_follow_up_loop(
+            catalogue=catalogue,
+            package=package,
+            initial_response={
+                "next_action": {
+                    "action": "helper_expansion",
+                    "boundary_id": mutation["reviewer_boundary_id"],
+                    "child_group_id": mutation["child_group_id"],
+                    "requests": [],
+                }
+            },
+            reviewer=reviewer,
+            controller_parent_id="required-success",
+            required_one=True,
+        )
+        self.assertEqual(completed["completed_expansion_count"], 1)
+        self.assertEqual(completed["operation_follow_up_count"], 1)
+        self.assertEqual(reviewer.call_count, 1)
+
+
+class N17CorrectedNestedAdaptiveTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.attempt = ROOT / "outputs/fault-experiments-v2-2-n10/attempt-029"
+        cls.built = build_n17_attempt(ROOT, cls.attempt)
+        cls.by_condition = {
+            (
+                value["controller_condition"]["instance_id"],
+                value["controller_condition"]["evidence_mode"],
+                value["controller_condition"]["source_setting"],
+            ): value["reviewer_package"]
+            for value in cls.built["packages"]
+        }
+
+    def test_n17_reuses_inputs_and_has_exact_counts(self):
+        self.assertEqual(len(self.built["captures"]), 2)
+        self.assertEqual(len(self.built["catalogues"]), 2)
+        self.assertEqual(len(self.built["packages"]), 12)
+        self.assertEqual(len(self.built["schedule"]["review_trials"]), 36)
+        self.assertEqual(self.built["schedule"]["repair_traces"], [])
+        for instance_id in ("n16-clean-control", "n16-nested-fault"):
+            source = ROOT / "outputs/fault-experiments-v2-2-n10/attempt-028/captures" / f"{instance_id}.json"
+            copied = self.attempt / "captures" / f"{instance_id}.json"
+            self.assertEqual(source.read_bytes(), copied.read_bytes())
+
+    def test_n17_response_contract_rejects_attempt_028_failure_shape(self):
+        schema_paths = (
+            ROOT / "schemas/v2_2/n16_nested_adaptive_review.schema.json",
+            ROOT / "schemas/v2_2/n16_nested_adaptive_required_one.schema.json",
+        )
+        call = json.loads((
+            ROOT
+            / "outputs/fault-experiments-v2-2-n10/attempt-028/ledger/call-attempt/call-000-9f7a02068e5ec11a.json"
+        ).read_text())
+        eight_units = call["payload"]["result"]["response"]
+        six_units = deepcopy(eight_units)
+        assigned = set(
+            self.by_condition[("n16-nested-fault", "compact_fixed", "source_present")]
+            ["common_base"]["section"]["assigned_boundary_ids"]
+        )
+        six_units["reviews"] = [
+            value for value in six_units["reviews"] if value["unit_id"] in assigned
+        ]
+        required_six = deepcopy(six_units)
+        required_six["next_action"] = {
+            "action": "helper_expansion",
+            "boundary_id": "bnd-8e4e0db29e4a3223",
+            "child_group_id": "grp-5b4092c8e1b4e04f",
+            "requests": [],
+        }
+        for index, schema_path in enumerate(schema_paths):
+            schema_text = schema_path.read_text()
+            for unsupported in ('"allOf"', '"contains"', '"minContains"', '"maxContains"'):
+                self.assertNotIn(unsupported, schema_text)
+            validator = Draft202012Validator(json.loads(schema_text))
+            self.assertTrue(list(validator.iter_errors(eight_units)))
+            candidate = six_units if index == 0 else required_six
+            self.assertFalse(list(validator.iter_errors(candidate)))
+            five = deepcopy(candidate)
+            five["reviews"] = five["reviews"][:5]
+            self.assertTrue(list(validator.iter_errors(five)))
+            seven = deepcopy(candidate)
+            seven["reviews"] = seven["reviews"] + [deepcopy(seven["reviews"][0])]
+            self.assertTrue(list(validator.iter_errors(seven)))
+            unknown = deepcopy(candidate)
+            unknown["reviews"][0]["unit_id"] = "bnd-not-assigned"
+            self.assertTrue(list(validator.iter_errors(unknown)))
+            handoff = deepcopy(candidate)
+            handoff["reviews"][0]["unit_id"] = "handoff-needs"
+            self.assertTrue(list(validator.iter_errors(handoff)))
+        duplicate = deepcopy(six_units)
+        duplicate["reviews"][0]["unit_id"] = duplicate["reviews"][1]["unit_id"]
+        package = self.by_condition[("n16-nested-fault", "compact_fixed", "source_present")]
+        with self.assertRaisesRegex(ValueError, "exactly once"):
+            validate_n16_reviewer_response(
+                self.built["catalogues"]["n16-nested-fault"], package, duplicate
+            )
+
+    def test_n17_operations_follow_actual_node_visibility(self):
+        instance_id = "n16-nested-fault"
+        catalogue = self.built["catalogues"][instance_id]
+        fixed = self.by_condition[(instance_id, "compact_fixed", "source_absent")]
+        voluntary = self.by_condition[(instance_id, "adaptive_voluntary", "source_absent")]
+        required = self.by_condition[(instance_id, "adaptive_required_one", "source_absent")]
+        self.assertEqual(fixed["available_operations"], [])
+        self.assertEqual(fixed["action_contract"]["permitted_actions"], ["finalize"])
+        for package in (voluntary, required):
+            self.assertEqual(package["available_operations"], ["helper_expansion"])
+            self.assertNotIn(
+                "artifact_inspection", package["action_contract"]["permitted_actions"]
+            )
+        mutation = json.loads(
+            (self.attempt / "qualification/n16-nested-mutation.json").read_text()
+        )
+        expanded, event = expand_n16_child(
+            catalogue,
+            required,
+            boundary_id=mutation["reviewer_boundary_id"],
+            child_group_id=mutation["child_group_id"],
+        )
+        self.assertEqual(event["status"], "completed")
+        self.assertIn("artifact_inspection", expanded["available_operations"])
+        node = next(
+            value
+            for value in expanded["runtime_evidence"]["nodes"]
+            if value.get("artifact_kind") is not None
+        )
+        _, inspection = perform_n16_operation(
+            catalogue,
+            expanded,
+            {
+                "operation": "artifact_inspection",
+                "requests": [{
+                    "node_ref": node["node_ref"],
+                    "inspection": "read",
+                    "start": 0,
+                    "count": 1,
+                    "columns": [],
+                    "query": "",
+                    "include_raw_metadata": False,
+                    "code": "",
+                }],
+            },
+        )
+        self.assertEqual(inspection["status"], "completed")
+
+    def test_n17_initial_evidence_is_identical_and_blind(self):
+        for instance_id in self.built["catalogues"]:
+            for source in ("source_present", "source_absent"):
+                packages = [
+                    self.by_condition[(instance_id, mode, source)]
+                    for mode in (
+                        "compact_fixed",
+                        "adaptive_voluntary",
+                        "adaptive_required_one",
+                    )
+                ]
+                self.assertEqual(
+                    len({canonical_json(value["runtime_evidence"]) for value in packages}),
+                    1,
+                )
+                self.assertEqual(packages[0]["runtime_evidence"]["nodes"], [])
+                self.assertEqual(packages[0]["runtime_evidence"]["relationships"], [])
+                for package in packages:
+                    visible = canonical_json(render_provider_request(package)).decode()
+                    for forbidden in (
+                        '"mutation"', '"oracle"', '"truth"', '"evidence_mode"',
+                        '"branch_id"', '"trial_id"', '"repetition"', '"seed"',
+                        '"treatment"',
+                    ):
+                        self.assertNotIn(forbidden, visible)
+
+
+class N17BFreshPostQuotaAdaptiveTests(unittest.TestCase):
+    def test_n17b_provider_schemas_are_supported_and_narrow(self):
+        ordinary = ROOT / "schemas/v2_2/n16_nested_adaptive_review.schema.json"
+        required = ROOT / "schemas/v2_2/n16_nested_adaptive_required_one.schema.json"
+        self.assertEqual(
+            sha256(ordinary.read_bytes()),
+            "sha256:67619397e786b9fa1f8d75ba1bcf91d97b61a44cf8c4089bbbf7fc34bccc8da7",
+        )
+        required_text = required.read_text()
+        for unsupported in ('"allOf"', '"contains"', '"minContains"', '"maxContains"', '"const"'):
+            self.assertNotIn(unsupported, required_text)
+        required_schema = json.loads(required_text)
+        self.assertEqual(
+            required_schema["properties"]["next_action"]["properties"]["action"],
+            {"enum": ["helper_expansion"]},
+        )
+
+    def test_n17b_schedule_is_balanced_in_rotating_local_blocks(self):
+        schedule = n17b_schedule()
+        reviews = schedule["review_trials"]
+        self.assertEqual(len(reviews), 36)
+        combinations = {
+            (value["instance_id"], value["evidence_mode"], value["source_setting"], value["repetition"])
+            for value in reviews
+        }
+        self.assertEqual(len(combinations), 36)
+        blocks = [reviews[index:index + 3] for index in range(0, 36, 3)]
+        self.assertEqual(len(blocks), 12)
+        for index, block in enumerate(blocks):
+            self.assertEqual(len({(x["instance_id"], x["source_setting"], x["repetition"]) for x in block}), 1)
+            self.assertEqual({x["evidence_mode"] for x in block}, set((
+                "compact_fixed", "adaptive_voluntary", "adaptive_required_one"
+            )))
+            self.assertEqual([x["mode_position"] for x in block], [1, 2, 3])
+            self.assertEqual(block[0]["local_block"], index + 1)
+        self.assertEqual(
+            [tuple(x["evidence_mode"] for x in block) for block in blocks[:3]],
+            [
+                ("compact_fixed", "adaptive_voluntary", "adaptive_required_one"),
+                ("adaptive_voluntary", "adaptive_required_one", "compact_fixed"),
+                ("adaptive_required_one", "compact_fixed", "adaptive_voluntary"),
+            ],
+        )
+
+    def test_n17b_reused_package_payloads_and_required_one_expansion(self):
+        source = ROOT / "outputs/fault-experiments-v2-2-n10/attempt-030"
+        manifests = sorted((source / "controller-manifests").glob("*.json"))
+        self.assertEqual(len(manifests), 12)
+        required_manifest = next(
+            json.loads(path.read_text())
+            for path in manifests
+            if json.loads(path.read_text())["controller_condition"]["instance_id"] == "n16-nested-fault"
+            and json.loads(path.read_text())["controller_condition"]["evidence_mode"] == "adaptive_required_one"
+            and json.loads(path.read_text())["controller_condition"]["source_setting"] == "source_absent"
+        )
+        package = json.loads((source / required_manifest["reviewer_package_path"]).read_text())
+        self.assertEqual(sha256(package), required_manifest["reviewer_package_sha256"])
+        catalogue = json.loads((source / "catalogues/n16-nested-fault.json").read_text())
+        mutation = json.loads((source / "qualification/n16-nested-mutation.json").read_text())
+        expanded, expansion = expand_n16_child(
+            catalogue,
+            package,
+            boundary_id=mutation["reviewer_boundary_id"],
+            child_group_id=mutation["child_group_id"],
+        )
+        self.assertEqual(expansion["status"], "completed")
+        disclosed = expanded["runtime_evidence"]["nodes"]
+        self.assertTrue(disclosed)
+        self.assertTrue(all(
+            canonical_stack(node["func_stack"])[:len(mutation["captured_child_prefix"])]
+            == canonical_stack(mutation["captured_child_prefix"])
+            for node in disclosed
+        ))
+        artifact_node = next(node for node in disclosed if node.get("artifact_kind") is not None)
+        self.assertIn("artifact_inspection", expanded["available_operations"])
+        _, inspection = perform_n16_operation(catalogue, expanded, {
+            "operation": "artifact_inspection",
+            "requests": [{
+                "node_ref": artifact_node["node_ref"], "inspection": "read",
+                "start": 0, "count": 1, "columns": [], "query": "",
+                "include_raw_metadata": False, "code": "",
+            }],
+        })
+        self.assertEqual(inspection["status"], "completed")
+
+
+class N18DownstreamFirstAdaptiveTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.source = ROOT / "outputs/fault-experiments-v2-2-n10/attempt-031"
+        cls.catalogues = {
+            instance_id: json.loads((cls.source / "catalogues" / f"{instance_id}.json").read_text())
+            for instance_id in ("n16-nested-fault", "n16-clean-control")
+        }
+        cls.source_bundles = {
+            instance_id: json.loads((cls.source / "source-bundles" / f"{instance_id}.json").read_text())["source_bundle"]
+            for instance_id in cls.catalogues
+        }
+        cls.neutral = json.loads((
+            ROOT / "outputs/fault-experiments-v2-2-n10/attempt-031/packages/brn-f034330e0e92a8b0/reviewer-package.json"
+        ).read_text())
+
+    def packages_for(self, instance_id, source_setting):
+        return {
+            mode: build_n18_review_package(
+                self.catalogues[instance_id],
+                evidence_mode=mode,
+                source_setting=source_setting,
+                neutral_base=self.neutral,
+                source_bundle=self.source_bundles[instance_id],
+            )
+            for mode in (
+                "current_run", "etiq_empty", "compact_fixed",
+                "adaptive_voluntary", "adaptive_required_one",
+            )
+        }
+
+    def test_n18_exact_matrix_and_balanced_local_blocks(self):
+        schedule = n18_schedule()
+        self.assertEqual(len(schedule["packages"]), 20)
+        self.assertEqual(len(schedule["review_trials"]), 60)
+        self.assertEqual(schedule["repair_traces"], [])
+        self.assertEqual(len({
+            (x["instance_id"], x["evidence_mode"], x["source_setting"], x["repetition"])
+            for x in schedule["review_trials"]
+        }), 60)
+        for index in range(0, 60, 5):
+            block = schedule["review_trials"][index:index + 5]
+            self.assertEqual(len({(x["instance_id"], x["source_setting"], x["repetition"]) for x in block}), 1)
+            self.assertEqual(len({x["evidence_mode"] for x in block}), 5)
+
+    def test_n18_common_execution_and_treatment_isolation(self):
+        for instance_id in self.catalogues:
+            for source in ("source_present", "source_absent"):
+                packages = self.packages_for(instance_id, source)
+                self.assertEqual(len({canonical_json(x["common_base"]) for x in packages.values()}), 1)
+                common = packages["current_run"]["common_base"]
+                self.assertEqual([x["job_position"] for x in common["job_executions"]], ["downstream", "upstream"])
+                self.assertEqual(len(common["exact_handoffs"]), 2)
+                self.assertEqual(len(common["section"]["assigned_boundary_ids"]), 6)
+                current = packages["current_run"]
+                empty = packages["etiq_empty"]
+                self.assertNotIn("runtime_evidence", current)
+                self.assertEqual(current["available_operations"], [])
+                self.assertTrue(all(not empty["runtime_evidence"][key] for key in (
+                    "anchors", "collapsed_child_groups", "nodes", "relationships", "handoffs"
+                )))
+                graph_packages = [packages[x] for x in (
+                    "compact_fixed", "adaptive_voluntary", "adaptive_required_one"
+                )]
+                self.assertEqual(
+                    {key for key in set(empty) | set(graph_packages[0]) if canonical_json(empty.get(key)) != canonical_json(graph_packages[0].get(key))},
+                    {"runtime_evidence", "allowed_evidence_refs"},
+                )
+                self.assertEqual(len({canonical_json(x["runtime_evidence"]) for x in graph_packages}), 1)
+                self.assertEqual(len(graph_packages[0]["runtime_evidence"]["anchors"]), 6)
+                self.assertEqual(graph_packages[0]["runtime_evidence"]["nodes"], [])
+
+    def test_n18_source_only_and_controller_secrecy(self):
+        for instance_id in self.catalogues:
+            for mode in ("current_run", "etiq_empty", "compact_fixed", "adaptive_voluntary", "adaptive_required_one"):
+                present = self.packages_for(instance_id, "source_present")[mode]
+                absent = self.packages_for(instance_id, "source_absent")[mode]
+                self.assertEqual(
+                    {key for key in set(present) | set(absent) if canonical_json(present.get(key)) != canonical_json(absent.get(key))},
+                    {"source_bundle"},
+                )
+                visible = canonical_json(render_provider_request(present)).decode()
+                for forbidden in ('"mutation"', '"oracle"', '"designation"', '"truth"', '"evidence_mode"', '"source_setting"', '"instance_id"', '"trial_id"', '"branch_id"', '"seed"'):
+                    self.assertNotIn(forbidden, visible)
+
+    def test_n18_required_one_discloses_only_selected_real_prefix(self):
+        catalogue = self.catalogues["n16-nested-fault"]
+        package = self.packages_for("n16-nested-fault", "source_absent")["adaptive_required_one"]
+        mutation = json.loads((self.source / "qualification/n16-nested-mutation.json").read_text())
+        expanded, event = expand_n16_child(
+            catalogue, package,
+            boundary_id=mutation["reviewer_boundary_id"],
+            child_group_id=mutation["child_group_id"],
+        )
+        self.assertEqual(event["status"], "completed")
+        prefix = canonical_stack(mutation["captured_child_prefix"])
+        self.assertTrue(expanded["runtime_evidence"]["nodes"])
+        self.assertTrue(all(
+            canonical_stack(node["func_stack"])[:len(prefix)] == prefix
+            for node in expanded["runtime_evidence"]["nodes"]
+        ))
+        self.assertTrue(all(
+            edge["relationship_ref"] in event["relationships_added"]
+            for edge in expanded["runtime_evidence"]["relationships"]
+        ))
 
 
 if __name__ == "__main__":

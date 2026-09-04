@@ -42,15 +42,16 @@ Without installation, run commands from the repository with `PYTHONPATH=src`.
 
 ## Fault-localisation experiments
 
-Attempt 027 is the latest downstream-first, two-job review experiment under
-protocol 2.2. It completed its planned 64 packages and 192 reviews, with zero
-repair traces by design, and produced analysis and replay closure.
+Attempt 032 is the latest downstream-first Adaptive-versus-no-graph experiment
+under protocol 2.2. It completed its planned 20 packages and 60 reviews, with
+zero repair traces by design, and produced analysis and replay closure.
 
-See the [Attempt 027 publication](outputs/fault-experiments-v2-2-n10/attempt-027-publication-001/README.md)
+See the [Attempt 032 publication](outputs/fault-experiments-v2-2-n10/attempt-032-publication-001/README.md)
 for its included records and limitations. The earlier
+[Attempt 027 publication](outputs/fault-experiments-v2-2-n10/attempt-027-publication-001/README.md)
+and
 [Attempt 026 publication](outputs/fault-experiments-v2-2-n10/attempt-026-publication-001/README.md)
-remains preserved separately as a terminal-incomplete direct-assigned-job
-pilot.
+remain preserved separately.
 
 Raw provider requests and ledgers, authentication state, caches, logs,
 duplicated workspaces, and other large transient files are excluded from Git.
