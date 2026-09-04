@@ -4,6 +4,16 @@ __pycache__/
 .venv/
 outputs/
 
+# Raw experiment internals. Curated result files are added explicitly with
+# `git add -f`; never add an experiment output directory wholesale.
+outputs/**/ledger/
+outputs/**/provider-requests/
+outputs/**/provider-branches/**/home/
+outputs/**/provider-branches/**/evidence/
+outputs/**/provider-branches/**/codex-events.jsonl
+outputs/**/provider-branches/**/codex-stderr.log
+outputs/**/provider-branches/**/branch-manifest.json
+
 # Internal planning, agent coordination, and working documentation
 instructions_between_agent_types/
 docs/blogpost/archive/
@@ -32,6 +42,10 @@ secrets/
 .azure/
 .config/gcloud/
 .codex/
+auth.json
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
 .git-credentials
 .ssh/
 .docker/

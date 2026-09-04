@@ -13,10 +13,13 @@ from use_case_icp.corrected_experiment import (
     N14B_AUTHORITY,
     N14B_AUTHORITY_SHA256,
     _normalized_review_response,
+    _controller_key_paths,
     aggregate_actual_usage,
     build_corrected_attempt,
+    build_n15_attempt,
     build_disclosure_catalogue,
     build_review_package,
+    expand_n15_helper,
     canonical_json,
     dependency_suffix,
     execute_resumable_lifecycle,
@@ -31,8 +34,10 @@ from use_case_icp.corrected_experiment import (
     run_corrected_lifecycle,
     run_follow_up_loop,
     sha256,
+    score_n15_top_suspect,
     usage_record,
     validate_visible_reference,
+    validate_n15_reviewer_response,
     verify_frozen_attempt,
     write_zero_model_orchestration_report,
 )
@@ -1180,6 +1185,116 @@ class CorrectedLifecycleTests(unittest.TestCase):
             }
         )
         self.assertEqual(abandoned_before, abandoned_after)
+
+
+class N15DownstreamFirstTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.built = build_n15_attempt(ROOT)
+        cls.by_condition = {
+            (
+                value["controller_condition"]["instance_id"],
+                value["controller_condition"]["evidence_mode"],
+                value["controller_condition"]["source_setting"],
+            ): value["reviewer_package"]
+            for value in cls.built["packages"]
+        }
+
+    def test_n15_build_counts_downstream_scope_and_two_job_graphs(self):
+        self.assertEqual(len(self.built["catalogues"]), 4)
+        self.assertEqual(len(self.built["packages"]), 64)
+        self.assertEqual(len(self.built["schedule"]["review_trials"]), 192)
+        self.assertEqual(self.built["schedule"]["repair_traces"], [])
+        for record in self.built["packages"]:
+            condition = record["controller_condition"]
+            package = record["reviewer_package"]
+            catalogue = self.built["catalogues"][condition["instance_id"]]
+            ids = package["common_base"]["section"]["assigned_boundary_ids"]
+            self.assertEqual(len(ids), 6)
+            self.assertEqual(len(set(ids)), 6)
+            self.assertEqual(
+                package["common_base"]["assigned_job"]["job_id"],
+                catalogue["job_order"][-1],
+            )
+            runtime = package.get("runtime_evidence")
+            if runtime and runtime["nodes"]:
+                self.assertEqual({value["job_id"] for value in runtime["nodes"]}, set(catalogue["job_order"]))
+                self.assertEqual(runtime["handoffs"], catalogue["handoffs"])
+
+    def test_n15_treatments_are_isolated_and_combined_random_is_matched(self):
+        for instance_id in self.built["catalogues"]:
+            for source in ("source_present", "source_absent"):
+                fixed = self.by_condition[(instance_id, "etiq_selected_fixed", source)]
+                adaptive = self.by_condition[(instance_id, "etiq_selected_adaptive", source)]
+                self.assertEqual(canonical_json(fixed["runtime_evidence"]), canonical_json(adaptive["runtime_evidence"]))
+                random_package = self.by_condition[(instance_id, "etiq_random_matched", source)]
+                match = random_package["runtime_evidence"]["random_match"]
+                self.assertEqual(match["scope"], "combined_two_job_pool")
+                self.assertTrue(match["node_count_matched"])
+                self.assertTrue(match["relationship_count_matched"])
+                self.assertEqual(len(self.by_condition[(instance_id, "history_full", source)]["prior_task_records"]), 1)
+                self.assertEqual(self.by_condition[(instance_id, "history_empty", source)]["prior_task_records"], [])
+            for mode in EVIDENCE_MODES:
+                present = self.by_condition[(instance_id, mode, "source_present")]
+                absent = self.by_condition[(instance_id, mode, "source_absent")]
+                self.assertEqual(
+                    {key for key in set(present) | set(absent) if canonical_json(present.get(key)) != canonical_json(absent.get(key))},
+                    {"source_bundle"},
+                )
+                self.assertEqual(_controller_key_paths(render_provider_request(present)), [])
+                visible = canonical_json(render_provider_request(present)).decode()
+                self.assertNotIn('"mutation"', visible)
+                self.assertNotIn('"oracle"', visible)
+
+    def test_n15_helper_expands_each_bound_job_and_suspect_scoring_uses_job_and_id(self):
+        catalogue = self.built["catalogues"]["instance-04"]
+        package = self.by_condition[("instance-04", "etiq_selected_adaptive", "source_absent")]
+        children = package["runtime_evidence"]["collapsed_children"]
+        self.assertEqual({value["job_id"] for value in children}, set(catalogue["job_order"]))
+        for job_id in catalogue["job_order"]:
+            child = next(value for value in children if value["job_id"] == job_id)
+            _, event = expand_n15_helper(
+                catalogue,
+                package,
+                {
+                    "operation": "helper_expansion",
+                    "boundary_id": child["boundary_id"],
+                    "prefixes": [child["func_stack"]],
+                },
+            )
+            self.assertEqual(event["resolved_job_id"], job_id)
+            self.assertEqual(event["status"], "completed")
+
+        instance = json.loads((ROOT / "outputs/fault-experiments-v2-2-n10/attempt-023/instances/instance-04.json").read_text())
+        truth_job = instance["mutation"]["target_job_id"]
+        truth_qualified = instance["mutation"]["site"]["qualified_function_name"]
+        truth = next(
+            binding
+            for binding in catalogue["jobs"][truth_job]["boundary_bindings"]
+            if binding["frozen_realized_identity"]["qualified_function_name"] == truth_qualified
+        )["reviewer_boundary_id"]
+        reviews = []
+        for boundary_id in package["common_base"]["section"]["assigned_boundary_ids"]:
+            reviews.append(
+                {
+                    "unit_id": boundary_id,
+                    "decision": "failed" if boundary_id == truth else "trusted",
+                    "decision_reason": "focused N15 validator test",
+                    "evidence_refs": [boundary_id],
+                    "trust_level": "provisionally_trusted",
+                    "criteria_outcomes": [],
+                    "boundary_health_acknowledged": True,
+                    "expand_helper_prefixes": [],
+                    "inspect_artifacts": [],
+                    "suspect_node_refs": [],
+                }
+            )
+        validation = validate_n15_reviewer_response(catalogue, package, {"reviews": reviews})
+        score = score_n15_top_suspect(catalogue, instance, validation)
+        self.assertEqual(validation["selected_job_id"], truth_job)
+        self.assertTrue(score["correct_job_localisation"])
+        self.assertTrue(score["exact_boundary_localisation"])
+        self.assertEqual(score["truth_function_name"], "normalize")
 
 
 if __name__ == "__main__":

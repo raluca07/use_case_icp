@@ -243,6 +243,17 @@ def build_parser() -> argparse.ArgumentParser:
     corrected.add_argument("--tester-gate")
     corrected.set_defaults(action="fault_experiment_corrected_four")
 
+    n15 = subparsers.add_parser(
+        "fault-experiment-n15",
+        help="build, freeze, verify, or run the downstream-first two-job experiment",
+    )
+    n15.add_argument("operation", choices=("build", "freeze", "verify", "live"))
+    n15.add_argument(
+        "--attempt-root",
+        default="outputs/fault-experiments-v2-2-n10/attempt-027",
+    )
+    n15.set_defaults(action="fault_experiment_n15")
+
     server = subparsers.add_parser("serve", help="serve the local dashboard")
     server.add_argument("--host", default="127.0.0.1")
     server.add_argument("--port", type=int, default=8000)
@@ -649,6 +660,47 @@ def main(argv: list[str] | None = None) -> int:
                 f"Corrected four-instance experiment failed: {type(exc).__name__}: {exc}",
                 file=sys.stderr,
             )
+            return 1
+        return 0
+    if args.action == "fault_experiment_n15":
+        from .corrected_experiment import (
+            build_n15_attempt,
+            freeze_n15_attempt,
+            n15_production_reviewer,
+            run_n15_lifecycle,
+            verify_n15_frozen_attempt,
+        )
+
+        attempt_root = Path(args.attempt_root)
+        if not attempt_root.is_absolute():
+            attempt_root = repo_root / attempt_root
+        try:
+            if args.operation == "build":
+                built = build_n15_attempt(repo_root)
+                print(json.dumps({
+                    "qualification": built["qualification"],
+                    "counts": {
+                        "catalogues": len(built["catalogues"]),
+                        "packages": len(built["packages"]),
+                        "reviews": len(built["schedule"]["review_trials"]),
+                        "repairs": len(built["schedule"]["repair_traces"]),
+                    },
+                }, indent=2))
+            elif args.operation == "freeze":
+                print(freeze_n15_attempt(repo_root, attempt_root))
+            elif args.operation == "verify":
+                print(json.dumps(verify_n15_frozen_attempt(repo_root, attempt_root), indent=2))
+            else:
+                terminal_path = run_n15_lifecycle(
+                    repo_root,
+                    attempt_root,
+                    reviewer=n15_production_reviewer(repo_root, attempt_root),
+                )
+                print(terminal_path)
+                terminal = json.loads(terminal_path.read_text())
+                return 0 if terminal.get("status") == "completed_experiment_and_analysis" else 1
+        except Exception as exc:
+            print(f"N15 experiment failed: {type(exc).__name__}: {exc}", file=sys.stderr)
             return 1
         return 0
     if args.action == "run":

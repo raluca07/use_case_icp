@@ -40,22 +40,20 @@ from PyPI. It can also be installed with `pip install -e '.[etiq]'`.
 
 Without installation, run commands from the repository with `PYTHONPATH=src`.
 
-## Fault-localisation experiment
+## Fault-localisation experiments
 
-Attempt 026 is the latest corrected four-instance run under protocol 2.2. It
-completed all 192 scheduled initial reviews and 43 of 96 repair traces before
-stopping fail-closed when a real-Etiq recapture was not reviewable. It is
-published as terminal-incomplete: no completed analysis, replay, or successful
-terminal closure is claimed.
+Attempt 027 is the latest downstream-first, two-job review experiment under
+protocol 2.2. It completed its planned 64 packages and 192 reviews, with zero
+repair traces by design, and produced analysis and replay closure.
 
-The curated Git publication contains the frozen packages, completed review and
-repair records, referenced provider responses, selected repaired pipelines,
-terminal records, derived descriptive summaries, and exact checksums. Raw
-provider requests and ledgers, authentication state, caches, logs, duplicated
-workspaces, and other large transient files remain excluded.
+See the [Attempt 027 publication](outputs/fault-experiments-v2-2-n10/attempt-027-publication-001/README.md)
+for its included records and limitations. The earlier
+[Attempt 026 publication](outputs/fault-experiments-v2-2-n10/attempt-026-publication-001/README.md)
+remains preserved separately as a terminal-incomplete direct-assigned-job
+pilot.
 
-See the [Attempt 026 publication](outputs/fault-experiments-v2-2-n10/attempt-026-publication-001/README.md)
-for its scope, limitations, and verification instructions.
+Raw provider requests and ledgers, authentication state, caches, logs,
+duplicated workspaces, and other large transient files are excluded from Git.
 
 ## Run
 

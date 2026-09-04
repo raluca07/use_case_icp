@@ -65,6 +65,33 @@ SOURCE_ATTEMPT = Path("outputs/fault-experiments-v2-2-n10/attempt-023")
 ABANDONED_ATTEMPT = Path("outputs/fault-experiments-v2-2-n10/attempt-024")
 CORRECTED_ATTEMPT = Path("outputs/fault-experiments-v2-2-n10/attempt-025")
 ATTEMPT_026 = Path("outputs/fault-experiments-v2-2-n10/attempt-026")
+ATTEMPT_027 = Path("outputs/fault-experiments-v2-2-n10/attempt-027")
+N15_TASK = Path("instructions_between_agent_types/developer/current/N15_downstream_first_cross_job_review_experiment.email.md")
+N15_TASK_SHA256 = "sha256:010b0ddb260abf453fb43f3120ccf84ca3b8af5aca8b53d92aa79cbc34fb7e0e"
+N15_AUTHORITY = Path("instructions_between_agent_types/overseer/decisions/N15_downstream_first_cross_job_review_experiment_authorization.json")
+N15_AUTHORITY_SHA256 = "sha256:c9e6a0c8fb73b6fb4523ec6fece848004aaa2543b06b0bdd1c76c0366116a6ec"
+N15_HISTORICAL_GATE = Path("outputs/fault-experiments-v2-2-n10/attempt-026/qualification/tester-n14b-hash-gate-44251821d78fba4d.json")
+N15_HISTORICAL_GATE_FILE_SHA256 = "sha256:edaa004cc64a51c8068641713c25b7a43d5631c32fe0b5e2f4c4f351bc372d36"
+N15_TASK_TEXT = (
+    "Starting from the observed downstream execution and final result, determine "
+    "whether a behaviorally significant fault exists anywhere in the two-job "
+    "chain. Review the downstream boundaries first, trace to the upstream producer "
+    "when the supplied evidence supports it, and return one top root-cause "
+    "boundary from either job or no suspect."
+)
+N15_CAPTURE_FILE_SHA256 = {
+    "instance-01": "sha256:2571997558cc5a2fdac95009faf47e9478a3017058f6a47ce5bfdae599741f98",
+    "instance-03": "sha256:f0736c1d37b09eb44332d0412ba7e7454892d6b2fe1626b537aaa1412cc99d33",
+    "instance-04": "sha256:95a58bcaddb0ea8d70a1db37ce0db609764c7880799c72126941c9a1e337d3d7",
+    "instance-12": "sha256:a4c4a6b00023e0d493bb45b754d799936f32658178ac53a9cac5fe57536ec736",
+}
+N15_PROTECTED_FILE_SHA256 = {
+    "src/use_case_icp/n05_runner.py": "sha256:25ba9749a212aef9d8a23513e4e1014985291708a0517e6d20f1f4469ed85bee",
+    "src/use_case_icp/n07_program.py": "sha256:d338cc22ce881b2c9bae46a105f227b9aae5f563fde17b177a3435286beec34f",
+    "src/use_case_icp/fault_operations.py": "sha256:1bb57683e121d179a3fc2e25351b6cb014b008a39ce867c6f79e75c38014d033",
+    "prompts/v2_2/fault_review.md": "sha256:1a59763cce79f307b0b86501ee4d272726c6df793d7827a9c155b8b8fd22ea44",
+    "schemas/v2_2/fault_review_receipt.schema.json": "sha256:3cebce8ef00c20f8316a4ed0998fd53ebff9e62a9471b7b635305ad7a5cbd075",
+}
 SELECTED_INSTANCES = {
     "instance-01": "upstream",
     "instance-04": "upstream",
@@ -3742,3 +3769,1274 @@ def run_corrected_lifecycle(
         )
         _write_immutable(path, terminal)
         return path
+
+
+# N15: downstream-first, two-job review path.  The production provider and
+# sandbox boundaries above are intentionally reused without modification.
+
+
+def _verify_n15_authority(repo_root: Path) -> dict[str, str]:
+    bindings = {
+        "N15 task": (N15_TASK, N15_TASK_SHA256),
+        "N15 authority": (N15_AUTHORITY, N15_AUTHORITY_SHA256),
+        "historical N14B gate": (N15_HISTORICAL_GATE, N15_HISTORICAL_GATE_FILE_SHA256),
+    }
+    result = {}
+    for label, (relative, expected) in bindings.items():
+        observed = sha256((repo_root / relative).read_bytes())
+        if observed != expected:
+            raise ValueError(f"{label} changed")
+        result[label] = observed
+    for relative, expected in N15_PROTECTED_FILE_SHA256.items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise RuntimeError(f"N15 protected boundary changed: {relative}")
+    historical_gate = _read_json(repo_root / N15_HISTORICAL_GATE)
+    current_isolation = {
+        "artifact_python_worker_sha256": sha256(_ARTIFACT_PYTHON_WORKER.encode("utf-8")),
+        "production_launcher_sha256": production_launcher_sha256(
+            artifact_python_launcher
+        ),
+        "launch_policy_sha256": ARTIFACT_PYTHON_LAUNCH_POLICY_SHA256,
+        "protocol_content_hash": PROTOCOL_CONTENT_HASH,
+        "model_configuration": {
+            "model": PROVIDER_MODEL,
+            "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        },
+    }
+    for field, observed in current_isolation.items():
+        if historical_gate.get(field) != observed:
+            raise RuntimeError(f"N15 isolation boundary changed: {field}")
+    if (PROVIDER_MODEL, PROVIDER_REASONING_EFFORT) != ("gpt-5.5", "high"):
+        raise RuntimeError("N15 model configuration changed")
+    return result
+
+
+def _catalogue_for_job(catalogue: Mapping[str, Any], job_id: str) -> dict[str, Any]:
+    if job_id not in catalogue["jobs"]:
+        raise ValueError("job is absent from two-job catalogue")
+    value = deepcopy(dict(catalogue))
+    value["assigned_job_id"] = job_id
+    value.pop("catalogue_sha256", None)
+    value["catalogue_sha256"] = sha256(value)
+    return value
+
+
+def _n15_boundary_bindings(catalogue: Mapping[str, Any]) -> list[dict[str, str]]:
+    order = list(map(str, catalogue["job_order"]))
+    rendered = []
+    for job_id in reversed(order):
+        job = catalogue["jobs"][job_id]
+        boundaries = {
+            str(value["boundary_id"]): value for value in job["realized_boundaries"]
+        }
+        for binding in job["boundary_bindings"]:
+            captured = str(binding["captured_boundary_id"])
+            if _realized_boundary_binding(boundaries[captured]) != binding:
+                raise ValueError("frozen two-job boundary binding changed")
+            rendered.append(
+                {
+                    "job_id": job_id,
+                    "job_position": "downstream" if job_id == order[-1] else "upstream",
+                    "captured_boundary_id": captured,
+                    "reviewer_boundary_id": str(binding["reviewer_boundary_id"]),
+                    "function_name": str(boundaries[captured]["function_name"]),
+                    "qualified_function_name": str(
+                        boundaries[captured]["static_identity"]["qualified_function_name"]
+                    ),
+                }
+            )
+    if len(rendered) != 6 or len({x["reviewer_boundary_id"] for x in rendered}) != 6:
+        raise ValueError("N15 requires six unique two-job boundary bindings")
+    return rendered
+
+
+def _tag_job_projection(projection: Mapping[str, Any], job_id: str) -> dict[str, Any]:
+    value = deepcopy(dict(projection))
+    value["nodes"] = [{**node, "job_id": job_id} for node in value["nodes"]]
+    value["relationships"] = [
+        {**edge, "job_id": job_id} for edge in value["relationships"]
+    ]
+    for child in value.get("collapsed_children", []):
+        child["job_id"] = job_id
+    value.pop("projection_sha256", None)
+    value["projection_sha256"] = sha256(value)
+    return value
+
+
+def _combine_n15_projections(
+    catalogue: Mapping[str, Any], projections: Mapping[str, Mapping[str, Any]]
+) -> dict[str, Any]:
+    order = list(map(str, catalogue["job_order"]))
+    downstream_first = list(reversed(order))
+    tagged = {
+        job_id: _tag_job_projection(projections[job_id], job_id)
+        for job_id in downstream_first
+    }
+    node_refs = [
+        str(node["node_ref"])
+        for job_id in downstream_first
+        for node in tagged[job_id]["nodes"]
+    ]
+    edge_refs = [
+        str(edge["relationship_ref"])
+        for job_id in downstream_first
+        for edge in tagged[job_id]["relationships"]
+    ]
+    if len(node_refs) != len(set(node_refs)) or len(edge_refs) != len(set(edge_refs)):
+        raise ValueError("combined two-job graph identifiers are not unique")
+    result = {
+        "job_evidence_order": downstream_first,
+        "nodes": [
+            node for job_id in downstream_first for node in tagged[job_id]["nodes"]
+        ],
+        "relationships": [
+            edge
+            for job_id in downstream_first
+            for edge in tagged[job_id]["relationships"]
+        ],
+        "handoffs": deepcopy(list(catalogue["handoffs"])),
+        "collapsed_children": [
+            child
+            for job_id in downstream_first
+            for child in tagged[job_id].get("collapsed_children", [])
+        ],
+        "visible_evidence_by_boundary": {
+            key: value
+            for job_id in downstream_first
+            for key, value in tagged[job_id]
+            .get("visible_evidence_by_boundary", {})
+            .items()
+        },
+    }
+    if len(result["handoffs"]) != 2:
+        raise ValueError("N15 graph requires both exact-hash handoffs")
+    result["projection_sha256"] = sha256(result)
+    return result
+
+
+def n15_selected_projection(
+    catalogue: Mapping[str, Any],
+    *,
+    expanded_prefixes_by_job: Mapping[str, Mapping[str, Iterable[Iterable[str]]]] | None = None,
+) -> dict[str, Any]:
+    maps = _n15_boundary_maps(catalogue)
+    projections = {}
+    for job_id in catalogue["job_order"]:
+        per_job = _catalogue_for_job(catalogue, str(job_id))
+        projection = selected_projection(
+            per_job,
+            expanded_prefixes_by_boundary=(expanded_prefixes_by_job or {}).get(
+                str(job_id), {}
+            ),
+        )
+        projections[str(job_id)] = _remap_projection_boundaries(
+            projection, maps[str(job_id)]
+        )
+    return _combine_n15_projections(catalogue, projections)
+
+
+def n15_full_projection(catalogue: Mapping[str, Any]) -> dict[str, Any]:
+    maps = _n15_boundary_maps(catalogue)
+    return _combine_n15_projections(
+        catalogue,
+        {
+            str(job_id): _remap_projection_boundaries(
+                full_projection(_catalogue_for_job(catalogue, str(job_id))),
+                maps[str(job_id)],
+            )
+            for job_id in catalogue["job_order"]
+        },
+    )
+
+
+def _n15_boundary_maps(catalogue: Mapping[str, Any]) -> dict[str, dict[str, str]]:
+    return {
+        str(job_id): _review_boundary_map(
+            _catalogue_for_job(catalogue, str(job_id)), {}
+        )
+        for job_id in catalogue["job_order"]
+    }
+
+
+def n15_random_matched_projection(
+    catalogue: Mapping[str, Any], fixed: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Oracle-blind combined-pool sample with Fixed's exact structural counts."""
+    node_by_ref: dict[str, tuple[str, Mapping[str, Any]]] = {}
+    edge_by_ref: dict[str, tuple[str, Mapping[str, Any]]] = {}
+    mandatory_nodes: set[str] = set()
+    mandatory_edges: set[str] = set()
+    eligible_nodes: set[str] = set()
+    eligible_edges: set[str] = set()
+    for job_id in map(str, catalogue["job_order"]):
+        job = catalogue["jobs"][job_id]
+        node_by_ref.update({str(x["node_ref"]): (job_id, x) for x in job["nodes"]})
+        edge_by_ref.update(
+            {str(x["relationship_ref"]): (job_id, x) for x in job["relationships"]}
+        )
+        for boundary in job["realized_boundaries"]:
+            mandatory_nodes.add(str(boundary["matched_function_node_ref"]))
+            mandatory_edges.update(
+                map(
+                    str,
+                    list(boundary["input_relationship_refs"])
+                    + list(boundary["output_relationship_refs"]),
+                )
+            )
+            eligible_nodes.update(map(str, boundary["node_refs"]))
+            eligible_edges.update(map(str, boundary["relationship_refs"]))
+    for ref in mandatory_edges | eligible_edges:
+        edge = edge_by_ref[ref][1]
+        mandatory_nodes.update(
+            {str(edge["source_ref"]), str(edge["target_ref"])}
+            if ref in mandatory_edges
+            else set()
+        )
+        eligible_nodes.update({str(edge["source_ref"]), str(edge["target_ref"])})
+    eligible_nodes |= mandatory_nodes
+    eligible_edges |= mandatory_edges
+    eligible_edges.update(
+        ref
+        for ref, (_, edge) in edge_by_ref.items()
+        if str(edge["source_ref"]) in eligible_nodes
+        and str(edge["target_ref"]) in eligible_nodes
+    )
+    target_nodes = len(fixed["nodes"])
+    target_edges = len(fixed["relationships"])
+    if len(mandatory_nodes) > target_nodes or len(mandatory_edges) > target_edges:
+        raise ValueError("combined Fixed budget is below mandatory two-job interface")
+    generator = random.Random(
+        int(sha256([catalogue["source_capture_sha256"], "n15-combined-random"])[7:23], 16)
+    )
+    candidates = sorted(eligible_nodes - mandatory_nodes)
+    chosen_nodes = chosen_edges = None
+    for _ in range(20_000):
+        generator.shuffle(candidates)
+        node_set = mandatory_nodes | set(candidates[: target_nodes - len(mandatory_nodes)])
+        possible = [
+            ref
+            for ref in eligible_edges - mandatory_edges
+            if {
+                str(edge_by_ref[ref][1]["source_ref"]),
+                str(edge_by_ref[ref][1]["target_ref"]),
+            }
+            <= node_set
+        ]
+        if len(node_set) == target_nodes and len(possible) >= target_edges - len(mandatory_edges):
+            generator.shuffle(possible)
+            chosen_nodes = node_set
+            chosen_edges = mandatory_edges | set(possible[: target_edges - len(mandatory_edges)])
+            break
+    if chosen_nodes is None or chosen_edges is None:
+        chosen_nodes = {str(x["node_ref"]) for x in fixed["nodes"]}
+        chosen_edges = {str(x["relationship_ref"]) for x in fixed["relationships"]}
+    nodes = [
+        {**structural_node(node_by_ref[ref][1]), "job_id": node_by_ref[ref][0]}
+        for ref in sorted(chosen_nodes, key=lambda x: (-catalogue["job_order"].index(node_by_ref[x][0]), x))
+    ]
+    edges = [
+        {**structural_relationship(edge_by_ref[ref][1]), "job_id": edge_by_ref[ref][0]}
+        for ref in sorted(chosen_edges, key=lambda x: (-catalogue["job_order"].index(edge_by_ref[x][0]), x))
+    ]
+    target_bytes = len(canonical_json({"nodes": fixed["nodes"], "relationships": fixed["relationships"]}))
+    observed_bytes = len(canonical_json({"nodes": nodes, "relationships": edges}))
+    result = {
+        "job_evidence_order": list(reversed(catalogue["job_order"])),
+        "nodes": nodes,
+        "relationships": edges,
+        "handoffs": deepcopy(list(catalogue["handoffs"])),
+        "collapsed_children": [],
+        "visible_evidence_by_boundary": {},
+        "random_match": {
+            "scope": "combined_two_job_pool",
+            "combined_fixed_projection_sha256": fixed["projection_sha256"],
+            "target_structural_utf8_bytes": target_bytes,
+            "observed_structural_utf8_bytes": observed_bytes,
+            "absolute_byte_difference": abs(target_bytes - observed_bytes),
+            "target_node_count": target_nodes,
+            "target_relationship_count": target_edges,
+            "node_count_matched": len(nodes) == target_nodes,
+            "relationship_count_matched": len(edges) == target_edges,
+            "eligible_nodes_sha256": sha256(sorted(eligible_nodes)),
+            "eligible_relationships_sha256": sha256(sorted(eligible_edges)),
+            "uses_fault_or_oracle_truth": False,
+        },
+    }
+    result["projection_sha256"] = sha256(result)
+    return result
+
+
+def _n15_common_base(
+    catalogue: Mapping[str, Any], neutral_base: Mapping[str, Any]
+) -> dict[str, Any]:
+    order = list(map(str, catalogue["job_order"]))
+    upstream, downstream = order
+    bindings = _n15_boundary_bindings(catalogue)
+    declarations = []
+    for binding in bindings:
+        job = catalogue["jobs"][binding["job_id"]]
+        boundary = next(
+            x
+            for x in job["realized_boundaries"]
+            if str(x["boundary_id"]) == binding["captured_boundary_id"]
+        )
+        declarations.append(
+            {
+                "boundary_id": binding["reviewer_boundary_id"],
+                "job_id": binding["job_id"],
+                "job_position": binding["job_position"],
+                "function_name": str(boundary["function_name"]),
+                "role": str(boundary["role"]),
+                "expected_inputs": deepcopy(boundary["expected_inputs"]),
+                "expected_outputs": deepcopy(boundary["expected_outputs"]),
+            }
+        )
+    handoffs = [
+        {
+            "handoff_name": str(value["handoff_id"]),
+            "upstream_job_id": str(value["upstream_job_id"]),
+            "downstream_job_id": str(value["downstream_job_id"]),
+            "direction": "upstream_to_downstream",
+        }
+        for value in catalogue["handoffs"]
+    ]
+    common = deepcopy(neutral_base["common_base"])
+    common["review_task"] = N15_TASK_TEXT
+    common["assigned_job"] = {
+        "job_id": downstream,
+        "observation_point": "downstream",
+        "input": deepcopy(catalogue["jobs"][downstream]["input"]),
+        "output": deepcopy(catalogue["jobs"][downstream]["output"]),
+        "stdout": str(catalogue["jobs"][downstream]["stdout"]),
+        "stderr": str(catalogue["jobs"][downstream]["stderr"]),
+    }
+    common["ordered_job_topology"] = [
+        {"job_id": downstream, "position": "downstream", "observation_point": True},
+        {"job_id": upstream, "position": "upstream", "observation_point": False},
+    ]
+    common["review_scope_sequence"] = [
+        {
+            "kind": "job_boundaries",
+            "job_id": downstream,
+            "boundary_ids": [x["boundary_id"] for x in declarations if x["job_id"] == downstream],
+        },
+        {"kind": "handoffs", "handoffs": handoffs},
+        {
+            "kind": "job_boundaries",
+            "job_id": upstream,
+            "boundary_ids": [x["boundary_id"] for x in declarations if x["job_id"] == upstream],
+        },
+    ]
+    common["semantic_declarations"] = declarations
+    common["section"] = {
+        **{
+            key: deepcopy(value)
+            for key, value in common["section"].items()
+            if key not in {"assigned_boundary_ids", "context_boundary_ids"}
+        },
+        "organization": {"kind": "downstream_first_two_job_boundaries"},
+        "assigned_boundary_ids": [x["boundary_id"] for x in declarations],
+        "context_boundary_ids": [],
+    }
+    return common
+
+
+def build_n15_review_package(
+    catalogue: Mapping[str, Any],
+    *,
+    evidence_mode: str,
+    source_setting: str,
+    neutral_base: Mapping[str, Any],
+) -> dict[str, Any]:
+    if evidence_mode not in EVIDENCE_MODES or source_setting not in SOURCE_SETTINGS:
+        raise ValueError("unknown N15 condition")
+    package: dict[str, Any] = {
+        "schema_version": "corrected-four-instance-package-2",
+        "common_base": _n15_common_base(catalogue, neutral_base),
+        "available_operations": [
+            *(["artifact_inspection"] if evidence_mode in GRAPH_MODES - {"etiq_empty"} else []),
+            *(["helper_expansion"] if evidence_mode == "etiq_selected_adaptive" else []),
+        ],
+        "prior_task_records": (
+            [
+                {
+                    "input": deepcopy(catalogue["jobs"][catalogue["job_order"][0]]["input"]),
+                    "output": deepcopy(catalogue["jobs"][catalogue["job_order"][0]]["output"]),
+                    "stdout": str(catalogue["jobs"][catalogue["job_order"][0]]["stdout"]),
+                    "stderr": str(catalogue["jobs"][catalogue["job_order"][0]]["stderr"]),
+                }
+            ]
+            if evidence_mode == "history_full"
+            else []
+        ),
+    }
+    if source_setting == "source_present":
+        source = deepcopy(neutral_base["source_bundle"])
+        if len(source) != 2:
+            raise ValueError("N15 Source Present requires both complete source files")
+        package["source_bundle"] = source
+    if evidence_mode in GRAPH_MODES:
+        if evidence_mode == "etiq_empty":
+            projection = {
+                "job_evidence_order": list(reversed(catalogue["job_order"])),
+                "nodes": [],
+                "relationships": [],
+                "handoffs": [],
+                "collapsed_children": [],
+                "visible_evidence_by_boundary": {},
+            }
+            projection["projection_sha256"] = sha256(projection)
+        elif evidence_mode == "etiq_full":
+            projection = n15_full_projection(catalogue)
+        else:
+            fixed = n15_selected_projection(catalogue)
+            projection = (
+                n15_random_matched_projection(catalogue, fixed)
+                if evidence_mode == "etiq_random_matched"
+                else fixed
+            )
+        package["runtime_evidence"] = projection
+    package["allowed_evidence_refs"] = sorted(
+        x["boundary_id"] for x in package["common_base"]["semantic_declarations"]
+    )
+    _validate_schema(package, PACKAGE_SCHEMA)
+    return package
+
+
+def n15_schedule(catalogues: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
+    values = {str(x["instance_id"]) for x in catalogues}
+    if values != set(SELECTED_INSTANCES):
+        raise ValueError("N15 requires exactly four selected instances")
+    packages = [
+        {
+            "instance_id": instance_id,
+            "evidence_mode": mode,
+            "source_setting": source,
+            "branch_id": f"brn-{sha256(['n15', instance_id, mode, source])[7:23]}",
+        }
+        for instance_id in SELECTED_INSTANCES
+        for mode in EVIDENCE_MODES
+        for source in SOURCE_SETTINGS
+    ]
+    reviews = [
+        {
+            **package,
+            "repetition": repetition,
+            "trial_id": f"trial-{sha256(['n15', package['branch_id'], repetition])[7:23]}",
+        }
+        for package in packages
+        for repetition in range(1, 4)
+    ]
+    if (len(packages), len(reviews)) != (64, 192):
+        raise AssertionError("N15 review matrix changed")
+    return {"packages": packages, "review_trials": reviews, "repair_traces": []}
+
+
+def build_n15_attempt(repo_root: Path) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    _verify_n15_authority(repo_root)
+    source_root = repo_root / SOURCE_ATTEMPT
+    source_paths = _capture_paths(source_root)
+    catalogues = {}
+    for instance_id, path in source_paths.items():
+        if sha256(path.read_bytes()) != N15_CAPTURE_FILE_SHA256[instance_id]:
+            raise ValueError(f"N15 source capture changed: {instance_id}")
+        catalogues[instance_id] = build_disclosure_catalogue(_read_json(path))
+    schedule = n15_schedule(catalogues.values())
+    packages = []
+    for item in schedule["packages"]:
+        catalogue = catalogues[item["instance_id"]]
+        neutral = _legacy_package(
+            source_root,
+            str(item["instance_id"]),
+            str(catalogue["assigned_job_id"]),
+        )
+        reviewer_package = build_n15_review_package(
+            catalogue,
+            evidence_mode=str(item["evidence_mode"]),
+            source_setting=str(item["source_setting"]),
+            neutral_base=neutral,
+        )
+        record = {
+            "schema_version": "n15-downstream-first-frozen-package-1",
+            "controller_condition": deepcopy(item),
+            "source_capture_sha256": catalogue["source_capture_sha256"],
+            "catalogue_sha256": catalogue["catalogue_sha256"],
+            "reviewer_package": reviewer_package,
+        }
+        record["package_sha256"] = sha256(record)
+        packages.append(record)
+    qualification = qualify_n15_packages(packages, catalogues, schedule)
+    return {
+        "catalogues": catalogues,
+        "packages": packages,
+        "schedule": schedule,
+        "qualification": qualification,
+        "source_capture_files": {
+            key: {
+                "path": path.relative_to(repo_root).as_posix(),
+                "file_sha256": sha256(path.read_bytes()),
+            }
+            for key, path in source_paths.items()
+        },
+    }
+
+
+def qualify_n15_packages(
+    packages: Iterable[Mapping[str, Any]],
+    catalogues: Mapping[str, Mapping[str, Any]],
+    schedule: Mapping[str, Any],
+) -> dict[str, Any]:
+    values = list(packages)
+    if (len(catalogues), len(values), len(schedule["review_trials"]), len(schedule["repair_traces"])) != (4, 64, 192, 0):
+        raise ValueError("N15 count invariant failed")
+    by_condition = {
+        (
+            x["controller_condition"]["instance_id"],
+            x["controller_condition"]["evidence_mode"],
+            x["controller_condition"]["source_setting"],
+        ): x["reviewer_package"]
+        for x in values
+    }
+    for record in values:
+        condition = record["controller_condition"]
+        package = record["reviewer_package"]
+        catalogue = catalogues[str(condition["instance_id"])]
+        ids = package["common_base"]["section"]["assigned_boundary_ids"]
+        if len(ids) != 6 or set(ids) != {
+            x["reviewer_boundary_id"] for x in _n15_boundary_bindings(catalogue)
+        }:
+            raise ValueError("N15 package does not expose exactly six boundaries")
+        if package["common_base"]["assigned_job"]["job_id"] != catalogue["job_order"][-1]:
+            raise ValueError("N15 package is not downstream-first")
+        runtime = package.get("runtime_evidence")
+        if runtime and runtime["nodes"]:
+            if {x["job_id"] for x in runtime["nodes"]} != set(catalogue["job_order"]):
+                raise ValueError("N15 graph lacks one job")
+            if runtime["handoffs"] != catalogue["handoffs"]:
+                raise ValueError("N15 graph lacks exact frozen handoffs")
+        if len(canonical_json(record)) > MAX_PACKAGE_BYTES:
+            raise ValueError("N15 package exceeds existing byte gate")
+        render_provider_request(package)
+    for instance_id in SELECTED_INSTANCES:
+        for source in SOURCE_SETTINGS:
+            fixed = by_condition[(instance_id, "etiq_selected_fixed", source)]
+            adaptive = by_condition[(instance_id, "etiq_selected_adaptive", source)]
+            if canonical_json(fixed["runtime_evidence"]) != canonical_json(adaptive["runtime_evidence"]):
+                raise ValueError("N15 Fixed and Adaptive bytes differ")
+            random_package = by_condition[(instance_id, "etiq_random_matched", source)]
+            match = random_package["runtime_evidence"]["random_match"]
+            if not match["node_count_matched"] or not match["relationship_count_matched"]:
+                raise ValueError("N15 Random does not match combined Fixed")
+            if len(by_condition[(instance_id, "history_full", source)]["prior_task_records"]) != 1:
+                raise ValueError("N15 History Full lacks its upstream record")
+            if by_condition[(instance_id, "history_empty", source)]["prior_task_records"]:
+                raise ValueError("N15 History Empty is not empty")
+        for mode in EVIDENCE_MODES:
+            present = by_condition[(instance_id, mode, "source_present")]
+            absent = by_condition[(instance_id, mode, "source_absent")]
+            if _differing_top_level_keys(present, absent) != {"source_bundle"}:
+                raise ValueError("N15 source pair differs outside source bundle")
+        current = by_condition[(instance_id, "current_run", "source_absent")]
+        history_empty = by_condition[(instance_id, "history_empty", "source_absent")]
+        history_full = by_condition[(instance_id, "history_full", "source_absent")]
+        graph_empty = by_condition[(instance_id, "etiq_empty", "source_absent")]
+        fixed = by_condition[(instance_id, "etiq_selected_fixed", "source_absent")]
+        adaptive = by_condition[(instance_id, "etiq_selected_adaptive", "source_absent")]
+        if current != history_empty:
+            raise ValueError("N15 Current and History Empty placebo requests differ")
+        if _differing_top_level_keys(history_full, history_empty) != {"prior_task_records"}:
+            raise ValueError("N15 history pair differs outside history payload")
+        if _differing_top_level_keys(graph_empty, current) != {"runtime_evidence"}:
+            raise ValueError("N15 Graph Empty differs outside graph envelope")
+        if _differing_top_level_keys(fixed, graph_empty) != {"runtime_evidence", "available_operations"}:
+            raise ValueError("N15 Fixed differs outside graph and operation payloads")
+        if _differing_top_level_keys(adaptive, fixed) != {"available_operations"}:
+            raise ValueError("N15 Adaptive differs from Fixed outside capability metadata")
+    return {
+        "status": "passed",
+        "model_calls": 0,
+        "catalogue_count": 4,
+        "package_count": 64,
+        "review_count": 192,
+        "repair_count": 0,
+        "downstream_first": True,
+        "six_boundary_scope": True,
+    }
+
+
+def expand_n15_helper(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    request: Mapping[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    if "helper_expansion" not in package.get("available_operations", []):
+        raise ValueError("helper expansion is unavailable in this reviewer package")
+    prefixes = list(request.get("prefixes", []))
+    if len(prefixes) != 1:
+        raise ValueError("exactly one direct child must be requested")
+    reviewer_id = str(request.get("boundary_id") or "")
+    requested = list(map(str, prefixes[0]))
+    runtime = package.get("runtime_evidence", {})
+    collapsed = {
+        (str(x["boundary_id"]), tuple(map(str, x["func_stack"])), str(x["job_id"]))
+        for x in runtime.get("collapsed_children", [])
+    }
+    binding = next(
+        (x for x in _n15_boundary_bindings(catalogue) if x["reviewer_boundary_id"] == reviewer_id),
+        None,
+    )
+    if binding is None or (reviewer_id, tuple(requested), binding["job_id"]) not in collapsed:
+        raise ValueError("helper expansion must target a current bound direct child")
+    reverse = {
+        value: (job_id, captured)
+        for job_id, mapping in _n15_boundary_maps(catalogue).items()
+        for captured, value in mapping.items()
+    }
+    expanded: dict[str, dict[str, list[list[str]]]] = {
+        str(job_id): {} for job_id in catalogue["job_order"]
+    }
+    roots = {
+        (str(job_id), str(x["boundary_id"])): canonical_stack(x["matched_prefix"])
+        for job_id in catalogue["job_order"]
+        for x in catalogue["jobs"][job_id]["realized_boundaries"]
+    }
+    for visible_id, details in runtime.get("visible_evidence_by_boundary", {}).items():
+        job_id, captured = reverse[str(visible_id)]
+        expanded[job_id][captured] = [
+            list(map(str, prefix))
+            for prefix in details.get("visible_prefixes", [])
+            if canonical_stack(prefix) != roots[(job_id, captured)]
+        ]
+    job_id, captured = reverse[reviewer_id]
+    expanded[job_id].setdefault(captured, []).append(requested)
+    projection = n15_selected_projection(
+        catalogue, expanded_prefixes_by_job=expanded
+    )
+    old_nodes = {str(x["node_ref"]) for x in runtime.get("nodes", [])}
+    old_edges = {str(x["relationship_ref"]) for x in runtime.get("relationships", [])}
+    updated = deepcopy(dict(package))
+    updated["runtime_evidence"] = projection
+    _validate_schema(updated, PACKAGE_SCHEMA)
+    return updated, {
+        "operation": "helper_expansion",
+        "status": "completed",
+        "boundary_id": reviewer_id,
+        "resolved_job_id": job_id,
+        "prefix": requested,
+        "nodes_added": [str(x["node_ref"]) for x in projection["nodes"] if str(x["node_ref"]) not in old_nodes],
+        "relationships_added": [str(x["relationship_ref"]) for x in projection["relationships"] if str(x["relationship_ref"]) not in old_edges],
+    }
+
+
+def perform_n15_operation(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    request: Mapping[str, Any],
+    *,
+    python_executor: Callable[[Mapping[str, Any], str], Mapping[str, Any]] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    operation = str(request.get("operation") or "")
+    try:
+        _validate_schema(request, OPERATION_SCHEMA)
+        if operation == "helper_expansion":
+            return expand_n15_helper(catalogue, package, request)
+        if operation != "artifact_inspection":
+            raise ValueError(f"illegal operation request: {operation}")
+        evidence = []
+        for value in request.get("requests", []):
+            ref = str(value.get("node_ref") or "")
+            owners = [
+                str(job_id)
+                for job_id in catalogue["job_order"]
+                if any(str(node["node_ref"]) == ref for node in catalogue["jobs"][job_id]["nodes"])
+            ]
+            if len(owners) != 1:
+                raise ValueError("artifact node does not resolve to exactly one bound job")
+            result = inspect_catalogue_artifact(
+                _catalogue_for_job(catalogue, owners[0]),
+                package,
+                value,
+                python_executor=python_executor,
+            )
+            evidence.append({**result, "resolved_job_id": owners[0]})
+        return deepcopy(dict(package)), {
+            "operation": operation,
+            "status": "completed",
+            "request_count": len(evidence),
+            "artifact_bytes_returned": sum(x["artifact_bytes_returned"] for x in evidence),
+            "returned_rows": sum(int(x.get("returned_rows", 0)) for x in evidence),
+            "returned_columns": sum(int(x.get("returned_columns", 0)) for x in evidence),
+            "returned_document_characters": sum(int(x.get("returned_document_characters", 0)) for x in evidence),
+            "full_data_requested": any(x.get("full_data_requested") is True for x in evidence),
+            "python_analysis_requested": any(x.get("python_analysis_requested") is True for x in evidence),
+            "evidence": evidence,
+        }
+    except (KeyError, TypeError, ValueError) as exc:
+        return deepcopy(dict(package)), {
+            "operation": operation,
+            "status": "rejected",
+            "error": str(exc),
+            "nodes_added": [],
+            "relationships_added": [],
+        }
+
+
+def run_n15_follow_up_loop(
+    *,
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    initial_response: Mapping[str, Any],
+    reviewer: Callable[[Mapping[str, Any]], Mapping[str, Any]],
+    controller_parent_id: str,
+    python_executor: Callable[[Mapping[str, Any], str], Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    follow_up_index = 0
+
+    def call(request: Mapping[str, Any]) -> Mapping[str, Any]:
+        nonlocal follow_up_index
+        follow_up_index += 1
+        return _invoke_callback(
+            reviewer,
+            request,
+            f"{controller_parent_id}-follow-up-{follow_up_index:02d}",
+        )
+
+    return run_catalogue_follow_ups(
+        catalogue=catalogue,
+        package=package,
+        initial_response=initial_response,
+        reviewer=call,
+        operation=lambda current_catalogue, current_package, request: perform_n15_operation(
+            current_catalogue,
+            current_package,
+            request,
+            python_executor=python_executor,
+        ),
+        phase="initial_review",
+    )
+
+
+def validate_n15_reviewer_response(
+    catalogue: Mapping[str, Any],
+    package: Mapping[str, Any],
+    response: Mapping[str, Any],
+) -> dict[str, Any]:
+    validation = validate_reviewer_response(package, response)
+    selected = validation["selected_suspect_boundary_id"]
+    binding = next(
+        (x for x in _n15_boundary_bindings(catalogue) if x["reviewer_boundary_id"] == selected),
+        None,
+    )
+    return {
+        **validation,
+        "selected_job_id": binding["job_id"] if binding else None,
+        "selected_job_position": binding["job_position"] if binding else None,
+        "selected_function_name": binding["function_name"] if binding else None,
+    }
+
+
+def score_n15_top_suspect(
+    catalogue: Mapping[str, Any],
+    instance_record: Mapping[str, Any],
+    validation: Mapping[str, Any],
+) -> dict[str, Any]:
+    mutation = instance_record.get("mutation")
+    if not mutation:
+        return {
+            "designation": "control",
+            "fault_detected": bool(validation["suspect_boundary_ids"]),
+            "false_positive": bool(validation["suspect_boundary_ids"]),
+            "correct_job_localisation": False,
+            "exact_boundary_localisation": False,
+            "truth_job_id": None,
+            "truth_reviewer_boundary_id": None,
+            "truth_function_name": None,
+        }
+    truth_job = str(mutation["target_job_id"])
+    qualified = str(mutation["site"]["qualified_function_name"])
+    truth = next(
+        x
+        for x in _n15_boundary_bindings(catalogue)
+        if x["job_id"] == truth_job and x["qualified_function_name"] == qualified
+    )
+    return {
+        "designation": "upstream_fault" if truth_job == catalogue["job_order"][0] else "downstream_fault",
+        "fault_detected": bool(validation["suspect_boundary_ids"]),
+        "false_positive": False,
+        "correct_job_localisation": validation.get("selected_job_id") == truth_job,
+        "exact_boundary_localisation": validation.get("selected_suspect_boundary_id") == truth["reviewer_boundary_id"],
+        "truth_job_id": truth_job,
+        "truth_reviewer_boundary_id": truth["reviewer_boundary_id"],
+        "truth_function_name": truth["function_name"],
+    }
+
+
+def _load_n15_frozen(attempt_root: Path) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    catalogues = {
+        path.stem: _read_json(path)
+        for path in sorted((attempt_root / "catalogues").glob("*.json"))
+    }
+    packages = {}
+    records = []
+    for path in sorted((attempt_root / "controller-manifests").glob("*.json")):
+        manifest = _read_json(path)
+        reviewer_package = _read_json(attempt_root / manifest["reviewer_package_path"])
+        if sha256(reviewer_package) != manifest["reviewer_package_sha256"]:
+            raise ValueError("N15 frozen reviewer package changed")
+        record = {
+            **{k: v for k, v in manifest.items() if k not in {"reviewer_package_path", "reviewer_package_sha256"}},
+            "reviewer_package": reviewer_package,
+        }
+        unsigned = deepcopy(record)
+        if unsigned.pop("package_sha256", None) != sha256(unsigned):
+            raise ValueError("N15 frozen package record changed")
+        packages[path.stem] = record
+        records.append(record)
+    return catalogues, packages, records
+
+
+def freeze_n15_attempt(repo_root: Path, attempt_root: Path | None = None) -> Path:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_027).resolve()
+    if target != (repo_root / ATTEMPT_027).resolve():
+        raise ValueError("N15 freeze is authorized only for Attempt 027")
+    if target.exists() and any(target.iterdir()):
+        raise ValueError("Attempt 027 already contains artifacts; freeze is one-use")
+    authorities = _verify_n15_authority(repo_root)
+    preserved = {
+        name: sha256(_tree_hashes(repo_root / "outputs/fault-experiments-v2-2-n10" / name))
+        for name in ("attempt-023", "attempt-025", "attempt-026")
+    }
+    built = build_n15_attempt(repo_root)
+    for instance_id, catalogue in built["catalogues"].items():
+        _write_immutable(target / "catalogues" / f"{instance_id}.json", catalogue)
+    for record in built["packages"]:
+        branch_id = record["controller_condition"]["branch_id"]
+        _write_immutable(target / "packages" / branch_id / "reviewer-package.json", record["reviewer_package"])
+        manifest = {k: deepcopy(v) for k, v in record.items() if k != "reviewer_package"}
+        manifest["reviewer_package_path"] = f"packages/{branch_id}/reviewer-package.json"
+        manifest["reviewer_package_sha256"] = sha256(record["reviewer_package"])
+        _write_immutable(target / "controller-manifests" / f"{branch_id}.json", manifest)
+    _write_immutable(target / "review-design.json", {"review_trials": built["schedule"]["review_trials"]})
+    _write_immutable(target / "repair-design.json", {"repair_traces": []})
+    if preserved != {
+        name: sha256(_tree_hashes(repo_root / "outputs/fault-experiments-v2-2-n10" / name))
+        for name in preserved
+    }:
+        raise RuntimeError("a preserved attempt changed during N15 freeze")
+    freeze = {
+        "schema_version": "n15-downstream-first-freeze-1",
+        "status": "frozen_before_first_experimental_review",
+        "attempt": "attempt-027",
+        "source_attempt": "attempt-023",
+        "authority_bindings": authorities,
+        "n15_authority": {"path": N15_AUTHORITY.as_posix(), "sha256": N15_AUTHORITY_SHA256},
+        "source_capture_files": built["source_capture_files"],
+        "catalogue_hashes": {k: v["catalogue_sha256"] for k, v in built["catalogues"].items()},
+        "package_hashes": [x["package_sha256"] for x in built["packages"]],
+        "review_design_sha256": sha256(built["schedule"]["review_trials"]),
+        "repair_design_sha256": sha256([]),
+        "expected_counts": {"catalogues": 4, "packages": 64, "reviews": 192, "repairs": 0},
+        "qualification": built["qualification"],
+        "protected_file_hashes_before_and_after_patch": deepcopy(N15_PROTECTED_FILE_SHA256),
+        "code_hashes": {
+            "src/use_case_icp/corrected_experiment.py": sha256((repo_root / "src/use_case_icp/corrected_experiment.py").read_bytes()),
+            "src/use_case_icp/__main__.py": sha256((repo_root / "src/use_case_icp/__main__.py").read_bytes()),
+            "tests/test_corrected_experiment.py": sha256((repo_root / "tests/test_corrected_experiment.py").read_bytes()),
+        },
+        "preserved_attempt_tree_hashes": preserved,
+        "historical_isolation_gate_file_sha256": N15_HISTORICAL_GATE_FILE_SHA256,
+        "model": PROVIDER_MODEL,
+        "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        "experimental_review_records_at_freeze": 0,
+    }
+    freeze["freeze_sha256"] = sha256(freeze)
+    path = target / "experiment-freeze.json"
+    _write_immutable(path, freeze)
+    return path
+
+
+def verify_n15_frozen_attempt(repo_root: Path, attempt_root: Path | None = None) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    target = (attempt_root or repo_root / ATTEMPT_027).resolve()
+    _verify_n15_authority(repo_root)
+    freeze = _read_json(target / "experiment-freeze.json")
+    observed = _verified_self_hash(freeze, "freeze_sha256")
+    if freeze.get("n15_authority") != {"path": N15_AUTHORITY.as_posix(), "sha256": N15_AUTHORITY_SHA256}:
+        raise ValueError("N15 freeze authority changed")
+    for relative, expected in freeze["code_hashes"].items():
+        if sha256((repo_root / relative).read_bytes()) != expected:
+            raise ValueError(f"N15 frozen code changed: {relative}")
+    for instance_id, binding in freeze["source_capture_files"].items():
+        if binding["file_sha256"] != N15_CAPTURE_FILE_SHA256[instance_id] or sha256((repo_root / binding["path"]).read_bytes()) != binding["file_sha256"]:
+            raise ValueError("N15 source capture binding changed")
+    catalogues, _, records = _load_n15_frozen(target)
+    for instance_id, catalogue in catalogues.items():
+        verify_catalogue(catalogue)
+        if catalogue["catalogue_sha256"] != freeze["catalogue_hashes"][instance_id]:
+            raise ValueError("N15 catalogue changed")
+    schedule = {
+        "review_trials": _read_json(target / "review-design.json")["review_trials"],
+        "repair_traces": _read_json(target / "repair-design.json")["repair_traces"],
+    }
+    qualification = qualify_n15_packages(records, catalogues, schedule)
+    if sorted(x["package_sha256"] for x in records) != sorted(freeze["package_hashes"]):
+        raise ValueError("N15 package membership changed")
+    if sha256(schedule["review_trials"]) != freeze["review_design_sha256"] or sha256(schedule["repair_traces"]) != freeze["repair_design_sha256"]:
+        raise ValueError("N15 schedule changed")
+    return {
+        "status": "verified",
+        "freeze_sha256": observed,
+        "qualification": qualification,
+        "package_count": 64,
+        "review_count": 192,
+        "repair_count": 0,
+    }
+
+
+def create_n15_live_consumption(repo_root: Path, attempt_root: Path) -> Path:
+    repo_root = repo_root.resolve()
+    attempt_root = attempt_root.resolve()
+    path = attempt_root / "live-consumption.json"
+    if path.is_file():
+        value = _read_json(path)
+        _verified_self_hash(value, "consumption_sha256")
+        return path
+    if list((attempt_root / "reviews").glob("*.json")):
+        raise ValueError("N15 review exists before live authority consumption")
+    verified = verify_n15_frozen_attempt(repo_root, attempt_root)
+    freeze = _read_json(attempt_root / "experiment-freeze.json")
+    record = {
+        "schema_version": "n15-live-consumption-1",
+        "status": "live_authority_consumed_before_first_provider_call",
+        "authority": {"path": N15_AUTHORITY.as_posix(), "sha256": N15_AUTHORITY_SHA256},
+        "freeze_sha256": verified["freeze_sha256"],
+        "package_tree_sha256": sha256(_tree_hashes(attempt_root / "packages")),
+        "controller_manifest_tree_sha256": sha256(_tree_hashes(attempt_root / "controller-manifests")),
+        "review_design_file_sha256": sha256((attempt_root / "review-design.json").read_bytes()),
+        "repair_design_file_sha256": sha256((attempt_root / "repair-design.json").read_bytes()),
+        "protected_file_hashes": deepcopy(N15_PROTECTED_FILE_SHA256),
+        "model": PROVIDER_MODEL,
+        "reasoning_effort": PROVIDER_REASONING_EFFORT,
+        "expected_counts": {"packages": 64, "reviews": 192, "repairs": 0},
+    }
+    if record["freeze_sha256"] != freeze["freeze_sha256"]:
+        raise ValueError("N15 live freeze binding changed")
+    record["consumption_sha256"] = sha256(record)
+    _write_immutable(path, record)
+    return path
+
+
+def _n15_comparison(
+    rows: list[dict[str, Any]], name: str, left: str, right: str
+) -> dict[str, Any]:
+    left_rows = [x for x in rows if x["evidence_mode"] == left]
+    right_rows = [x for x in rows if x["evidence_mode"] == right]
+    metrics = (
+        "fault_detected",
+        "correct_job_localisation",
+        "exact_boundary_localisation",
+        "false_positive",
+    )
+    return {
+        "name": name,
+        "left": left,
+        "right": right,
+        **{
+            f"{metric}_rate_difference": (
+                sum(bool(x[metric]) for x in left_rows) / len(left_rows)
+                - sum(bool(x[metric]) for x in right_rows) / len(right_rows)
+            )
+            for metric in metrics
+        },
+    }
+
+
+def _n15_grouped(rows: list[dict[str, Any]], fields: tuple[str, ...]) -> list[dict[str, Any]]:
+    groups: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
+    for row in rows:
+        groups.setdefault(tuple(row[field] for field in fields), []).append(row)
+    return [
+        {
+            **dict(zip(fields, key)),
+            "n": len(values),
+            "fault_detections": sum(bool(x["fault_detected"]) for x in values),
+            "correct_job_localisations": sum(bool(x["correct_job_localisation"]) for x in values),
+            "exact_boundary_localisations": sum(bool(x["exact_boundary_localisation"]) for x in values),
+            "false_positives": sum(bool(x["false_positive"]) for x in values),
+        }
+        for key, values in sorted(groups.items())
+    ]
+
+
+def _write_n15_analysis(
+    attempt_root: Path,
+    packages: Mapping[str, Mapping[str, Any]],
+    reviews: Mapping[tuple[str, int], Mapping[str, Any]],
+) -> Path:
+    rows = []
+    token_records = []
+    for record in reviews.values():
+        condition = record["controller_trial"]
+        events = record.get("operation_events", [])
+        rows.append(
+            {
+                **deepcopy(condition),
+                "designation": record["designation"],
+                "fault_detected": bool(record["fault_detected"]),
+                "false_positive": bool(record["false_positive"]),
+                "selected_job_id": record.get("selected_job_id"),
+                "selected_job_position": record.get("selected_job_position"),
+                "selected_boundary_id": record.get("selected_suspect_boundary_id"),
+                "selected_function_name": record.get("selected_function_name"),
+                "correct_job_localisation": bool(record["correct_job_localisation"]),
+                "exact_boundary_localisation": bool(record["exact_boundary_localisation"]),
+                "accepted_operation_count": sum(x.get("status") == "completed" for x in events),
+                "rejected_operation_count": sum(str(x.get("status", "")).startswith("rejected") for x in events),
+                "disclosed_node_count": len(
+                    packages[str(condition["branch_id"])]["reviewer_package"]
+                    .get("runtime_evidence", {})
+                    .get("nodes", [])
+                ) + sum(len(x.get("nodes_added", [])) for x in events),
+                "operation_events": deepcopy(events),
+                "input_tokens": int(record["usage"].get("input_tokens", 0)),
+                "cached_input_tokens": int(record["usage"].get("cached_input_tokens", 0)),
+                "output_tokens": int(record["usage"].get("output_tokens", 0)),
+            }
+        )
+        token_records.extend(record["usage"].get("calls", []))
+    comparisons = [
+        _n15_comparison(rows, "history_empty_vs_current", "history_empty", "current_run"),
+        _n15_comparison(rows, "history_full_vs_history_empty", "history_full", "history_empty"),
+        _n15_comparison(rows, "graph_empty_vs_current", "etiq_empty", "current_run"),
+        _n15_comparison(rows, "fixed_vs_graph_empty", "etiq_selected_fixed", "etiq_empty"),
+        _n15_comparison(rows, "adaptive_vs_fixed", "etiq_selected_adaptive", "etiq_selected_fixed"),
+        _n15_comparison(rows, "random_matched_vs_fixed", "etiq_random_matched", "etiq_selected_fixed"),
+        _n15_comparison(rows, "full_graph_vs_graph_empty", "etiq_full", "etiq_empty"),
+    ]
+    for mode in EVIDENCE_MODES:
+        selected = [x for x in rows if x["evidence_mode"] == mode]
+        present = [x for x in selected if x["source_setting"] == "source_present"]
+        absent = [x for x in selected if x["source_setting"] == "source_absent"]
+        comparisons.append(
+            {
+                "name": f"source_present_vs_absent__{mode}",
+                "left": "source_present",
+                "right": "source_absent",
+                **{
+                    f"{metric}_rate_difference": (
+                        sum(bool(x[metric]) for x in present) / len(present)
+                        - sum(bool(x[metric]) for x in absent) / len(absent)
+                    )
+                    for metric in (
+                        "fault_detected",
+                        "correct_job_localisation",
+                        "exact_boundary_localisation",
+                        "false_positive",
+                    )
+                },
+            }
+        )
+    primary = [x for x in rows if x["instance_id"] == "instance-04"]
+    calibration = [x for x in rows if x["instance_id"] == "instance-03"]
+    controls = [x for x in rows if x["designation"] == "control"]
+    repetition_groups: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        repetition_groups.setdefault(str(row["branch_id"]), []).append(row)
+    analysis = {
+        "schema_version": "n15-downstream-first-analysis-1",
+        "scope_limitation": "Four-pipeline descriptive experiment with one upstream-fault pipeline; Attempt 026 is a separate direct-assigned-job pilot and is not pooled.",
+        "review_count": len(rows),
+        "repair_trace_count": 0,
+        "primary_instance_04": {
+            "downstream_observation_fault_detection": {"numerator": sum(x["fault_detected"] for x in primary), "denominator": len(primary)},
+            "correct_upstream_job_localisation": {"numerator": sum(x["correct_job_localisation"] for x in primary), "denominator": len(primary)},
+            "exact_normalize_localisation": {"numerator": sum(x["exact_boundary_localisation"] for x in primary), "denominator": len(primary)},
+        },
+        "calibration_instance_03": {
+            "downstream_fault_detection": {"numerator": sum(x["fault_detected"] for x in calibration), "denominator": len(calibration)},
+            "exact_prioritize_needs_localisation": {"numerator": sum(x["exact_boundary_localisation"] for x in calibration), "denominator": len(calibration)},
+        },
+        "control_false_positives": {"numerator": sum(x["false_positive"] for x in controls), "denominator": len(controls)},
+        "contrasts": comparisons,
+        "results_by": {
+            "evidence_mode": _n15_grouped(rows, ("evidence_mode",)),
+            "source_setting": _n15_grouped(rows, ("source_setting",)),
+            "fault_scope": _n15_grouped(rows, ("designation",)),
+            "instance": _n15_grouped(rows, ("instance_id",)),
+            "full_cells": _n15_grouped(rows, ("instance_id", "evidence_mode", "source_setting")),
+        },
+        "repetition_agreement": [
+            {
+                "branch_id": branch_id,
+                "n": len(values),
+                "fault_detection_unanimous": len({x["fault_detected"] for x in values}) == 1,
+                "top_suspect_unanimous": len({(x["selected_job_id"], x["selected_boundary_id"]) for x in values}) == 1,
+            }
+            for branch_id, values in sorted(repetition_groups.items())
+        ],
+        "rows": rows,
+        "raw_token_usage": token_records,
+        "actual_usage": aggregate_actual_usage(token_records),
+    }
+    analysis["analysis_sha256"] = sha256(analysis)
+    path = attempt_root / "analysis/summary.json"
+    _write_immutable(path, analysis)
+    return path
+
+
+def execute_n15_lifecycle(
+    repo_root: Path,
+    attempt_root: Path,
+    *,
+    reviewer: Callable[..., Mapping[str, Any]],
+) -> Path:
+    repo_root = repo_root.resolve()
+    attempt_root = attempt_root.resolve()
+    verified = verify_n15_frozen_attempt(repo_root, attempt_root)
+    create_n15_live_consumption(repo_root, attempt_root)
+    catalogues, packages, records = _load_n15_frozen(attempt_root)
+    schedule = _read_json(attempt_root / "review-design.json")["review_trials"]
+    if len(schedule) != 192 or _read_json(attempt_root / "repair-design.json")["repair_traces"]:
+        raise ValueError("N15 frozen schedule changed")
+    gate = _read_json(repo_root / N15_HISTORICAL_GATE)
+    python_executor = signed_catalogue_python_executor(
+        gate=gate,
+        expected_gate_sha256=sha256(gate),
+        repo_root=repo_root,
+    )
+    instance_records = {
+        instance_id: _read_json(repo_root / SOURCE_ATTEMPT / "instances" / f"{instance_id}.json")
+        for instance_id in SELECTED_INSTANCES
+    }
+    reviews: dict[tuple[str, int], dict[str, Any]] = {}
+    for trial in schedule:
+        path = attempt_root / "reviews" / f"{trial['trial_id']}.json"
+        if path.is_file():
+            record = _read_json(path)
+            _verified_self_hash(record, "review_sha256")
+            if record.get("controller_trial") != trial or record.get("status") != "complete":
+                raise ValueError("N15 partial review record is invalid")
+        else:
+            package_record = packages[str(trial["branch_id"])]
+            package = package_record["reviewer_package"]
+            initial = _normalized_review_response(
+                _invoke_callback(reviewer, render_provider_request(package), str(trial["trial_id"]))
+            )
+
+            def follow_up(request: Mapping[str, Any], *, controller_parent_id: str = "") -> Mapping[str, Any]:
+                return _normalized_review_response(
+                    _invoke_callback(
+                        reviewer,
+                        render_provider_request(request["reviewer_package"], operation_response=request["operation_response"]),
+                        controller_parent_id,
+                    )
+                )
+
+            followed = run_n15_follow_up_loop(
+                catalogue=catalogues[str(trial["instance_id"])],
+                package=package,
+                initial_response=initial,
+                reviewer=follow_up,
+                controller_parent_id=str(trial["trial_id"]),
+                python_executor=python_executor,
+            )
+            validation = validate_n15_reviewer_response(
+                catalogues[str(trial["instance_id"])], followed["package"], followed["response"]
+            )
+            score = score_n15_top_suspect(
+                catalogues[str(trial["instance_id"])],
+                instance_records[str(trial["instance_id"])],
+                validation,
+            )
+            record = {
+                "schema_version": "n15-downstream-first-review-1",
+                "controller_trial": deepcopy(trial),
+                "package_sha256": package_record["package_sha256"],
+                "receipt": validation["receipt"],
+                "selected_suspect_boundary_id": validation["selected_suspect_boundary_id"],
+                "selected_job_id": validation["selected_job_id"],
+                "selected_job_position": validation["selected_job_position"],
+                "selected_function_name": validation["selected_function_name"],
+                **score,
+                "operation_events": followed["operation_events"],
+                "call_records": followed["call_records"],
+                "usage": followed["usage"],
+                "status": "complete",
+            }
+            record["review_sha256"] = sha256(record)
+            _write_immutable(path, record)
+        reviews[(str(trial["branch_id"]), int(trial["repetition"]))] = record
+    if len(reviews) != 192:
+        raise ValueError("N15 review count is incomplete")
+    call_ids = [
+        str(call_id)
+        for record in reviews.values()
+        for call in record.get("call_records", [])
+        for call_id in call.get("call_ids", [])
+    ]
+    if not call_ids or len(call_ids) != len(set(call_ids)):
+        raise ValueError("N15 scientific call lineage is empty or duplicated")
+    for call_id in call_ids:
+        verify_record(attempt_root / "ledger", record_type="call-attempt", record_id=call_id)
+    analysis_path = _write_n15_analysis(attempt_root, packages, reviews)
+    analysis = _read_json(analysis_path)
+    replay = {
+        "schema_version": "n15-downstream-first-replay-1",
+        "freeze_sha256": verified["freeze_sha256"],
+        "review_hashes": sorted(x["review_sha256"] for x in reviews.values()),
+        "observed_counts": {"packages": len(records), "reviews": len(reviews), "repairs": 0, "logical_call_ids": len(call_ids)},
+        "all_record_hashes_recomputed": True,
+        "duplicate_logical_calls": False,
+    }
+    replay["replay_sha256"] = sha256(replay)
+    _write_immutable(attempt_root / "replay/reconciliation.json", replay)
+    terminal = {
+        "schema_version": "n15-downstream-first-terminal-1",
+        "status": "completed_experiment_and_analysis",
+        "package_count": 64,
+        "review_count": 192,
+        "repair_trace_count": 0,
+        "analysis_sha256": analysis["analysis_sha256"],
+        "replay_sha256": replay["replay_sha256"],
+    }
+    terminal["terminal_sha256"] = sha256(terminal)
+    path = attempt_root / "terminal-state.json"
+    _write_immutable(path, terminal)
+    return path
+
+
+def run_n15_lifecycle(
+    repo_root: Path,
+    attempt_root: Path,
+    *,
+    reviewer: Callable[..., Mapping[str, Any]],
+) -> Path:
+    try:
+        return execute_n15_lifecycle(repo_root, attempt_root, reviewer=reviewer)
+    except Exception as exc:
+        terminal = {
+            "schema_version": "n15-downstream-first-terminal-1",
+            "status": "terminal_incomplete",
+            "failure_stage": "n15_resumable_lifecycle",
+            "error": f"{type(exc).__name__}: {exc}",
+            "completed_review_records": len(list((attempt_root / "reviews").glob("*.json"))),
+            "completed_repair_records": 0,
+        }
+        terminal["terminal_sha256"] = sha256(terminal)
+        path = attempt_root / "terminal" / f"terminal-incomplete-{terminal['terminal_sha256'][7:23]}.json"
+        _write_immutable(path, terminal)
+        return path
+
+
+def n15_production_reviewer(repo_root: Path, attempt_root: Path) -> Callable[..., Mapping[str, Any]]:
+    def reviewer(request: Mapping[str, Any], *, controller_parent_id: str) -> Mapping[str, Any]:
+        return production_reviewer(
+            request,
+            controller_parent_id=controller_parent_id,
+            repo_root=repo_root,
+            attempt_root=attempt_root,
+        )
+
+    return reviewer
