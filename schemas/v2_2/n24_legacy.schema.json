@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fault_detected", "suspect_job", "suspect_function", "explanation", "cited_evidence", "follow_up_requests"],
+  "properties": {
+    "fault_detected": {"type": "boolean"},
+    "suspect_job": {"type": ["string", "null"], "enum": ["job_1", "job_2", null]},
+    "suspect_function": {"type": ["string", "null"]},
+    "explanation": {"type": "string"},
+    "cited_evidence": {"type": "array", "items": {"type": "string"}},
+    "follow_up_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["operation", "execution_group_id", "requests"],
+        "properties": {
+          "operation": {"type": "string", "enum": ["expand_execution_group", "artifact_inspection"]},
+          "execution_group_id": {"type": "string"},
+          "requests": {
+            "type": "array",
+            "maxItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["node_ref", "inspection", "start", "count", "columns", "query", "include_raw_metadata", "code"],
+              "properties": {
+                "node_ref": {"type": "string", "minLength": 1},
+                "inspection": {"type": "string", "enum": ["read", "describe", "full", "python"]},
+                "start": {"type": "integer", "minimum": 0},
+                "count": {"type": "integer", "minimum": 1},
+                "columns": {"type": "array", "items": {"type": "string"}},
+                "query": {"type": "string"},
+                "include_raw_metadata": {"type": "boolean"},
+                "code": {"type": "string", "maxLength": 2000}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

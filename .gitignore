@@ -9,19 +9,34 @@ outputs/
 outputs/**/ledger/
 outputs/**/provider-requests/
 outputs/**/provider-branches/**/home/
+outputs/**/provider-branches/**/.codex/
+outputs/**/provider-branches/**/.cache/
 outputs/**/provider-branches/**/evidence/
 outputs/**/provider-branches/**/dependencies/
 outputs/**/provider-branches/**/jobstore/
 outputs/**/provider-branches/**/temp/
 outputs/**/provider-branches/**/workspace/
+outputs/**/provider-branches/**/output/
+outputs/**/provider-branches/**/logs/
+outputs/**/provider-branches/**/events/
+outputs/**/provider-branches/**/raw/
 outputs/**/provider-branches/**/codex-events.jsonl
 outputs/**/provider-branches/**/codex-stderr.log
 outputs/**/provider-branches/**/branch-manifest.json
+outputs/**/cache/
+outputs/**/logs/
+outputs/**/tmp/
+outputs/**/raw/
 
 # Internal planning, agent coordination, and working documentation
 instructions_between_agent_types/
 docs/blogpost/archive/
 docs/experiments/**/raw-job/
+docs/workshops/ICLR/
+docs/workshops/fast_submission/
+
+# Generated submission and transfer archives
+*.zip
 
 # Secrets and local configuration
 .env
@@ -33,6 +48,8 @@ docs/experiments/**/raw-job/
 *.key
 *.p12
 *.pfx
+*.crt
+*.cer
 credentials*.json
 client_secret*.json
 service-account*.json
@@ -73,6 +90,7 @@ id_rsa*
 id_dsa*
 id_ecdsa*
 id_ed25519*
+*.mobileprovision
 
 # Local tool and agent state
 .tools/

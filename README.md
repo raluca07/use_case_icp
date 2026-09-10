@@ -42,12 +42,14 @@ Without installation, run commands from the repository with `PYTHONPATH=src`.
 
 ## Fault-localisation experiments
 
-Attempt 032 is the latest downstream-first Adaptive-versus-no-graph experiment
-under protocol 2.2. It completed its planned 20 packages and 60 reviews, with
-zero repair traces by design, and produced analysis and replay closure.
+Attempt 041 is the latest unified upstream-fault evidence-package experiment
+under protocol 2.2. Its stored terminal record reports completion of 364 frozen
+packages and 1,092 reviews across six fault mechanisms and one clean control,
+with 1,302 logical provider calls and zero repair traces by design.
 
-See the [Attempt 032 publication](outputs/fault-experiments-v2-2-n10/attempt-032-publication-001/README.md)
-for its included records and limitations. The earlier
+See the [Attempt 041 publication](outputs/fault-experiments-v2-2-n10/attempt-041-publication-001/README.md)
+for its included records, corrections, and limitations. The earlier
+[Attempt 032 publication](outputs/fault-experiments-v2-2-n10/attempt-032-publication-001/README.md),
 [Attempt 027 publication](outputs/fault-experiments-v2-2-n10/attempt-027-publication-001/README.md)
 and
 [Attempt 026 publication](outputs/fault-experiments-v2-2-n10/attempt-026-publication-001/README.md)
