@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pipeline",
+    "change_summary"
+  ],
+  "properties": {
+    "change_summary": {
+      "type": "string"
+    },
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_file",
+        "files",
+        "review_boundaries"
+      ],
+      "properties": {
+        "entry_file": {
+          "type": "string"
+        },
+        "review_boundaries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "function_name",
+              "role",
+              "expected_inputs",
+              "expected_outputs"
+            ],
+            "properties": {
+              "function_name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "expected_inputs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "expected_outputs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "content"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

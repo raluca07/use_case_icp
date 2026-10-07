@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/use-case-icp/v2/fault-isolation-gate.schema.json",
+  "title": "V2 signed production isolation gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "protocol_content_hash",
+    "production_launcher_sha256",
+    "launch_policy_sha256",
+    "sandbox_backend",
+    "sandbox_backend_version",
+    "probe_fixture_sha256",
+    "probes",
+    "tester_identity",
+    "tester_signature",
+    "signed_at",
+    "accepted"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "protocol_content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "production_launcher_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "launch_policy_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "sandbox_backend": {"type": "string"},
+    "sandbox_backend_version": {"type": "string"},
+    "probe_fixture_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "probes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["process", "operation", "target", "denied"],
+        "properties": {
+          "process": {"enum": ["codex", "generated_job", "repaired_job"]},
+          "operation": {"enum": ["read", "write", "list", "import"]},
+          "target": {"type": "string"},
+          "denied": {"const": true}
+        }
+      }
+    },
+    "tester_identity": {"type": "string"},
+    "tester_signature": {"type": "string"},
+    "signed_at": {"type": "string"},
+    "accepted": {"const": true}
+  }
+}

@@ -24,7 +24,7 @@ A small local workflow that runs fresh Codex sessions for segmentation, market-d
 
 ## Setup
 
-The core uses only Python 3.12's standard library. A real run additionally needs the Codex CLI to be authenticated and Etiq installed:
+The core uses Python 3.12 plus `jsonschema`. A real run additionally needs the Codex CLI to be authenticated and Etiq installed:
 
 ```bash
 python3 -m venv .venv
@@ -39,6 +39,29 @@ Etiq is pinned to the stable
 from PyPI. It can also be installed with `pip install -e '.[etiq]'`.
 
 Without installation, run commands from the repository with `PYTHONPATH=src`.
+
+## Latest fault-localisation experiment
+
+Attempt 057 is the current experiment. It compares six evidence treatments on
+12 subtle, data-dependent faults and four clean controls using 288 fresh
+reviews and 576 logical model calls. The corrected result was 188/216 exact
+fault localisations (87.04%) with 0/72 clean-control false positives; no
+prespecified arm contrast was statistically significant.
+
+- [Read the corrected report](docs/workshops/ICLR/N27PHF-natural-state-multi-hard-fault-experiment/README.md)
+- [Review the protocol](docs/experiments/attempt-057/PROTOCOL.md)
+- [Run or adapt the experiment](docs/experiments/attempt-057/RUN.md)
+
+The public runner is self-contained:
+
+```bash
+python -m use_case_icp.n27phf_public build
+python -m use_case_icp.n27phf_public freeze
+python -m use_case_icp.n27phf_public verify
+```
+
+Raw provider requests and ledgers, authentication state, caches, logs,
+duplicated workspaces, and other large transient files are excluded from Git.
 
 ## Run
 
@@ -210,52 +233,3 @@ secondary-finding metrics, attach a reviewed assessment:
 The latest run's `issue-assessment.json` is a complete example. Manual
 assessment is explicit because neither `etiq_selected` nor any other arm is
 automatically treated as ground truth.
-
-## Latest recorded run and comparison
-
-On 30 July 2026, controlled comparison
-`controlled-comparison-25382837f8b34720` ran every GPT-5.5 arm from the same
-recorded baseline corpus. Each arm had three independent scoped
-review → repair → replay cycles, followed by the same fresh blind
-`etiq_selected` judge.
-
-| Context | Repairs | Reported input tokens | Blind-judge unresolved boundaries | Measured time |
-| --- | ---: | ---: | ---: | ---: |
-| `semantic_only` | 3 | 568,715 | 4 | 568.1s |
-| `history_full` | 3 | 1,824,533 | 4 | unavailable |
-| `etiq_full` | 3 | 1,331,686 | 3 | 508.4s |
-| `etiq_selected` | 3 | 1,000,797 | 2 | 722.1s |
-
-No arm reached blind-judge trust within three repairs. `etiq_selected` used
-24.8% fewer input tokens than `etiq_full` and 45.1% fewer than
-`history_full`, while leaving fewer unresolved boundaries than either and two
-fewer than `semantic_only`. It still used 76.0% more tokens and more wall time
-than semantic-only, so the result supports better repair outcome and graph
-attribution—not universal cost reduction.
-
-The first full-graph judge for `history_full` exceeded Codex's 1,048,576
-character input limit. All four already-produced final runs were therefore
-rejudged with fresh isolated graph-selected judges; superseded judge calls are
-excluded from the table. History's original in-memory duration breakdown was
-not recoverable after that judge failure, so it is shown as unavailable rather
-than zero.
-
-After starting the dashboard, open:
-
-- `/jobs/<job_id>` for a stored job;
-- `/jobs/<job_id>/lineage?run=<run_id>` for a run's Etiq lineage;
-- `/jobs/<job_id>/controlled-experiments/<experiment_id>` for an end-to-end
-  controlled comparison.
-
-Generated job data under `outputs/` is intentionally not published. Static
-dashboard examples are available in the
-[`docs/blogpost/figures/`](docs/blogpost/figures/) and
-[`docs/experiments/`](docs/experiments/) directories.
-
-The earlier July benchmark blogpost and its curated dashboard figures remain in
-[`docs/blogpost/`](docs/blogpost/); they predate this four-arm run.
-
-The current controlled comparison is archived under
-[`docs/experiments/2026-07-30-controlled-job-32968d910a7847a7/`](docs/experiments/2026-07-30-controlled-job-32968d910a7847a7/).
-The earlier review-only comparison remains under
-[`docs/experiments/2026-07-29-four-arm-job-883750474f164113/`](docs/experiments/2026-07-29-four-arm-job-883750474f164113/).

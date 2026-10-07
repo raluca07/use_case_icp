@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["campaign_brief", "metadata"],
+  "properties": {
+    "campaign_brief": {"type": "object", "additionalProperties": false, "required": ["audience_need", "recommended_action", "message_strategy", "primary_message", "supporting_points"], "properties": {"audience_need": {"type": "string"}, "recommended_action": {"type": "string"}, "message_strategy": {"enum": ["lead_with_unmet_need", "reinforce_supported_need"]}, "primary_message": {"type": "string"}, "supporting_points": {"type": "array", "maxItems": 3, "items": {"type": "object", "additionalProperties": false, "required": ["priority_rank", "record_id", "need", "capability_id", "coverage", "unsupported"], "properties": {"priority_rank": {}, "record_id": {}, "need": {}, "capability_id": {}, "coverage": {}, "unsupported": {}}}}}},
+    "metadata": {"type": "object", "additionalProperties": false, "required": ["supporting_point_count", "consumed_handoffs"], "properties": {"supporting_point_count": {"type": "integer", "minimum": 0, "maximum": 3}, "consumed_handoffs": {"type": "array", "prefixItems": [{"const": "priorities"}, {"const": "recommendation"}], "minItems": 2, "maxItems": 2}}}
+  }
+}

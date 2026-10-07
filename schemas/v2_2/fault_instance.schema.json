@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/use-case-icp/v2-2/fault-instance.schema.json",
+  "title": "Protocol-2.2 frozen experimental instance",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "protocol_id",
+    "protocol_version",
+    "protocol_content_hash",
+    "instance_id",
+    "designation",
+    "authoring_seed",
+    "reference_bundle_sha256",
+    "mutant_bundle_sha256",
+    "source_sha256",
+    "execution_sha256",
+    "instance_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "protocol_id": {"const": "neurips-2026-workshop-fault-localisation-v2"},
+    "protocol_version": {"const": "2.2.0"},
+    "protocol_content_hash": {"const": "sha256:bcfcd1afc192a37b2619934ac62a85c17ee80b2dfd45157d92185be03c4145c1"},
+    "instance_id": {"type": "string", "pattern": "^instance-[0-9]{2}$"},
+    "designation": {"enum": ["faulty", "no_injection_control"]},
+    "authoring_seed": {"type": "integer"},
+    "reference_bundle_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "mutant_bundle_sha256": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+    "source_sha256": {"type": "object"},
+    "execution_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "instance_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

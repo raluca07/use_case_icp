@@ -103,6 +103,35 @@ def _boundary_relationships(
     return found
 
 
+def match_observed_function_prefixes(
+    snapshot: EtiqEvidenceSnapshot,
+    function_name: str,
+) -> list[tuple[str, ...]]:
+    """Return outermost canonical execution prefixes matching a declaration name."""
+    observed_prefixes = {
+        prefix
+        for node in snapshot.nodes
+        for prefix in _prefixes(node.func_stack)
+    }
+    candidates = sorted(
+        (
+            prefix
+            for prefix in observed_prefixes
+            if frame_name(prefix[-1]) == str(function_name).strip()
+        ),
+        key=lambda value: (len(value), value),
+    )
+    return [
+        candidate
+        for candidate in candidates
+        if not any(
+            len(parent) < len(candidate)
+            and candidate[: len(parent)] == parent
+            for parent in candidates
+        )
+    ]
+
+
 def _order_units(
     units: list[EvidenceReviewUnit],
     snapshot: EtiqEvidenceSnapshot,

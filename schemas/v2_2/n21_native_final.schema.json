@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fault_detected", "suspect_job", "suspect_function", "explanation", "evidence_refs"],
+  "properties": {
+    "fault_detected": {"type": "boolean"},
+    "suspect_job": {
+      "type": ["string", "null"],
+      "enum": ["job_upstream_demand_provenance", "job_downstream_coverage_priority", null]
+    },
+    "suspect_function": {"type": ["string", "null"]},
+    "explanation": {"type": "string"},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}}
+  }
+}

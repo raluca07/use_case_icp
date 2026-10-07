@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["failing_job_id", "pipeline", "change_summary"],
+  "properties": {
+    "failing_job_id": {
+      "type": "string",
+      "enum": ["market-demand-research", "coverage-prioritization-synthesis"]
+    },
+    "pipeline": {"$ref": "#/$defs/pipeline"},
+    "change_summary": {"type": "string"}
+  },
+  "$defs": {
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry_file", "files", "review_boundaries"],
+      "properties": {
+        "entry_file": {"type": "string", "const": "pipeline.py"},
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "content"],
+            "properties": {
+              "path": {"type": "string"},
+              "content": {"type": "string"}
+            }
+          }
+        },
+        "review_boundaries": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["function_name", "role", "expected_inputs", "expected_outputs"],
+            "properties": {
+              "function_name": {"type": "string"},
+              "role": {"type": "string"},
+              "expected_inputs": {"type": "array", "items": {"type": "string"}},
+              "expected_outputs": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    }
+  }
+}

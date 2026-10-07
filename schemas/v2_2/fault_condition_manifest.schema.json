@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/use-case-icp/v2/fault-condition-manifest.schema.json",
+  "title": "V2 D03 condition manifest",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/restricted"
+    },
+    {
+      "$ref": "#/$defs/reviewer_visible"
+    }
+  ],
+  "$defs": {
+    "sha256_or_null": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inspect_visible_artifact",
+        "reveal_direct_child",
+        "retrace_relationships_after_localisation"
+      ],
+      "properties": {
+        "inspect_visible_artifact": {
+          "type": "boolean"
+        },
+        "reveal_direct_child": {
+          "type": "boolean"
+        },
+        "retrace_relationships_after_localisation": {
+          "type": "boolean"
+        }
+      }
+    },
+    "restricted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "protocol_content_hash",
+        "storage_classification",
+        "job_positions",
+        "configurations",
+        "branches"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1"
+        },
+        "protocol_content_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "storage_classification": {
+          "const": "restricted_controller_only"
+        },
+        "job_positions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "upstream",
+            "downstream"
+          ],
+          "properties": {
+            "upstream": {
+              "type": "string",
+              "minLength": 1
+            },
+            "downstream": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "configurations": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12
+        },
+        "branches": {
+          "type": "array",
+          "minItems": 96,
+          "maxItems": 96
+        }
+      }
+    },
+    "reviewer_visible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "protocol_content_hash",
+        "conditions",
+        "branches"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1"
+        },
+        "protocol_content_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "conditions": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "condition_id",
+              "capabilities",
+              "evidence_sha256"
+            ],
+            "properties": {
+              "condition_id": {
+                "type": "string",
+                "pattern": "^cfg-[0-9a-f]{24}$"
+              },
+              "capabilities": {
+                "$ref": "#/$defs/capabilities"
+              },
+              "evidence_sha256": {
+                "$ref": "#/$defs/sha256_or_null"
+              }
+            }
+          }
+        },
+        "branches": {
+          "type": "array",
+          "minItems": 96,
+          "maxItems": 96,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "instance_id",
+              "condition_id",
+              "branch_id",
+              "capabilities",
+              "evidence_sha256"
+            ],
+            "properties": {
+              "instance_id": {
+                "type": "string",
+                "pattern": "^ins-[0-9a-f]{24}$"
+              },
+              "condition_id": {
+                "type": "string",
+                "pattern": "^cfg-[0-9a-f]{24}$"
+              },
+              "branch_id": {
+                "type": "string",
+                "pattern": "^brn-[0-9a-f]{24}$"
+              },
+              "capabilities": {
+                "$ref": "#/$defs/capabilities"
+              },
+              "evidence_sha256": {
+                "$ref": "#/$defs/sha256_or_null"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

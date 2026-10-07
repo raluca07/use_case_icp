@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "V2 Workshop fault-operation event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "protocol_content_hash",
+    "sequence",
+    "event_id",
+    "operation",
+    "status",
+    "call_id",
+    "input_tokens",
+    "output_tokens",
+    "evidence_added",
+    "latency_seconds",
+    "errors",
+    "details",
+    "recorded_unix_ns"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "protocol_content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "operation": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "started",
+        "completed",
+        "rejected",
+        "failed"
+      ]
+    },
+    "call_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "input_tokens": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "output_tokens": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "evidence_added": {
+      "type": "object"
+    },
+    "latency_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "details": {
+      "type": "object"
+    },
+    "recorded_unix_ns": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

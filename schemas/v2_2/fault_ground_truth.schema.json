@@ -1,0 +1,314 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/use-case-icp/v2/fault-ground-truth.schema.json",
+  "title": "V2 Restricted construction-time fault ground truth",
+  "type": "object",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "manifest_status": {
+            "const": "draft_pre_capture"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "capture_finalized": {
+            "const": false
+          },
+          "capture_snapshot_ids": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "manifest_status": {
+            "const": "finalized_post_capture"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "capture_finalized": {
+            "const": true
+          },
+          "capture_snapshot_ids": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "required": [
+    "schema_version",
+    "protocol_version",
+    "protocol_content_hash",
+    "storage_classification",
+    "protocol_decision",
+    "manifest_status",
+    "fault_class",
+    "provenance",
+    "injected_function",
+    "injected_job_id",
+    "parameter",
+    "seed",
+    "site",
+    "clean_bundle_sha256",
+    "mutant_bundle_sha256",
+    "clean_function_sha256",
+    "mutant_function_sha256",
+    "normalized_formatting",
+    "primary_localisation_truth",
+    "downstream_contamination",
+    "captured_fault_node_refs",
+    "capture_snapshot_ids",
+    "capture_finalized",
+    "validation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "protocol_version": {
+      "const": "1.3.1"
+    },
+    "protocol_content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "storage_classification": {
+      "const": "restricted_controller_only"
+    },
+    "protocol_decision": {
+      "const": "inject_single_fault"
+    },
+    "manifest_status": {
+      "enum": [
+        "draft_pre_capture",
+        "finalized_post_capture"
+      ]
+    },
+    "fault_class": {
+      "enum": [
+        "drop_field",
+        "truncate_sequence",
+        "fabricate_identifier",
+        "invert_comparison",
+        "reverse_ordering"
+      ]
+    },
+    "provenance": {
+      "enum": [
+        "observed-inspired",
+        "synthetic"
+      ]
+    },
+    "injected_function": {
+      "type": "string",
+      "minLength": 1
+    },
+    "injected_job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parameter": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "site": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "function_name",
+        "helper",
+        "original_span",
+        "mutant_span",
+        "ast_operator",
+        "occurrence",
+        "candidate_count",
+        "original_snippet",
+        "mutant_snippet",
+        "original_snippet_sha256",
+        "mutant_snippet_sha256"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "function_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "helper": {
+          "type": "boolean"
+        },
+        "original_span": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start_line",
+            "start_column",
+            "end_line",
+            "end_column"
+          ],
+          "properties": {
+            "start_line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "start_column": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end_line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "end_column": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "mutant_span": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start_line",
+            "start_column",
+            "end_line",
+            "end_column"
+          ],
+          "properties": {
+            "start_line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "start_column": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end_line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "end_column": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "ast_operator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "occurrence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "candidate_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "original_snippet": {
+          "type": "string"
+        },
+        "mutant_snippet": {
+          "type": "string"
+        },
+        "original_snippet_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "mutant_snippet_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "clean_bundle_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "mutant_bundle_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "clean_function_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "mutant_function_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "normalized_formatting": {
+      "const": true
+    },
+    "primary_localisation_truth": {
+      "const": "injected_function"
+    },
+    "downstream_contamination": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "captured_fault_node_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "capture_snapshot_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "capture_finalized": {
+      "type": "boolean"
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "compile_success",
+        "execution_success",
+        "schema_valid",
+        "mutated_statement_executed",
+        "plausible_final_result",
+        "semantic_oracle_failed"
+      ],
+      "properties": {
+        "compile_success": {
+          "const": true
+        },
+        "execution_success": {
+          "const": true
+        },
+        "schema_valid": {
+          "const": true
+        },
+        "mutated_statement_executed": {
+          "const": true
+        },
+        "plausible_final_result": {
+          "const": true
+        },
+        "semantic_oracle_failed": {
+          "const": true
+        }
+      }
+    }
+  }
+}

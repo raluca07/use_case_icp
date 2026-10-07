@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/use-case-icp/fault-review-package.schema.json",
+  "title": "Leakage-safe fault review package",
+  "type": "object",
+  "unevaluatedProperties": false,
+  "required": [
+    "schema_version",
+    "opaque_ids",
+    "capabilities",
+    "common_base",
+    "allowed_evidence_refs"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "opaque_ids": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instance_id", "condition_id", "branch_id"],
+      "properties": {
+        "instance_id": {"type": "string", "minLength": 8},
+        "condition_id": {"type": "string", "minLength": 8},
+        "branch_id": {"type": "string", "minLength": 8}
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inspect_visible_artifact",
+        "reveal_direct_child",
+        "retrace_relationships_after_localisation"
+      ],
+      "properties": {
+        "inspect_visible_artifact": {"type": "boolean"},
+        "reveal_direct_child": {"type": "boolean"},
+        "retrace_relationships_after_localisation": {"type": "boolean"}
+      }
+    },
+    "common_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "review_task",
+        "behavioural_criteria",
+        "top_level",
+        "assigned_job",
+        "semantic_declarations",
+        "section"
+      ],
+      "properties": {
+        "schema_version": {"const": "1"},
+        "review_task": {"type": "string"},
+        "behavioural_criteria": {"type": "array", "items": {"type": "string"}},
+        "top_level": {"type": "object"},
+        "assigned_job": {"type": "object"},
+        "semantic_declarations": {"type": "array", "minItems": 1},
+        "section": {"type": "object"}
+      }
+    },
+    "allowed_evidence_refs": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    }
+  },
+  "oneOf": [
+    {
+      "title": "base only",
+      "not": {
+        "anyOf": [
+          {"required": ["source_bundle"]},
+          {"required": ["prior_task_records"]},
+          {"required": ["runtime_evidence"]}
+        ]
+      }
+    },
+    {
+      "title": "base plus source",
+      "required": ["source_bundle"],
+      "properties": {"source_bundle": {"type": "array", "minItems": 2, "maxItems": 2}},
+      "not": {
+        "anyOf": [
+          {"required": ["prior_task_records"]},
+          {"required": ["runtime_evidence"]}
+        ]
+      }
+    },
+    {
+      "title": "base plus history",
+      "required": ["prior_task_records"],
+      "properties": {"prior_task_records": {"type": "array"}},
+      "not": {
+        "anyOf": [
+          {"required": ["source_bundle"]},
+          {"required": ["runtime_evidence"]}
+        ]
+      }
+    },
+    {
+      "title": "base plus source and history",
+      "required": ["source_bundle", "prior_task_records"],
+      "properties": {
+        "source_bundle": {"type": "array", "minItems": 2, "maxItems": 2},
+        "prior_task_records": {"type": "array"}
+      },
+      "not": {"required": ["runtime_evidence"]}
+    },
+    {
+      "title": "base plus runtime evidence",
+      "required": ["runtime_evidence"],
+      "properties": {"runtime_evidence": {"$ref": "#/$defs/runtime_evidence"}},
+      "not": {
+        "anyOf": [
+          {"required": ["source_bundle"]},
+          {"required": ["prior_task_records"]}
+        ]
+      }
+    },
+    {
+      "title": "base plus source and runtime evidence",
+      "required": ["source_bundle", "runtime_evidence"],
+      "properties": {
+        "source_bundle": {"type": "array", "minItems": 2, "maxItems": 2},
+        "runtime_evidence": {"$ref": "#/$defs/runtime_evidence"}
+      },
+      "not": {"required": ["prior_task_records"]}
+    }
+  ],
+  "$defs": {
+    "runtime_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nodes",
+        "relationships",
+        "visible_evidence_by_boundary",
+        "collapsed_helpers",
+        "handoffs"
+      ],
+      "properties": {
+        "nodes": {"type": "array"},
+        "relationships": {"type": "array"},
+        "visible_evidence_by_boundary": {"type": "object"},
+        "collapsed_helpers": {"type": "array"},
+        "handoffs": {"type": "array"}
+      }
+    }
+  }
+}

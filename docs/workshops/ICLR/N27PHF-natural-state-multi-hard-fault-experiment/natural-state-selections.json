@@ -1,0 +1,866 @@
+[
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-be706d81dc28979f",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-4966e0702c5ff8cb"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-20640e4066f1847f",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-d89dd2dd6daefa7d"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-03",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-5a2a4d81a9f1b963",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-4da4e8251c64187a"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-fa0ced0fbf4b7c52",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-694a9854569febd7"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-77f741dbb7f33d92",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-f47c3e6aedd4f44b"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-fa0ced0fbf4b7c52",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-6a5a2f46d0df87a8"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-be706d81dc28979f",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-3c1b0e76d2ef2e43"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-r01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-b2cd375f26d4fb9e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-de5b18711c6ec00f"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-7a17afe077e15b82",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-8c9e0f784a129938"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4729f9b92acd7900",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-ff312952d527aae7"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-9f8c8ba8a4049bae",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-a8950b1ce47b76fe"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-03",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-5a2a4d81a9f1b963",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-d0c1c6579970fb9b"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4729f9b92acd7900",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-3d0e157e6f2f3d13"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-77f741dbb7f33d92",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-6cca98ed10e26770"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-735bb8317d15d2ac",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-a82ad7c3ae07d21e"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-3fbf3d5826b830c4",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-0bcf8f9243326d63"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4729f9b92acd7900",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-e4946864d7077c29"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-a035c8cb80fbe41e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-7ca40f049a34c250"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-7a17afe077e15b82",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-f3b66e89af75c4af"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4e883058aae35a5a",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-9543d68be958c957"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-fa9c9b81f5442a7e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-d81d65e67581d8e1"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-8aeb6e9cb4f3e12f",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-cbf89c22acbccfbf"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-04",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-3fa6fc2f00ca34a3",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-f399467170fefe0d"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-92027ff8911f77b3",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-cc1121fed654c897"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-20640e4066f1847f",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-4dbe58c961389f10"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-04",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-8cd6907045bb8f38",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-69c65b25601c2599"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-r01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-133083eb8efc81cf",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-b0318fa900d05ddb"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-04",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-8cd6907045bb8f38",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-495a5b15a25baeac"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-bfdf6ab462c35705",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-1b7dafb2b0275a1f"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-04",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-e50dbfac8577e242",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-2e5753e3a5d9e6f2"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-fa9c9b81f5442a7e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-385a7d706808ec82"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4729f9b92acd7900",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-bbb9dd3dc859eb0f"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-d561ab0b1410fc44",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-4a888cadec6bf462"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-fa9c9b81f5442a7e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-d059b512509a6c26"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-92027ff8911f77b3",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-b589c03d486ee06d"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-d561ab0b1410fc44",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-5c055e300959f012"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-03",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-5a2a4d81a9f1b963",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-d1546bd058e10de6"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-b5366359b8abffb0",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-6af3f24b95b508ae"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-6dec5c2b3589d28d",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-c4296f989ba638f8"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-fa9c9b81f5442a7e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-67dceb4d077e1739"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-r01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-0c929517255431f9",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-b660f9567d5e1ef2"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-bfdf6ab462c35705",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-646dd64bc76f3f19"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-r02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-168939d0f10348cf",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-69900203589222f3"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-92027ff8911f77b3",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-84be3f3f50e16691"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-5039037edd11969b",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-7457821a54bb0082"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-03",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-5a2a4d81a9f1b963",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-77704916235dd592"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-03",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-66f11a9784b87426",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-c7fb4b01d2d84a8e"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-04",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-e50dbfac8577e242",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-31b0a7eb0f4fb123"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-c2839c6f29887562",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-fc302f0c6070ad86"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-fa9c9b81f5442a7e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-812c46ad7ca92ff8"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-r01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-133083eb8efc81cf",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-960aa60ff7946526"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-c2839c6f29887562",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-d9b004145a633d93"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-04",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-8cd6907045bb8f38",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-77dba96eeee58d4c"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-b5366359b8abffb0",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-e7e5ac742de07e24"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4e883058aae35a5a",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-387b012edeaca88d"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-5039037edd11969b",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-b54abfaca986911a"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-92027ff8911f77b3",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-d1a698452036fab8"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-a035c8cb80fbe41e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-0d9f754df33b902e"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-77f741dbb7f33d92",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-c7667416177af224"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-r02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-af0cd3911d68eca6",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-14207e0a5468c50a"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-r02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-a2ccfaae8796050d",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-6841edcc661c2646"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-401247793ce51ff0",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-4edf95b6ba57c2c8"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4729f9b92acd7900",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-5a0c8ac9313c24f9"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-c2839c6f29887562",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-24718e9744547262"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-5039037edd11969b",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-c86a5ea1fdcaf7d5"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-r02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-582ea27317d41725",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-9e6ce6d0856bc85e"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4e883058aae35a5a",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-03262215f2b7cbf1"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-d9c47817dc032cf6",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-d0f06f0acf9d234a"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-be706d81dc28979f",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-14018ff9aea5a230"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-03",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-66f11a9784b87426",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-3b8df8e62337e049"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-be706d81dc28979f",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-d18ecf33952cc70d"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-735bb8317d15d2ac",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-f45b219cef80d3ae"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-fa0ced0fbf4b7c52",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-a9e6e486c7f9166c"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-r01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-133083eb8efc81cf",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-778f1f55e2181b61"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-f4a90226e4f183fb",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-a9b43130e729858c"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-7a17afe077e15b82",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-e983afbc4b6e5070"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-fa0ced0fbf4b7c52",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-eb890aab70e27400"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-control-01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-41093f63bc927e82",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-0a26f76c18be0404"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-r02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-168939d0f10348cf",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-1cbf6de105d2f6a9"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-r02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-af0cd3911d68eca6",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-722584119ff9ca28"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-be706d81dc28979f",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-9c39ca55e0bb3c4f"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-abd413afe73004cc",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-76c16ca309b69b8d"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c02",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-fa0ced0fbf4b7c52",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-3a4a0f226771e6dc"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-8aeb6e9cb4f3e12f",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-6e0aa812f35fd976"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": false,
+    "instance": "case-r01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-b6cc5980e8033a80",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-393174e68b8dff80"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-5039037edd11969b",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-66215dae07ff1e9f"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-735bb8317d15d2ac",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-369f87791b361157"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-c2839c6f29887562",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-eb45bcbb65bfe20c"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-fa9c9b81f5442a7e",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-52038ab25cb3b2a2"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4e883058aae35a5a",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-9f10031643483176"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-c01",
+    "recorded_exact_function_localisation": false,
+    "selected_artifact_ref": "art-7a17afe077e15b82",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-3ad7ba2881c8a417"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-v01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-5039037edd11969b",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-9a4999c2236e58a9"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-77f741dbb7f33d92",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-31be9cc8e508006c"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-s02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-735bb8317d15d2ac",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-9e6e87e320866260"
+  },
+  {
+    "cell": "P05",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-e02",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-4729f9b92acd7900",
+    "selected_prespecified_natural_state": false,
+    "trial_id": "trial-0477733b42edc6d2"
+  },
+  {
+    "cell": "P04",
+    "corrected_exact_function_localisation": true,
+    "instance": "case-d01",
+    "recorded_exact_function_localisation": true,
+    "selected_artifact_ref": "art-77f741dbb7f33d92",
+    "selected_prespecified_natural_state": true,
+    "trial_id": "trial-f49e61f10b48be52"
+  }
+]

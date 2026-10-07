@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "corrected_four_instance_package.schema.json",
+  "title": "Corrected four-instance reviewer package",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "common_base",
+    "available_operations",
+    "allowed_evidence_refs",
+    "prior_task_records"
+  ],
+  "properties": {
+    "schema_version": {"const": "corrected-four-instance-package-2"},
+    "common_base": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "review_task",
+        "behavioural_criteria",
+        "top_level",
+        "assigned_job",
+        "semantic_declarations",
+        "section"
+      ]
+    },
+    "available_operations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["artifact_inspection", "helper_expansion"]}
+    },
+    "allowed_evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "prior_task_records": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["input", "output", "stdout", "stderr"],
+        "properties": {
+          "input": {},
+          "output": {},
+          "stdout": {"type": "string"},
+          "stderr": {"type": "string"}
+        }
+      }
+    },
+    "source_bundle": {"type": "array"},
+    "runtime_evidence": {
+      "type": "object",
+      "required": [
+        "nodes",
+        "relationships",
+        "handoffs",
+        "collapsed_children",
+        "visible_evidence_by_boundary",
+        "projection_sha256"
+      ]
+    }
+  }
+}

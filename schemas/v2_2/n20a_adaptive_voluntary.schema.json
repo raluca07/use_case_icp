@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fault_detected", "suspect_job", "suspect_function", "suspect_boundary_id", "explanation", "evidence_refs", "next_action"],
+  "properties": {
+    "fault_detected": {"type": "boolean"},
+    "suspect_job": {
+      "type": ["string", "null"],
+      "enum": ["job_upstream_demand_provenance", "job_downstream_coverage_priority", null]
+    },
+    "suspect_function": {"type": ["string", "null"]},
+    "suspect_boundary_id": {"type": ["string", "null"]},
+    "explanation": {"type": "string"},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "next_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "boundary_id", "child_group_id"],
+      "properties": {
+        "action": {"type": "string", "enum": ["helper_expansion", "finalize"]},
+        "boundary_id": {"type": "string"},
+        "child_group_id": {"type": "string"}
+      }
+    }
+  }
+}

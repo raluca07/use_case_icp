@@ -233,7 +233,24 @@ def validate_repair_scope(
 ) -> None:
     if original.entry_file != replacement.entry_file:
         raise ValueError("repair cannot change entry_file")
-    if original.review_boundaries != replacement.review_boundaries:
+    declaration_fields = (
+        "boundary_id",
+        "source_path",
+        "qualified_function_name",
+        "semantic_stage",
+        "role",
+        "expected_inputs",
+        "expected_outputs",
+    )
+    original_declarations = [
+        {field: value.get(field) for field in declaration_fields}
+        for value in original.review_boundaries
+    ]
+    replacement_declarations = [
+        {field: value.get(field) for field in declaration_fields}
+        for value in replacement.review_boundaries
+    ]
+    if original_declarations != replacement_declarations:
         raise ValueError("repair cannot change declared review boundaries")
     old_files = {item.path: item.content for item in original.files}
     new_files = {item.path: item.content for item in replacement.files}

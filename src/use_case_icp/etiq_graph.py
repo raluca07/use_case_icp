@@ -428,6 +428,9 @@ def serialize_etiq_result(*, job_id: str, run_id: str, result: Any) -> EtiqEvide
                 raw_metadata={
                     "etiq_metadata": _metadata(mapping),
                     "captured_invocation_count": 1,
+                    "source_node_type": (
+                        type(state_node).__name__ if state_node is not None else None
+                    ),
                 },
             )
             nodes.append(mapping_node)
