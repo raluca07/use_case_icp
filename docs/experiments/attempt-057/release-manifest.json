@@ -1,0 +1,8 @@
+{
+  "experiment": "Attempt 057",
+  "protocol_sha256": "sha256:6fded5384b54cc6b482b704b5d6e0a368b629e34957a3e43a60d54116106f26f",
+  "public_entry_point": "python -m use_case_icp.n27phf_public",
+  "frozen_entry_point": "python -m use_case_icp.n27phf_experiment",
+  "raw_workspace_included": false,
+  "results_report": "docs/workshops/ICLR/N27PHF-natural-state-multi-hard-fault-experiment/README.md"
+}

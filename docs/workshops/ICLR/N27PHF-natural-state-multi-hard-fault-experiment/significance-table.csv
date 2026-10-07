@@ -1,0 +1,65 @@
+mechanism,outcome,name,left,right,instances,reviews_per_arm,left_hits,right_hits,mean_difference,wins,ties,losses,two_sided_p_value,holm_p_value,significant_raw_0_05,significant_holm_0_05
+,detected,Primary: Adaptive + semantics vs no graph,P05,P01,12,36,34,30,0.1111111111111111,2,10,0,0.5,1.0,False,False
+,detected,Static compact graph vs no graph,P02,P01,12,36,33,30,0.08333333333333333,2,10,0,0.5,1.0,False,False
+,detected,Semantics on static graph,P03,P02,12,36,30,33,-0.08333333333333333,0,10,2,0.5,1.0,False,False
+,detected,Adaptive disclosure vs static graph,P04,P02,12,36,33,33,0.0,1,10,1,1.0,1.0,False,False
+,detected,Adaptive + semantics vs static + semantics,P05,P03,12,36,34,30,0.1111111111111111,2,10,0,0.5,1.0,False,False
+,detected,Adaptive + semantics vs equal-call reconsideration,P05,P06,12,36,34,28,0.16666666666666666,4,8,0,0.125,0.75,False,False
+,correct_job,Primary: Adaptive + semantics vs no graph,P05,P01,12,36,34,30,0.1111111111111111,2,10,0,0.5,1.0,False,False
+,correct_job,Static compact graph vs no graph,P02,P01,12,36,33,30,0.08333333333333333,2,10,0,0.5,1.0,False,False
+,correct_job,Semantics on static graph,P03,P02,12,36,30,33,-0.08333333333333333,0,10,2,0.5,1.0,False,False
+,correct_job,Adaptive disclosure vs static graph,P04,P02,12,36,33,33,0.0,1,10,1,1.0,1.0,False,False
+,correct_job,Adaptive + semantics vs static + semantics,P05,P03,12,36,34,30,0.1111111111111111,2,10,0,0.5,1.0,False,False
+,correct_job,Adaptive + semantics vs equal-call reconsideration,P05,P06,12,36,34,28,0.16666666666666666,4,8,0,0.125,0.75,False,False
+,exact,Primary: Adaptive + semantics vs no graph,P05,P01,12,36,34,30,0.1111111111111111,2,10,0,0.5,1.0,False,False
+,exact,Static compact graph vs no graph,P02,P01,12,36,33,30,0.08333333333333333,2,10,0,0.5,1.0,False,False
+,exact,Semantics on static graph,P03,P02,12,36,30,33,-0.08333333333333333,0,10,2,0.5,1.0,False,False
+,exact,Adaptive disclosure vs static graph,P04,P02,12,36,33,33,0.0,1,10,1,1.0,1.0,False,False
+,exact,Adaptive + semantics vs static + semantics,P05,P03,12,36,34,30,0.1111111111111111,2,10,0,0.5,1.0,False,False
+,exact,Adaptive + semantics vs equal-call reconsideration,P05,P06,12,36,34,28,0.16666666666666666,4,8,0,0.125,0.75,False,False
+,false_positive,Primary: Adaptive + semantics vs no graph,P05,P01,4,12,0,0,0.0,0,4,0,1.0,1.0,False,False
+,false_positive,Static compact graph vs no graph,P02,P01,4,12,0,0,0.0,0,4,0,1.0,1.0,False,False
+,false_positive,Semantics on static graph,P03,P02,4,12,0,0,0.0,0,4,0,1.0,1.0,False,False
+,false_positive,Adaptive disclosure vs static graph,P04,P02,4,12,0,0,0.0,0,4,0,1.0,1.0,False,False
+,false_positive,Adaptive + semantics vs static + semantics,P05,P03,4,12,0,0,0.0,0,4,0,1.0,1.0,False,False
+,false_positive,Adaptive + semantics vs equal-call reconsideration,P05,P06,4,12,0,0,0.0,0,4,0,1.0,1.0,False,False
+,exact,"Adaptive vs equal-call reconsideration, both without semantics",P04,P06,12,36,33,28,0.1388888888888889,4,8,0,0.125,0.5,False,False
+,exact,Semantics on Adaptive,P05,P04,12,36,34,33,0.02777777777777778,1,11,0,1.0,1.0,False,False
+,exact,Equal-call reconsideration vs static graph,P06,P02,12,36,28,33,-0.1388888888888889,0,8,4,0.125,0.5,False,False
+,exact,Adaptive + semantics vs static graph,P05,P02,12,36,34,33,0.027777777777777787,1,10,1,1.0,1.0,False,False
+R_premature_contribution_rounding,exact,Primary: Adaptive + semantics vs no graph,P05,P01,2,6,4,0,0.6666666666666666,2,0,0,0.5,1.0,False,False
+R_premature_contribution_rounding,exact,Static compact graph vs no graph,P02,P01,2,6,3,0,0.5,2,0,0,0.5,1.0,False,False
+R_premature_contribution_rounding,exact,Semantics on static graph,P03,P02,2,6,0,3,-0.5,0,0,2,0.5,1.0,False,False
+R_premature_contribution_rounding,exact,Adaptive disclosure vs static graph,P04,P02,2,6,3,3,0.0,1,0,1,1.0,1.0,False,False
+R_premature_contribution_rounding,exact,Adaptive + semantics vs static + semantics,P05,P03,2,6,4,0,0.6666666666666666,2,0,0,0.5,1.0,False,False
+R_premature_contribution_rounding,exact,Adaptive + semantics vs equal-call reconsideration,P05,P06,2,6,4,0,0.6666666666666666,2,0,0,0.5,1.0,False,False
+S_recorded_time_snapshot_substitution,exact,Primary: Adaptive + semantics vs no graph,P05,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+S_recorded_time_snapshot_substitution,exact,Static compact graph vs no graph,P02,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+S_recorded_time_snapshot_substitution,exact,Semantics on static graph,P03,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+S_recorded_time_snapshot_substitution,exact,Adaptive disclosure vs static graph,P04,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+S_recorded_time_snapshot_substitution,exact,Adaptive + semantics vs static + semantics,P05,P03,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+S_recorded_time_snapshot_substitution,exact,Adaptive + semantics vs equal-call reconsideration,P05,P06,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+E_expiry_compared_with_recorded_time,exact,Primary: Adaptive + semantics vs no graph,P05,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+E_expiry_compared_with_recorded_time,exact,Static compact graph vs no graph,P02,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+E_expiry_compared_with_recorded_time,exact,Semantics on static graph,P03,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+E_expiry_compared_with_recorded_time,exact,Adaptive disclosure vs static graph,P04,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+E_expiry_compared_with_recorded_time,exact,Adaptive + semantics vs static + semantics,P05,P03,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+E_expiry_compared_with_recorded_time,exact,Adaptive + semantics vs equal-call reconsideration,P05,P06,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+V_oldest_repeat_retained,exact,Primary: Adaptive + semantics vs no graph,P05,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+V_oldest_repeat_retained,exact,Static compact graph vs no graph,P02,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+V_oldest_repeat_retained,exact,Semantics on static graph,P03,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+V_oldest_repeat_retained,exact,Adaptive disclosure vs static graph,P04,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+V_oldest_repeat_retained,exact,Adaptive + semantics vs static + semantics,P05,P03,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+V_oldest_repeat_retained,exact,Adaptive + semantics vs equal-call reconsideration,P05,P06,2,6,6,4,0.33333333333333337,2,0,0,0.5,1.0,False,False
+D_repeat_rank_scoped_by_source,exact,Primary: Adaptive + semantics vs no graph,P05,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+D_repeat_rank_scoped_by_source,exact,Static compact graph vs no graph,P02,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+D_repeat_rank_scoped_by_source,exact,Semantics on static graph,P03,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+D_repeat_rank_scoped_by_source,exact,Adaptive disclosure vs static graph,P04,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+D_repeat_rank_scoped_by_source,exact,Adaptive + semantics vs static + semantics,P05,P03,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+D_repeat_rank_scoped_by_source,exact,Adaptive + semantics vs equal-call reconsideration,P05,P06,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+C_non_cumulative_channel_cap,exact,Primary: Adaptive + semantics vs no graph,P05,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+C_non_cumulative_channel_cap,exact,Static compact graph vs no graph,P02,P01,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+C_non_cumulative_channel_cap,exact,Semantics on static graph,P03,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+C_non_cumulative_channel_cap,exact,Adaptive disclosure vs static graph,P04,P02,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+C_non_cumulative_channel_cap,exact,Adaptive + semantics vs static + semantics,P05,P03,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False
+C_non_cumulative_channel_cap,exact,Adaptive + semantics vs equal-call reconsideration,P05,P06,2,6,6,6,0.0,0,2,0,1.0,1.0,False,False

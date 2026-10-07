@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["campaign_portfolio", "metadata"],
+  "properties": {
+    "campaign_portfolio": {
+      "type": "object",
+      "required": ["recommended_focus", "recommended_decision", "items", "coverage_totals"],
+      "properties": {
+        "recommended_focus": {"type": "string"},
+        "recommended_decision": {"type": "string"},
+        "items": {"type": "array", "items": {"type": "object"}},
+        "coverage_totals": {"type": "object"}
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["item_count", "traceable_item_count", "evidence_review_item_count", "input_coverage_count", "input_priority_count", "consumed_handoffs"]
+    }
+  }
+}

@@ -39,8 +39,10 @@ from .fault_operations import (
 from .review import frame_name
 from .fault_v21 import static_definitions
 from .n05_program import (
+    _parse_output,
     _pipeline_payload,
     derive_review_evidence,
+    execute_pipeline_in_branch,
     execute_two_job_chain,
     load_preflight_inputs,
 )
@@ -312,8 +314,8 @@ def _verify_capture(capture: Mapping[str, Any]) -> None:
         raise ValueError("canonical capture hash mismatch")
     job_ids = list(map(str, capture.get("job_ids", [])))
     jobs = capture.get("jobs")
-    if len(job_ids) != 2 or len(set(job_ids)) != 2 or not isinstance(jobs, Mapping):
-        raise ValueError("canonical capture must contain two explicitly ordered jobs")
+    if len(job_ids) not in {2, 3} or len(set(job_ids)) != len(job_ids) or not isinstance(jobs, Mapping):
+        raise ValueError("canonical capture must contain two or three explicitly ordered jobs")
     for job_id in job_ids:
         job = jobs.get(job_id)
         if not isinstance(job, Mapping):
@@ -326,7 +328,9 @@ def _verify_capture(capture: Mapping[str, Any]) -> None:
 def assigned_job_id(capture: Mapping[str, Any]) -> str:
     _verify_capture(capture)
     instance_id = str(capture["instance_id"])
-    if instance_id in N16_INSTANCES:
+    if instance_id.startswith("n19a-three-job-"):
+        position = 2
+    elif instance_id in N16_INSTANCES:
         position = 1
     else:
         position = 0 if SELECTED_INSTANCES[instance_id] == "upstream" else 1
@@ -5670,15 +5674,20 @@ def _n16_binding_rows(catalogue: Mapping[str, Any]) -> list[dict[str, Any]]:
             rows.append(
                 {
                     "job_id": job_id,
-                    "job_position": "downstream" if job_id == order[-1] else "upstream",
+                    "job_position": (
+                        "downstream" if len(order) == 2 and job_id == order[-1]
+                        else "upstream" if len(order) == 2
+                        else f"job_{order.index(job_id) + 1}"
+                    ),
                     "captured_boundary_id": str(boundary["boundary_id"]),
                     "reviewer_boundary_id": reviewer_id,
                     "function_name": str(boundary["function_name"]),
                     "qualified_function_name": str(identity["qualified_function_name"]),
                 }
             )
-    if len(rows) != 6 or len({x["reviewer_boundary_id"] for x in rows}) != 6:
-        raise ValueError("N16 requires six unique two-job boundaries")
+    expected = sum(len(catalogue["jobs"][job_id]["realized_boundaries"]) for job_id in order)
+    if len(rows) not in {6, 7} or len(rows) != expected or len({x["reviewer_boundary_id"] for x in rows}) != len(rows):
+        raise ValueError("nested review requires six or seven unique boundaries")
     return rows
 
 

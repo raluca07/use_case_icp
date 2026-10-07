@@ -1,0 +1,110 @@
+{
+  "P01": [
+    {
+      "call_position": 1,
+      "calls": 48,
+      "mean_cached_input_tokens": 10794.666666666666,
+      "mean_input_tokens": 27287.770833333332,
+      "mean_latency_seconds": 26.833514554604108,
+      "mean_output_tokens": 1248.2291666666667
+    }
+  ],
+  "P02": [
+    {
+      "call_position": 1,
+      "calls": 48,
+      "mean_cached_input_tokens": 11008.0,
+      "mean_input_tokens": 59160.458333333336,
+      "mean_latency_seconds": 28.995877988666546,
+      "mean_output_tokens": 1350.25
+    }
+  ],
+  "P03": [
+    {
+      "call_position": 1,
+      "calls": 48,
+      "mean_cached_input_tokens": 11008.0,
+      "mean_input_tokens": 60216.375,
+      "mean_latency_seconds": 28.29003473550002,
+      "mean_output_tokens": 1318.4791666666667
+    }
+  ],
+  "P04": [
+    {
+      "call_position": 1,
+      "calls": 48,
+      "mean_cached_input_tokens": 10154.666666666666,
+      "mean_input_tokens": 59256.4375,
+      "mean_latency_seconds": 15.841216022250194,
+      "mean_output_tokens": 631.2083333333334
+    },
+    {
+      "call_position": 2,
+      "calls": 48,
+      "mean_cached_input_tokens": 9728.0,
+      "mean_input_tokens": 64309.708333333336,
+      "mean_latency_seconds": 16.40017849612525,
+      "mean_output_tokens": 661.5
+    },
+    {
+      "call_position": 3,
+      "calls": 48,
+      "mean_cached_input_tokens": 11008.0,
+      "mean_input_tokens": 64732.354166666664,
+      "mean_latency_seconds": 23.281633271437613,
+      "mean_output_tokens": 1040.625
+    }
+  ],
+  "P05": [
+    {
+      "call_position": 1,
+      "calls": 48,
+      "mean_cached_input_tokens": 10368.0,
+      "mean_input_tokens": 60312.5,
+      "mean_latency_seconds": 16.172130306833406,
+      "mean_output_tokens": 636.7916666666666
+    },
+    {
+      "call_position": 2,
+      "calls": 48,
+      "mean_cached_input_tokens": 10538.666666666666,
+      "mean_input_tokens": 64516.3125,
+      "mean_latency_seconds": 16.26782468852095,
+      "mean_output_tokens": 645.1041666666666
+    },
+    {
+      "call_position": 3,
+      "calls": 48,
+      "mean_cached_input_tokens": 11434.666666666666,
+      "mean_input_tokens": 64840.125,
+      "mean_latency_seconds": 24.267999653666664,
+      "mean_output_tokens": 1104.125
+    }
+  ],
+  "P06": [
+    {
+      "call_position": 1,
+      "calls": 48,
+      "mean_cached_input_tokens": 9728.0,
+      "mean_input_tokens": 59229.458333333336,
+      "mean_latency_seconds": 31.196988138604166,
+      "mean_output_tokens": 1482.9791666666667
+    },
+    {
+      "call_position": 2,
+      "calls": 48,
+      "mean_cached_input_tokens": 9941.333333333334,
+      "mean_input_tokens": 59264.416666666664,
+      "mean_latency_seconds": 20.93867759581222,
+      "mean_output_tokens": 914.5625
+    },
+    {
+      "call_position": 3,
+      "calls": 48,
+      "mean_cached_input_tokens": 10368.0,
+      "mean_input_tokens": 59195.291666666664,
+      "mean_latency_seconds": 26.591637824541824,
+      "mean_output_tokens": 1228.0625
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/use-case-icp/fault-setup-record.schema.json",
+  "title": "Protocol 1.3.1 restricted setup record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "protocol_content_hash", "storage_classification",
+    "record_kind", "setup_id", "job_ids", "payload", "setup_usage",
+    "excluded_from_experimental_treatment_usage", "reviewer_visibility",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "protocol_content_hash": {"const": "sha256:c5af2acbe1aa7ab473efad4d2fc3adb4183edaadf23165831cfb7b052a3b1d9f"},
+    "storage_classification": {"const": "restricted_controller_only"},
+    "record_kind": {
+      "enum": [
+        "preflight", "authoring", "stabilization_repair",
+        "rejected_candidate", "reference_execution", "reference_oracle",
+        "complexity_gate"
+      ]
+    },
+    "setup_id": {"type": "string", "minLength": 8},
+    "job_ids": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "uniqueItems": true, "items": {"type": "string", "minLength": 1}
+    },
+    "payload": {"type": "object"},
+    "setup_usage": {"type": "object"},
+    "excluded_from_experimental_treatment_usage": {"const": true},
+    "reviewer_visibility": {"const": "forbidden"},
+    "record_sha256": {"pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

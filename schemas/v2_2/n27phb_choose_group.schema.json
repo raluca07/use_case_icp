@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fault_detected", "suspect_job", "suspect_function", "explanation", "cited_evidence", "next_action"],
+  "properties": {
+    "fault_detected": {"type": "boolean"},
+    "suspect_job": {"type": ["string", "null"], "enum": ["job_1", "job_2", "job_3", "job_4", null]},
+    "suspect_function": {"type": ["string", "null"]},
+    "explanation": {"type": "string"},
+    "cited_evidence": {"type": "array", "items": {"type": "string"}},
+    "next_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "execution_group_id"],
+      "properties": {
+        "action": {"type": "string", "const": "expand_execution_group"},
+        "execution_group_id": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
+

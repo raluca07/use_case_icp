@@ -1,1 +1,0 @@
-{"command":".venv/bin/python -m pytest -q tests/test_n24_experiment.py","failures":0,"full_suite_run":false,"model_calls":0,"schema_version":"n24-focused-tests-1","skips":0,"tests_passed":6}

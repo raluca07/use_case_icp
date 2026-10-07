@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "V2 Boundary-scoped equal-budget random projection",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "projection_id",
+    "projection_identity_scope",
+    "protocol_content_hash",
+    "instance_id",
+    "job_id",
+    "boundary_id",
+    "realized_boundary_sha256",
+    "mandatory_interface_sha256",
+    "mandatory_handoffs",
+    "serializer",
+    "serializer_version",
+    "structural_residual_utf8_bytes",
+    "derived_seed",
+    "ordered_candidate_universe_sha256",
+    "candidate_universe",
+    "selected_bundles",
+    "node_refs",
+    "relationship_refs",
+    "residual_node_refs",
+    "residual_relationship_refs",
+    "random_residual_utf8_bytes",
+    "absolute_byte_difference",
+    "relative_byte_difference",
+    "budget_tolerance_utf8_bytes",
+    "uses_fault_or_oracle_truth",
+    "helper_expansion_allowed",
+    "projection_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "projection_id": {
+      "pattern": "^prj-[0-9a-f]{24}$"
+    },
+    "projection_identity_scope": {
+      "const": "realized_boundary"
+    },
+    "protocol_content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "instance_id": {
+      "type": "string"
+    },
+    "job_id": {
+      "type": "string"
+    },
+    "boundary_id": {
+      "type": "string"
+    },
+    "realized_boundary_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "mandatory_interface_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "mandatory_handoffs": {
+      "type": "array"
+    },
+    "serializer": {
+      "type": "string"
+    },
+    "serializer_version": {
+      "type": "string"
+    },
+    "structural_residual_utf8_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "derived_seed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ordered_candidate_universe_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "candidate_universe": {
+      "type": "array"
+    },
+    "selected_bundles": {
+      "type": "array"
+    },
+    "node_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "relationship_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "residual_node_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "residual_relationship_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "random_residual_utf8_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "absolute_byte_difference": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "relative_byte_difference": {
+      "type": "number",
+      "minimum": 0
+    },
+    "budget_tolerance_utf8_bytes": {
+      "type": "integer",
+      "minimum": 2048
+    },
+    "uses_fault_or_oracle_truth": {
+      "const": false
+    },
+    "helper_expansion_allowed": {
+      "const": false
+    },
+    "projection_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

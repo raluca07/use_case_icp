@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["activation_plan", "metadata"],
+  "properties": {
+    "activation_plan": {
+      "type": "object",
+      "required": ["recommended_focus", "recommended_decision", "launch_actions", "evidence_review_actions", "channel_mix", "plan_summary"],
+      "properties": {
+        "recommended_focus": {"type": "string"},
+        "recommended_decision": {"type": "string"},
+        "launch_actions": {"type": "array", "items": {"type": "object"}},
+        "evidence_review_actions": {"type": "array", "items": {"type": "object"}},
+        "channel_mix": {"type": "array", "items": {"type": "object"}},
+        "plan_summary": {"type": "string"}
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["scheduled_action_count", "review_action_count", "total_action_count", "rules_version", "consumed_handoffs"]
+    }
+  }
+}

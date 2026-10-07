@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import base64
+import hashlib
 import importlib.metadata
 import io
 import json
@@ -14,7 +15,7 @@ from typing import Any
 
 from .etiq_graph import serialize_etiq_result
 from .job_store import JobStore
-from .records import jsonable
+from .records import jsonable, stable_hash
 
 EXPECTED_ETIQ_VERSION = "2.3.0"
 
@@ -145,7 +146,29 @@ def persist_result(
     manifest_hash: str,
     result: Any,
 ) -> None:
+    export = getattr(result, "create_full_lineage_graph", None)
+    if not callable(export):
+        raise RuntimeError("Etiq scan result does not expose create_full_lineage_graph()")
+    native_text = export(graph_format="json")
+    if not isinstance(native_text, str):
+        raise TypeError("Etiq native JSON lineage export did not return text")
+    native_lineage = json.loads(native_text)
+    if not isinstance(native_lineage, dict):
+        raise ValueError("Etiq native JSON lineage export is not an object")
+    if not isinstance(native_lineage.get("objects"), list) or not isinstance(
+        native_lineage.get("edges"), list
+    ):
+        raise ValueError("Etiq native JSON lineage export lacks objects or edges")
+    native_path = run_dir / "etiq-native-lineage.json"
+    store.write_json(native_path, native_lineage)
+    native_file_sha256 = "sha256:" + hashlib.sha256(native_path.read_bytes()).hexdigest()
+    native_logical_sha256 = "sha256:" + stable_hash(native_lineage)
+
     snapshot = serialize_etiq_result(job_id=job_id, run_id=run_id, result=result)
+    snapshot.inventories["json_lineage_export"] = "captured"
+    snapshot.inventories["native_lineage_file"] = native_path.name
+    snapshot.inventories["native_lineage_file_sha256"] = native_file_sha256
+    snapshot.inventories["native_lineage_logical_sha256"] = native_logical_sha256
     store.write_json(run_dir / "etiq-nodes.json", snapshot.nodes)
     store.write_json(run_dir / "etiq-relationships.json", snapshot.relationships)
     store.write_json(run_dir / "etiq-inventory.json", snapshot.inventories)
@@ -159,6 +182,10 @@ def persist_result(
             "manifest_hash": manifest_hash,
             "node_count": len(snapshot.nodes),
             "relationship_count": len(snapshot.relationships),
+            "native_lineage_export_status": "captured",
+            "native_lineage_file": native_path.name,
+            "native_lineage_file_sha256": native_file_sha256,
+            "native_lineage_logical_sha256": native_logical_sha256,
             "reviewable": not snapshot.scan_errors and bool(snapshot.nodes),
             "created_at": snapshot.created_at,
             "schema_version": snapshot.schema_version,

@@ -13,6 +13,7 @@ dependencies = ["jsonschema>=4.26"]
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 etiq = ["etiq-copilot==2.3.0"]
+formal = ["rdflib==7.6.0", "pyshacl==0.40.1"]
 
 [project.scripts]
 use-case-icp = "use_case_icp.__main__:main"

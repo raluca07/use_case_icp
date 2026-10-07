@@ -298,6 +298,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     n18.set_defaults(action="fault_experiment_n18")
 
+    n19a = subparsers.add_parser(
+        "fault-experiment-n19a",
+        help="build, freeze, verify, or run the three-job campaign-brief experiment",
+    )
+    n19a.add_argument("operation", choices=("build", "freeze", "verify", "live"))
+    n19a.add_argument(
+        "--attempt-root",
+        default="outputs/fault-experiments-v2-2-n10/attempt-033",
+    )
+    n19a.set_defaults(action="fault_experiment_n19a")
+
     server = subparsers.add_parser("serve", help="serve the local dashboard")
     server.add_argument("--host", default="127.0.0.1")
     server.add_argument("--port", type=int, default=8000)
@@ -824,6 +835,29 @@ def main(argv: list[str] | None = None) -> int:
                 return 0 if terminal.get("status") == "completed_experiment_and_analysis" else 1
         except Exception as exc:
             print(f"N18 experiment failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+            return 1
+        return 0
+    if args.action == "fault_experiment_n19a":
+        from .n19a_experiment import build_attempt, freeze_attempt, run_lifecycle, verify_frozen_attempt
+
+        attempt_root = Path(args.attempt_root)
+        if not attempt_root.is_absolute():
+            attempt_root = repo_root / attempt_root
+        try:
+            if args.operation == "build":
+                built = build_attempt(repo_root, attempt_root)
+                print(json.dumps({"qualification": built["qualification"], "counts": {"captures": len(built["captures"]), "catalogues": len(built["catalogues"]), "packages": len(built["packages"]), "reviews": len(built["schedule"]["review_trials"]), "repairs": len(built["schedule"]["repair_traces"])}}, indent=2))
+            elif args.operation == "freeze":
+                print(freeze_attempt(repo_root, attempt_root))
+            elif args.operation == "verify":
+                print(json.dumps(verify_frozen_attempt(repo_root, attempt_root), indent=2))
+            else:
+                terminal_path = run_lifecycle(repo_root, attempt_root)
+                print(terminal_path)
+                terminal = json.loads(terminal_path.read_text())
+                return 0 if terminal.get("status") == "completed_experiment_and_analysis" else 1
+        except Exception as exc:
+            print(f"N19A experiment failed: {type(exc).__name__}: {exc}", file=sys.stderr)
             return 1
         return 0
     if args.action == "run":
