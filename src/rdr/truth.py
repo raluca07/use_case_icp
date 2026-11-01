@@ -76,9 +76,12 @@ def choose_symptom(instance_id: str, stale: list[str], faulty: Trace) -> str:
 
 def make_truth(instance_id: str, faulty: Trace, gold: Trace, origin_index: int | None,
                neutralised: dict[str, dict | None] | None = None, ignore_fields=(),
-               decoy_index: int | None = None, min_stale: int = 1) -> Truth:
+               decoy_index: int | None = None, min_stale: int = 1, *, expect_faulty: bool) -> Truth:
     stale, missing = stale_records(faulty, gold, neutralised, ignore_fields)
     is_faulty = bool(stale or missing)
+    if is_faulty != expect_faulty:
+        raise ValueError(f"expect_faulty={expect_faulty} but the run is {'faulty' if is_faulty else 'clean'} "
+                         f"against gold (stale={stale}, missing={missing})")
     if is_faulty and origin_index is None:
         raise ValueError("a faulty instance needs an origin index")
     if is_faulty and not stale:

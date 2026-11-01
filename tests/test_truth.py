@@ -44,20 +44,24 @@ def test_conflicting_base_values_raise():
 
 
 def test_make_truth_for_persistent_fault():
-    truth = make_truth("i1", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED)
+    truth = make_truth("i1", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED,
+                       expect_faulty=True)
     assert truth == Truth("i1", True, 1, ["splitwise.expenses#77"], [], "splitwise.expenses#77", None)
 
 
 def test_make_truth_for_clean_control_has_no_origin_and_a_seeded_symptom():
-    truth = make_truth("i2", clean_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED)
+    truth = make_truth("i2", clean_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED,
+                       expect_faulty=False)
     assert truth.is_faulty is False and truth.origin_index is None and truth.stale == []
     assert truth.symptom in clean_trace().touched_records()
-    assert truth.symptom == make_truth("i2", clean_trace(), gold_trace(), 1, REFUNDED).symptom
+    assert truth.symptom == make_truth("i2", clean_trace(), gold_trace(), 1, REFUNDED,
+                                         expect_faulty=False).symptom
 
 
 def test_make_truth_requires_origin_for_faulty_runs():
     with pytest.raises(ValueError, match="origin"):
-        make_truth("i3", persistent_trace(), gold_trace(), origin_index=None, neutralised=REFUNDED)
+        make_truth("i3", persistent_trace(), gold_trace(), origin_index=None, neutralised=REFUNDED,
+                   expect_faulty=True)
 
 
 def test_choose_symptom_picks_a_deterministic_stale_record():
@@ -89,18 +93,43 @@ def test_neutralised_expected_value_ignores_volatile_fields():
 
 def test_min_stale_rejects_instances_with_too_few_stale_records():
     with pytest.raises(ValueError, match="stale"):
-        make_truth("i6", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED, min_stale=2)
-    truth = make_truth("i6", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED, min_stale=1)
+        make_truth("i6", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED, min_stale=2,
+                   expect_faulty=True)
+    truth = make_truth("i6", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED, min_stale=1,
+                       expect_faulty=True)
     assert truth.stale == ["splitwise.expenses#77"]
 
 
 def test_min_stale_does_not_apply_to_clean_controls():
-    truth = make_truth("i7", clean_trace(), gold_trace(), origin_index=None, neutralised=REFUNDED, min_stale=2)
+    truth = make_truth("i7", clean_trace(), gold_trace(), origin_index=None, neutralised=REFUNDED, min_stale=2,
+                       expect_faulty=False)
     assert truth.is_faulty is False
 
 
 def test_truth_round_trip(tmp_path):
-    truth = make_truth("i1", persistent_trace(), gold_trace(), 1, REFUNDED, decoy_index=4)
+    truth = make_truth("i1", persistent_trace(), gold_trace(), 1, REFUNDED, decoy_index=4, expect_faulty=True)
     path = tmp_path / "truth.json"
     truth.save(path)
     assert Truth.load(path) == truth
+
+
+def test_make_truth_requires_expect_faulty():
+    with pytest.raises(TypeError):
+        make_truth("i8", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED)
+
+
+def test_make_truth_rejects_a_faulty_instance_that_was_meant_to_be_clean():
+    with pytest.raises(ValueError, match="expect_faulty"):
+        make_truth("i8", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED,
+                   expect_faulty=False)
+
+
+def test_make_truth_rejects_a_clean_instance_that_was_meant_to_be_faulty():
+    with pytest.raises(ValueError, match="expect_faulty"):
+        make_truth("i9", clean_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED, expect_faulty=True)
+
+
+def test_min_stale_two_accepts_a_nonpersistent_fault_with_two_stale_records():
+    truth = make_truth("i10", nonpersistent_trace(), gold_trace(), origin_index=1, min_stale=2, expect_faulty=True)
+    assert truth.stale == ["splitwise.expenses#77", "venmo.transactions#101"]
+    assert truth.missing == ["venmo.transactions#201"] and truth.is_faulty

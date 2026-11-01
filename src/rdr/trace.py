@@ -34,6 +34,11 @@ class Trace:
     final_message: str
     calls: list[Call]
 
+    def __post_init__(self) -> None:
+        indices = [c.index for c in self.calls]
+        if any(later <= earlier for earlier, later in zip(indices, indices[1:])):
+            raise ValueError(f"call indices must be unique and strictly increasing, got {indices}")
+
     def touched_records(self) -> list[str]:
         seen: list[str] = []
         for call in self.calls:
@@ -65,9 +70,6 @@ class Trace:
             Call(c["index"], c["app"], c["api"], c["args"], c["response"], [Write(**w) for w in c["writes"]])
             for c in data["calls"]
         ]
-        indices = [c.index for c in calls]
-        if any(later <= earlier for earlier, later in zip(indices, indices[1:])):
-            raise ValueError(f"call indices must be unique and strictly increasing, got {indices}")
         return cls(data["task_id"], data["instruction"], data["final_message"], calls)
 
     def save(self, path: Path) -> None:

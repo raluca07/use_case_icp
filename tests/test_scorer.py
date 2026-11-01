@@ -11,7 +11,7 @@ def test_perfect_answer():
     s = score({"anything_wrong": True, "origin_call": 1,
                "still_wrong_records": ["splitwise.expenses#77", "todo.items#5"]}, FAULTY)
     assert s == {"instance_id": "i1", "detection_correct": True, "origin_hit": True, "stale_precision": 1.0,
-                 "stale_recall": 1.0, "false_stale_count": None, "followed_decoy": None}
+                 "stale_recall": 1.0, "false_stale_count": None, "followed_decoy": None, "named_symptom": True, "unknown_labels": None}
 
 
 def test_wrong_origin_and_extra_record():
@@ -68,3 +68,25 @@ def test_malformed_answer_raises():
         score({"anything_wrong": "yes", "origin_call": 1, "still_wrong_records": []}, FAULTY)
     with pytest.raises(ValueError):
         score({"anything_wrong": True}, FAULTY)
+
+
+def test_named_symptom_is_true_only_when_the_symptom_is_claimed():
+    named = score({"anything_wrong": True, "origin_call": 1, "still_wrong_records": ["rec:splitwise.expenses#77"]},
+                  FAULTY)
+    assert named["named_symptom"] is True
+    other = score({"anything_wrong": True, "origin_call": 1, "still_wrong_records": ["todo.items#5"]}, FAULTY)
+    assert other["named_symptom"] is False
+    none = score({"anything_wrong": False, "origin_call": None, "still_wrong_records": []}, CLEAN)
+    assert none["named_symptom"] is False
+
+
+def test_unknown_labels_counts_claims_outside_the_known_set():
+    known = {"splitwise.expenses#77", "todo.items#5", "venmo.transactions#201"}
+    answer = {"anything_wrong": True, "origin_call": 1,
+              "still_wrong_records": ["rec:todo.items#5", "todo.items#99", "made.up#1", "made.up#1"]}
+    assert score(answer, FAULTY, known_labels=known)["unknown_labels"] == 2
+    assert score(answer, FAULTY)["unknown_labels"] is None
+    assert score(answer, FAULTY, known_labels=set())["unknown_labels"] == 3
+    clean = score({"anything_wrong": False, "origin_call": None, "still_wrong_records": []}, CLEAN,
+                  known_labels=known)
+    assert clean["unknown_labels"] == 0

@@ -14,7 +14,8 @@ def _sha256(path: Path) -> str:
 
 def _included(root: Path, path: Path) -> bool:
     relative = path.relative_to(root)
-    if relative.as_posix() == MANIFEST_NAME or path.name == ".DS_Store" or "__pycache__" in relative.parts:
+    junk_part = any(part in {"__pycache__", ".ipynb_checkpoints"} for part in relative.parts)
+    if relative.as_posix() == MANIFEST_NAME or path.name == ".DS_Store" or path.name.startswith("._") or junk_part:
         return False
     return path.is_file()
 

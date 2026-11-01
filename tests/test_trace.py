@@ -1,7 +1,7 @@
 import pytest
 from builders import persistent_trace
 
-from rdr.trace import Trace
+from rdr.trace import Call, Trace
 
 
 def test_touched_records_in_first_write_order():
@@ -48,3 +48,15 @@ def test_from_dict_accepts_increasing_gappy_indices():
 def test_from_dict_rejects_duplicate_or_decreasing_indices(indices):
     with pytest.raises(ValueError, match="strictly increasing"):
         Trace.from_dict(_with_indices(*indices))
+
+
+@pytest.mark.parametrize("indices", [(0, 0), (2, 1), (0, 1, 1)])
+def test_constructor_rejects_duplicate_or_decreasing_indices(indices):
+    calls = [Call(i, "a", "x", {}, {}) for i in indices]
+    with pytest.raises(ValueError, match="strictly increasing"):
+        Trace("t", "i", "m", calls)
+
+
+def test_constructor_accepts_gappy_increasing_indices_and_empty_traces():
+    assert [c.index for c in Trace("t", "i", "m", [Call(i, "a", "x", {}, {}) for i in (0, 3, 7)]).calls] == [0, 3, 7]
+    assert Trace("t", "i", "m", []).calls == []

@@ -49,3 +49,21 @@ def test_manifest_is_excluded_only_at_the_root(tmp_path):
 def test_missing_manifest_is_reported(tmp_path):
     _tree(tmp_path)
     assert verify_manifest(tmp_path) == ["missing manifest"]
+
+
+def test_appledouble_files_and_ipynb_checkpoints_are_ignored(tmp_path):
+    _tree(tmp_path)
+    write_manifest(tmp_path)
+    (tmp_path / "packages" / "._a.txt").write_bytes(b"x")
+    (tmp_path / "._hypotheses.md").write_bytes(b"x")
+    (tmp_path / "nb" / ".ipynb_checkpoints").mkdir(parents=True)
+    (tmp_path / "nb" / ".ipynb_checkpoints" / "n-checkpoint.ipynb").write_text("{}")
+    assert verify_manifest(tmp_path) == []
+    assert all("._" not in k and ".ipynb_checkpoints" not in k for k in build_manifest(tmp_path))
+
+
+def test_names_that_merely_contain_the_ignored_markers_are_kept(tmp_path):
+    _tree(tmp_path)
+    (tmp_path / "a._b.txt").write_text("keep")
+    (tmp_path / "ipynb_checkpoints.txt").write_text("keep")
+    assert {"a._b.txt", "ipynb_checkpoints.txt"} <= set(build_manifest(tmp_path))
