@@ -64,6 +64,7 @@ def stale_records(faulty: Trace, gold: Trace, neutralised: dict[str, dict | None
 
 
 def choose_symptom(instance_id: str, stale: list[str], faulty: Trace) -> str:
+    # Same seed expression as packager.seed_for; kept local so the modules stay independent.
     rng = random.Random(zlib.crc32(instance_id.encode("utf-8")))
     if stale:
         return rng.choice(sorted(stale))

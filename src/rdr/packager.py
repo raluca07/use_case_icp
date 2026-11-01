@@ -1,15 +1,16 @@
-"""Evidence packages for the six reviewer arms and the rewired-edge test."""
+"""Evidence packages for the seven reviewer arms and the rewired-edge test."""
 from __future__ import annotations
 
 import json
+import re
 import zlib
 
 from rdr.graph import (build_graph, call_node, edge_counts, neighbourhood, random_subgraph, rec_node, render,
                        rewire_one, rewire_writes, strip_ignored)
 from rdr.trace import Trace
 
-ARMS = ("A", "B", "C", "D", "E", "F")
-FORBIDDEN = ("inject", "fault", "stale", "repair", "decoy", "gold", "truth")
+ARMS = ("A", "B", "C", "D", "E", "F", "G")
+FORBIDDEN = re.compile(r"\b(inject\w*|fault\w*|stale|repair\w*|decoy\w*|gold|truth)\b", re.IGNORECASE)
 D_HOPS = 2
 
 
@@ -22,10 +23,9 @@ def seed_for(instance_id: str) -> int:
 
 
 def check_leakage(text: str, forbidden=FORBIDDEN) -> None:
-    lowered = text.lower()
-    for word in forbidden:
-        if word in lowered:
-            raise LeakageError(word)
+    match = forbidden.search(text)
+    if match:
+        raise LeakageError(match.group(0))
 
 
 def _header(trace: Trace, symptom: str) -> list[str]:
@@ -66,12 +66,14 @@ def build_package(arm: str, trace: Trace, symptom: str, instance_id: str) -> str
         lines += ["", "PROVENANCE GRAPH", render(random_subgraph(graph, counts, seed))]
     elif arm == "F":
         lines += ["", "PROVENANCE GRAPH", render(rewire_writes(graph, seed))]
+    elif arm == "G":
+        lines += ["", *_action_log(trace), "", "PROVENANCE GRAPH", render(graph)]
     text = "\n".join(lines)
     check_leakage(text)
     return text
 
 
-def build_rewired_package(trace: Trace, symptom: str, instance_id: str, decoy_index: int) -> str:
+def build_rewired_package(trace: Trace, symptom: str, decoy_index: int) -> str:
     graph = rewire_one(build_graph(trace), rec_node(symptom), call_node(decoy_index))
     text = "\n".join([*_header(trace, symptom), "", "PROVENANCE GRAPH", render(graph)])
     check_leakage(text)
