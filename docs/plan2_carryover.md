@@ -31,3 +31,11 @@ Read together with `docs/gate0_findings.md` and the spec. Items here are decided
 - H3 scoring: besides `followed_decoy`, score "moved off origin" relative to the same instance in arm C (`rewire_one` moves the symptom's writer, not the origin).
 - `D_HOPS` is a parameter: as the origin-to-symptom distance dial grows, a fixed 2-hop D excludes the origin by construction; record hops used.
 - Seeds: `choose_symptom`, arm E and arm F all draw from `Random(crc32(instance_id))`; salting per purpose would need the global seed constraint amended (low impact, Fabio's call).
+
+## Minor items from the fix-pass re-review (1 Nov 2026)
+
+- Arm F informativeness: on realistic shapes the symptom is often re-sourced to the login call, which writes nothing, so F can be a recognisably fake graph. Measure how informative F is in the pilot; consider restricting replacement sources to calls that write something.
+- `.failed.json`: backoff retries overwrite earlier failure evidence, and a later success leaves a stale `.failed.json`. Use numbered suffixes or remove on success.
+- `build_rewired_package` takes no `extra_forbidden` or `d_hops`; add them for symmetry with `build_package`.
+- The camelCase leakage pass drops tokens such as `TruthSocial` or `StaleMate` (conservative). Log exclusions by reason and check the exclusion rate on the real task set.
+- Records saved before `command_sha256` existed cannot be resumed; use fresh output directories.

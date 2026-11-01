@@ -12,7 +12,7 @@ Five rules for every test in this design:
 
 1. The fault is invisible in the final output and final state alone (arm A's evidence); finding its origin requires the run's history or graph.
 2. Ground truth is fixed per role (origin, stale records, symptom) before any reviewer call.
-3. Instances are generated, giving hundreds of independent cases.
+3. Instances are generated, giving hundreds of cases, clustered by task generator for independence.
 4. Each test has a difficulty dial, so results are curves, not points.
 5. A control shows the reviewer reads the graph's edges, not only extra tokens.
 
@@ -63,7 +63,7 @@ Independence: the unit is the task generator, not the task. The 147 train and de
 
 Each component reads and writes files; none calls another directly.
 
-1. **AppWorld setup.** Python 3.11+, git LFS, `pip install appworld`, `appworld install`, `appworld download data`, plus released experiment outputs.
+1. **AppWorld setup.** Python 3.11+ (the project venv is 3.13), git LFS, `pip install appworld`, `appworld install`, `appworld download data`. Released experiment outputs are test-split only and are not used.
 2. **Fault injector.** Edits a gold solution to insert a wrong action and a partial repair, then executes it in AppWorld. Ground truth is mechanical: origin = the injected action; stale records = rows where the final database differs from the gold run's final database. Clean controls insert the same action with a full repair; the injector rejects any control whose final state differs from gold. For the curve test it splices in N actions from other tasks and verifies, by database diff, that they never touch the stale records.
 3. **Graph builder.** Executes one statement at a time and snapshots the database after each, attributing every write to its call. Read edges come from row ids appearing in a later call's id-keyed arguments. Etiq (`etiq_copilot`, statement-level value capture) cannot see database rows behind the API layer, so this builder always supplies record nodes and write edges. A first-day spike decides whether call-to-call data-flow ("feeds") edges come from Etiq's captured lineage or from value matching between responses and later arguments; Raluca is told the result. Etiq ships a CPython 3.13 binary, so the project venv is Python 3.13.
 4. **Evidence packager.** Builds arms A to G from the same run. A leakage check removes anything that reveals the injection (comments, variable names, unnatural repair wording).
