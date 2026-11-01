@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import tempfile
 import time
@@ -15,7 +16,7 @@ __all__ = ["ANSWER_SCHEMA", "KNOWN_SIDE_MODELS", "ReviewError", "build_command",
            "review_with_backoff"]
 
 KNOWN_SIDE_MODELS = frozenset({"claude-haiku-4-5-20251001"})
-RETRY_MARKERS = ("usage limit", "rate limit", "rate_limit", "overloaded", "429")
+RETRY_PATTERN = re.compile(r"usage limit|rate limit|rate_limit|overloaded|\b429\b")
 
 SYSTEM_PROMPT = (
     "You review the record of an automated assistant's work in a user's apps. "
@@ -75,11 +76,16 @@ def parse_output(stdout: str) -> dict:
         "served_models": sorted((envelope.get("modelUsage") or {}).keys()),
         "usage": envelope.get("usage") or {},
         "is_error": is_error,
+        "envelope": envelope,
     }
 
 
 def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _command_sha256(model: str, effort: str) -> str:
+    return _sha256(json.dumps(build_command(model, effort)[1:]))
 
 
 def _load_saved(out_path: Path, package_sha256: str, model: str, effort: str) -> dict:
@@ -89,7 +95,8 @@ def _load_saved(out_path: Path, package_sha256: str, model: str, effort: str) ->
         raise ReviewError(f"saved review is unreadable: {out_path}: {err}") from err
     if not isinstance(saved, dict):
         raise ReviewError(f"saved review is unreadable: {out_path}: not an object")
-    current = {"package_sha256": package_sha256, "model_requested": model, "effort": effort}
+    current = {"package_sha256": package_sha256, "model_requested": model, "effort": effort,
+               "command_sha256": _command_sha256(model, effort)}
     differing = sorted(k for k, v in current.items() if saved.get(k) != v)
     if differing:
         raise ReviewError(f"cannot resume {out_path}: saved review differs in {differing}")
@@ -113,6 +120,7 @@ def review(package_text: str, out_path: Path, model: str, effort: str, workdir: 
     package_sha256 = _sha256(package_text)
     if out_path.exists():
         return _load_saved(out_path, package_sha256, model, effort)
+    started = time.monotonic()
     try:
         if any(workdir.iterdir()):
             raise ReviewError(f"workdir must be empty: {workdir}")
@@ -122,6 +130,22 @@ def review(package_text: str, out_path: Path, model: str, effort: str, workdir: 
         raise ReviewError(f"cannot run reviewer: {err}") from err
     except subprocess.TimeoutExpired as err:
         raise ReviewError(f"reviewer timed out after {timeout}s") from err
+    wall_seconds = time.monotonic() - started
+    try:
+        record = _check_run(proc, model)
+    except ReviewError as err:
+        _write_atomic(out_path.with_name(out_path.stem + ".failed.json"), {
+            "stdout": proc.stdout, "stderr": proc.stderr, "reason": str(err), "model": model, "effort": effort,
+            "package_sha256": package_sha256, "wall_seconds": wall_seconds})
+        raise
+    record.update(model_requested=model, effort=effort, package_sha256=package_sha256,
+                  command_sha256=_command_sha256(model, effort), wall_seconds=wall_seconds,
+                  stdout_sha256=_sha256(proc.stdout))
+    _write_atomic(out_path, record)
+    return record
+
+
+def _check_run(proc, model: str) -> dict:
     if proc.returncode != 0:
         raise ReviewError("\n".join(part for part in (proc.stderr, proc.stdout) if part)[-2000:])
     record = parse_output(proc.stdout)
@@ -134,8 +158,6 @@ def review(package_text: str, out_path: Path, model: str, effort: str, workdir: 
     served = record["served_models"]
     if model not in served or any(m != model and m not in KNOWN_SIDE_MODELS for m in served):
         raise ReviewError(f"requested {model}, served {served}")
-    record.update(model_requested=model, effort=effort, package_sha256=package_sha256)
-    _write_atomic(out_path, record)
     return record
 
 
@@ -144,6 +166,6 @@ def review_with_backoff(*args, waits=(60, 300, 1800), sleep_fn=time.sleep, **kwa
         try:
             return review(*args, **kwargs)
         except ReviewError as err:
-            if wait is None or not any(marker in str(err).lower() for marker in RETRY_MARKERS):
+            if wait is None or not RETRY_PATTERN.search(str(err).lower()):
                 raise
             sleep_fn(wait)

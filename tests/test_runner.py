@@ -183,6 +183,90 @@ def test_backoff_does_not_retry_a_non_limit_failure(tmp_path, monkeypatch):
     assert waits == [] and len(count.read_text().splitlines()) == 1
 
 
+def test_record_keeps_the_full_envelope_wall_time_and_stdout_hash(tmp_path):
+    record = _review(tmp_path)
+    assert record["envelope"]["is_error"] is False
+    assert set(record["envelope"]["modelUsage"]) == {MODEL}
+    assert json.loads(record["envelope"]["result"]) == EXPECTED
+    assert isinstance(record["wall_seconds"], float) and record["wall_seconds"] >= 0
+    assert len(record["stdout_sha256"]) == 64
+    saved = json.loads((tmp_path / "out" / "r.json").read_text())
+    assert saved["envelope"] == record["envelope"] and saved["stdout_sha256"] == record["stdout_sha256"]
+
+
+def _failed(tmp_path, name="r.failed.json"):
+    return json.loads((tmp_path / "out" / name).read_text())
+
+
+@pytest.mark.parametrize("mode, env, reason", [
+    ("fail", {"FAKE_ERR": "boom on stderr"}, "boom on stderr"),
+    ("fail_stdout", {"FAKE_ERR": "boom on stdout"}, "boom on stdout"),
+    ("garbage", {}, "envelope"),
+    ("malformed", {}, "malformed answer"),
+    ("error_envelope", {}, "error"),
+    ("result", {"FAKE_SERVED": SIDE}, "served"),
+])
+def test_failures_after_the_subprocess_ran_leave_a_failed_record(tmp_path, monkeypatch, mode, env, reason):
+    monkeypatch.setenv("FAKE_MODE", mode)
+    for key, value in env.items():
+        monkeypatch.setenv(key, value)
+    with pytest.raises(ReviewError):
+        _review(tmp_path, package="PKG")
+    failed = _failed(tmp_path)
+    assert reason in failed["reason"]
+    assert {"stdout", "stderr", "reason", "model", "effort", "package_sha256"} <= set(failed)
+    assert failed["model"] == MODEL and failed["effort"] == "medium"
+    assert failed["package_sha256"] == hashlib.sha256(b"PKG").hexdigest()
+    assert not (tmp_path / "out" / "r.json").exists()
+    assert sorted(p.name for p in (tmp_path / "out").iterdir()) == ["r.failed.json"]
+
+
+def test_failed_record_keeps_raw_stdout_and_stderr(tmp_path, monkeypatch):
+    monkeypatch.setenv("FAKE_MODE", "fail")
+    monkeypatch.setenv("FAKE_ERR", "visible failure text")
+    with pytest.raises(ReviewError):
+        _review(tmp_path)
+    assert "visible failure text" in _failed(tmp_path)["stderr"]
+    monkeypatch.setenv("FAKE_MODE", "malformed")
+    with pytest.raises(ReviewError):
+        _review(tmp_path)
+    assert "anything_wrong" in _failed(tmp_path)["stdout"]
+
+
+def test_a_later_success_still_writes_the_normal_record(tmp_path, monkeypatch):
+    monkeypatch.setenv("FAKE_MODE", "fail")
+    with pytest.raises(ReviewError):
+        _review(tmp_path)
+    monkeypatch.setenv("FAKE_MODE", "result")
+    assert _review(tmp_path)["answer"] == EXPECTED
+
+
+def test_resume_with_a_different_system_prompt_raises(tmp_path, monkeypatch):
+    first = _review(tmp_path)
+    assert len(first["command_sha256"]) == 64
+    monkeypatch.setenv("FAKE_MODE", "fail")
+    monkeypatch.setattr(runner, "SYSTEM_PROMPT", runner.SYSTEM_PROMPT + " Be brief.")
+    with pytest.raises(ReviewError, match="command_sha256"):
+        _review(tmp_path)
+
+
+def test_command_hash_excludes_the_executable(tmp_path):
+    expected = hashlib.sha256(json.dumps(build_command(MODEL, "medium")[1:]).encode()).hexdigest()
+    assert _review(tmp_path)["command_sha256"] == expected
+
+
+def test_backoff_does_not_retry_when_429_is_part_of_a_longer_number(tmp_path, monkeypatch):
+    monkeypatch.setenv("FAKE_MODE", "fail")
+    monkeypatch.setenv("FAKE_ERR", "Prompt has 1429 tokens")
+    waits = []
+    workdir = tmp_path / "empty"
+    workdir.mkdir()
+    with pytest.raises(ReviewError, match="1429"):
+        review_with_backoff("PACKAGE", tmp_path / "out.json", MODEL, "medium", workdir,
+                            claude_cmd=FAKE, waits=(1, 2), sleep_fn=waits.append)
+    assert waits == []
+
+
 def test_saved_record_is_valid_json_with_integrity_fields(tmp_path):
     _review(tmp_path)
     saved = json.loads((tmp_path / "out" / "r.json").read_text())
