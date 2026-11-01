@@ -1,6 +1,7 @@
 """Deterministic per-review scores. No LLM judge."""
 from __future__ import annotations
 
+from rdr.answer import normalise_record, validate_answer
 from rdr.truth import Truth
 
 
@@ -9,13 +10,15 @@ def _ratio(numerator: int, denominator: int) -> float | None:
 
 
 def score(answer: dict, truth: Truth) -> dict:
-    claimed = set(answer.get("still_wrong_records") or []) - {truth.symptom}
-    actual = set(truth.stale) - {truth.symptom}
+    validate_answer(answer)
+    symptom = normalise_record(truth.symptom)
+    claimed = {normalise_record(r) for r in answer["still_wrong_records"]} - {symptom}
+    actual = {normalise_record(r) for r in truth.stale} - {symptom}
     hits = len(claimed & actual)
-    origin = answer.get("origin_call")
+    origin = answer["origin_call"]
     return {
         "instance_id": truth.instance_id,
-        "detection_correct": bool(answer.get("anything_wrong")) == truth.is_faulty,
+        "detection_correct": answer["anything_wrong"] == truth.is_faulty,
         "origin_hit": (origin == truth.origin_index) if truth.is_faulty else None,
         "stale_precision": _ratio(hits, len(claimed)) if truth.is_faulty else None,
         "stale_recall": _ratio(hits, len(actual)) if truth.is_faulty else None,

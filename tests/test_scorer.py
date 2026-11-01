@@ -1,3 +1,5 @@
+import pytest
+
 from rdr.scorer import score
 from rdr.truth import Truth
 
@@ -38,3 +40,31 @@ def test_decoy_follow():
     truth = Truth("i3", True, 1, ["splitwise.expenses#77"], [], "splitwise.expenses#77", decoy_index=4)
     assert score({"anything_wrong": True, "origin_call": 4, "still_wrong_records": []}, truth)["followed_decoy"] is True
     assert score({"anything_wrong": True, "origin_call": 1, "still_wrong_records": []}, truth)["followed_decoy"] is False
+
+
+def test_rec_prefixed_claims_score_like_bare_labels():
+    bare = score({"anything_wrong": True, "origin_call": 1,
+                  "still_wrong_records": ["splitwise.expenses#77", "todo.items#5"]}, FAULTY)
+    prefixed = score({"anything_wrong": True, "origin_call": 1,
+                      "still_wrong_records": ["rec:splitwise.expenses#77", " rec:todo.items#5 "]}, FAULTY)
+    assert prefixed == bare
+    assert prefixed["stale_precision"] == 1.0 and prefixed["stale_recall"] == 1.0
+
+
+def test_rec_prefixed_symptom_is_excluded_on_clean_controls():
+    s = score({"anything_wrong": True, "origin_call": 2,
+               "still_wrong_records": ["rec:venmo.transactions#201", "rec:splitwise.expenses#77"]}, CLEAN)
+    assert s["false_stale_count"] == 1
+
+
+def test_truth_labels_are_normalised_too():
+    truth = Truth("i4", True, 1, ["rec:splitwise.expenses#77", "todo.items#5"], [], "rec:splitwise.expenses#77")
+    s = score({"anything_wrong": True, "origin_call": 1, "still_wrong_records": ["todo.items#5"]}, truth)
+    assert s["stale_precision"] == 1.0 and s["stale_recall"] == 1.0
+
+
+def test_malformed_answer_raises():
+    with pytest.raises(ValueError):
+        score({"anything_wrong": "yes", "origin_call": 1, "still_wrong_records": []}, FAULTY)
+    with pytest.raises(ValueError):
+        score({"anything_wrong": True}, FAULTY)
