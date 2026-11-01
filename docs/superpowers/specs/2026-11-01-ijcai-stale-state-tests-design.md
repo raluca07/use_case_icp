@@ -25,7 +25,7 @@ Five rules for every test in this design:
 
 ## 3. Reviewer evidence arms
 
-Every package contains the task instruction, the agent's final message and the final state of touched records. Arms add evidence on top:
+Every package contains the task instruction, the agent's final message, a user report naming one record that looks wrong (the symptom: one stale record for faulty instances, a deterministically chosen correct record for clean controls), the final state of touched records, and the list of calls made (index and API name only, so every arm can name an origin). Arms add evidence on top:
 
 | Arm | Added evidence |
 |---|---|
@@ -59,7 +59,7 @@ Each component reads and writes files; none calls another directly.
 
 1. **AppWorld setup.** Python 3.11+, git LFS, `pip install appworld`, `appworld install`, `appworld download data`, plus released experiment outputs.
 2. **Fault injector.** Edits a gold solution to insert a wrong action and a partial repair, then executes it in AppWorld. Ground truth is mechanical: origin = the injected action; stale records = rows where the final database differs from the gold run's final database. Clean controls insert the same action with a full repair; the injector rejects any control whose final state differs from gold. For the curve test it splices in N actions from other tasks and verifies, by database diff, that they never touch the stale records.
-3. **Graph builder.** Executes one statement at a time and snapshots the database after each, attributing every write to its call. Read edges come from record IDs in API responses that later calls consume. A first-day spike tests whether Etiq records this natively; if not, this builder is the graph source and Raluca is told before commitment.
+3. **Graph builder.** Executes one statement at a time and snapshots the database after each, attributing every write to its call. Read edges come from record IDs in API responses that later calls consume. Etiq (`etiq_copilot`, statement-level value capture) cannot see database rows behind the API layer, so this builder always supplies record nodes and write edges. A first-day spike decides whether call-to-call data-flow ("feeds") edges come from Etiq's captured lineage or from value matching between responses and later arguments; Raluca is told the result. Etiq ships a CPython 3.13 binary, so the project venv is Python 3.13.
 4. **Evidence packager.** Builds arms A to F from the same run. A leakage check removes anything that reveals the injection (comments, variable names, unnatural repair wording).
 5. **Reviewer runner.** One fresh isolated `claude -p` session per review:
    `claude -p <package> --model claude-haiku-5-5 --effort medium --tools "" --setting-sources "" --strict-mcp-config --system-prompt <reviewer prompt> --json-schema <answer schema> --no-session-persistence --output-format json`, run from an empty directory. Measured overhead of this recipe: about 630 tokens (the default `claude -p` loads about 36k tokens of user configuration and must not be used). Use full model IDs: the `haiku` alias serves Haiku 4.5. Temperature cannot be set on current models, so reproducibility is the pinned model ID, the pinned effort and repeated runs. Raw output, served model (`modelUsage`) and token usage are stored per call. The runner resumes after interruption and backs off on subscription limits.
