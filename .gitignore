@@ -4,3 +4,4 @@ __pycache__/
 appworld_root/
 runs/
 tests/fixtures/appworld/
+.superpowers/
