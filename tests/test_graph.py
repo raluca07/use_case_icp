@@ -1,8 +1,8 @@
 import pytest
-from builders import persistent_trace
+from builders import persistent_trace, realistic_trace
 
-from rdr.graph import (Edge, build_graph, call_node, edge_counts, neighbourhood, random_subgraph, rec_node,
-                       render, rewire_one, rewire_writes, strip_ignored)
+from rdr.graph import (Edge, build_graph, call_node, edge_counts, fake_writes, neighbourhood, random_subgraph,
+                       rec_node, render, rewire_one, strip_ignored)
 from rdr.trace import Call, Trace, Write
 
 EXP77 = rec_node("splitwise.expenses#77")
@@ -129,20 +129,76 @@ def test_random_subgraph_matches_counts_and_is_deterministic():
     assert first.edges == random_subgraph(g, counts, seed=7).edges
 
 
-def test_rewire_writes_changes_structure_deterministically():
+def _ancestors(graph, writers):
+    reverse = {}
+    for e in graph.edges:
+        reverse.setdefault(e.dst, set()).add(e.src)
+    seen, stack = set(writers), list(writers)
+    while stack:
+        for parent in reverse.get(stack.pop(), ()):
+            if parent not in seen:
+                seen.add(parent)
+                stack.append(parent)
+    return seen
+
+
+def _symptom_writers(graph, symptom):
+    return {e.src for e in graph.edges if e.kind == "writes" and e.dst == symptom}
+
+
+def test_fake_writes_is_deterministic_and_only_touches_writes_edges():
     g = build_graph(persistent_trace())
-    fake = rewire_writes(g, seed=3)
-    original_writes = {e for e in g.edges if e.kind == "writes"}
-    fake_writes = {e for e in fake.edges if e.kind == "writes"}
-    assert fake_writes != original_writes
+    fake, fraction = fake_writes(g, EXP77, frozenset({call_node(1)}), seed=3)
+    again, again_fraction = fake_writes(g, EXP77, frozenset({call_node(1)}), seed=3)
+    assert fake.edges == again.edges and fraction == again_fraction
     assert {e for e in fake.edges if e.kind != "writes"} == {e for e in g.edges if e.kind != "writes"}
-    assert fake.edges == rewire_writes(g, seed=3).edges
+    assert fake.call_nodes == g.call_nodes and fake.record_nodes == g.record_nodes
+    assert 0.5 <= fraction <= 1.0
 
 
-def test_rewire_writes_raises_when_nothing_can_change():
+def test_fake_writes_never_points_the_symptom_at_the_origin_or_its_ancestors():
+    g = build_graph(persistent_trace())
+    for seed in range(2000):
+        fake, _ = fake_writes(g, EXP77, frozenset({call_node(1)}), seed)
+        sources = _symptom_writers(fake, EXP77)
+        assert sources and sources <= {call_node(0), call_node(4)}, (seed, sources)
+
+
+def test_fake_writes_every_writes_edge_gets_a_different_source_when_unique():
+    g = build_graph(realistic_trace())
+    fake, fraction = fake_writes(g, EXP77, frozenset(), seed=5)
+    assert fraction == 1.0
+    old = {e.dst: e.src for e in g.edges if e.kind == "writes"}
+    for e in fake.edges:
+        if e.kind == "writes":
+            assert e.src != old[e.dst]
+
+
+def test_fake_writes_on_a_realistic_shape_never_fails_or_touches_the_origin():
+    g = build_graph(realistic_trace())
+    banned = _ancestors(g, _symptom_writers(g, EXP77)) | {call_node(1)}
+    for seed in range(200):
+        fake, fraction = fake_writes(g, EXP77, frozenset({call_node(1)}), seed)
+        assert fraction >= 0.5
+        sources = _symptom_writers(fake, EXP77)
+        assert sources and not (sources & banned), (seed, sources)
+
+
+def test_fake_writes_raises_when_a_symptom_edge_has_no_candidate():
     single = build_graph(_trace(Call(0, "a", "x", {}, {}, [Write("a.t#1", None, {"v": 1})])))
-    with pytest.raises(ValueError, match="rewir"):
-        rewire_writes(single, seed=1)
+    with pytest.raises(ValueError, match="candidate"):
+        fake_writes(single, rec_node("a.t#1"), frozenset(), seed=1)
+    g = build_graph(persistent_trace())
+    with pytest.raises(ValueError, match="candidate"):
+        fake_writes(g, EXP77, frozenset({call_node(0), call_node(4)}), seed=1)
+
+
+def test_fake_writes_raises_when_less_than_half_the_edges_change():
+    two = build_graph(_trace(
+        Call(0, "a", "x", {}, {}, [Write("a.t#1", None, {"v": 1})]),
+        Call(1, "a", "y", {}, {}, [Write("a.t#1", {"v": 1}, {"v": 2})])))
+    with pytest.raises(ValueError, match="fraction"):
+        fake_writes(two, rec_node("a.t#none"), frozenset(), seed=1)
 
 
 def test_rewire_one_rejects_unknown_decoy_and_existing_writer():

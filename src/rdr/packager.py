@@ -5,13 +5,12 @@ import json
 import re
 import zlib
 
-from rdr.graph import (build_graph, call_node, edge_counts, neighbourhood, random_subgraph, rec_node, render,
-                       rewire_one, rewire_writes, strip_ignored)
+from rdr.graph import (build_graph, call_node, edge_counts, fake_writes, neighbourhood, random_subgraph, rec_node, render,
+                       rewire_one, strip_ignored)
 from rdr.trace import Trace
 
 ARMS = ("A", "B", "C", "D", "E", "F", "G")
 FORBIDDEN = re.compile(r"\b(inject\w*|fault\w*|stale|repair\w*|decoy\w*|gold|truth)\b", re.IGNORECASE)
-D_HOPS = 2
 
 
 class LeakageError(ValueError):
@@ -22,10 +21,11 @@ def seed_for(instance_id: str) -> int:
     return zlib.crc32(instance_id.encode("utf-8"))
 
 
-def check_leakage(text: str, forbidden=FORBIDDEN) -> None:
-    match = forbidden.search(text)
-    if match:
-        raise LeakageError(match.group(0))
+def check_leakage(text: str, forbidden=FORBIDDEN, extra_forbidden: re.Pattern | None = None) -> None:
+    for pattern in (forbidden, extra_forbidden):
+        match = pattern.search(text) if pattern else None
+        if match:
+            raise LeakageError(match.group(0))
 
 
 def _header(trace: Trace, symptom: str) -> list[str]:
@@ -49,7 +49,9 @@ def _action_log(trace: Trace) -> list[str]:
     return lines
 
 
-def build_package(arm: str, trace: Trace, symptom: str, instance_id: str) -> str:
+def build_package(arm: str, trace: Trace, symptom: str, instance_id: str, avoid_calls=frozenset(),
+                  d_hops: int = 2, extra_forbidden: re.Pattern | None = None) -> str:
+    """`avoid_calls` (call indices) is never printed; arm F uses it to keep the fake graph off the origin."""
     if arm not in ARMS:
         raise ValueError(f"unknown arm {arm!r}")
     graph = build_graph(trace)
@@ -60,16 +62,17 @@ def build_package(arm: str, trace: Trace, symptom: str, instance_id: str) -> str
     elif arm == "C":
         lines += ["", "PROVENANCE GRAPH", render(graph)]
     elif arm == "D":
-        lines += ["", "PROVENANCE GRAPH", render(neighbourhood(graph, rec_node(symptom), D_HOPS))]
+        lines += ["", "PROVENANCE GRAPH", render(neighbourhood(graph, rec_node(symptom), d_hops))]
     elif arm == "E":
-        counts = edge_counts(neighbourhood(graph, rec_node(symptom), D_HOPS))
+        counts = edge_counts(neighbourhood(graph, rec_node(symptom), d_hops))
         lines += ["", "PROVENANCE GRAPH", render(random_subgraph(graph, counts, seed))]
     elif arm == "F":
-        lines += ["", "PROVENANCE GRAPH", render(rewire_writes(graph, seed))]
+        fake, _ = fake_writes(graph, rec_node(symptom), {call_node(i) for i in avoid_calls}, seed)
+        lines += ["", "PROVENANCE GRAPH", render(fake)]
     elif arm == "G":
         lines += ["", *_action_log(trace), "", "PROVENANCE GRAPH", render(graph)]
     text = "\n".join(lines)
-    check_leakage(text)
+    check_leakage(text, extra_forbidden=extra_forbidden)
     return text
 
 

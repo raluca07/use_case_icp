@@ -1,5 +1,12 @@
+import hashlib
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
 import pytest
-from builders import persistent_trace
+from builders import persistent_trace, realistic_trace
 
 from rdr.packager import ARMS, LeakageError, build_package, build_rewired_package, check_leakage
 
@@ -45,6 +52,63 @@ def test_arm_e_matches_d_edge_counts():
 
 def test_arm_f_differs_from_c():
     assert _pkg("F") != _pkg("C")
+
+
+def _symptom_sources(text):
+    return {int(m) for m in re.findall(r"^call:(\d+) -writes-> rec:splitwise\.expenses#77$", text, re.M)}
+
+
+def test_arm_f_never_points_the_symptom_at_the_origin_or_its_ancestors():
+    for n in range(200):
+        text = build_package("F", persistent_trace(), SYMPTOM, f"inst{n}", avoid_calls=frozenset({1}))
+        sources = _symptom_sources(text)
+        assert sources and sources <= {0, 4}, (n, sources)
+
+
+def test_arm_f_on_a_realistic_shape_never_fails_and_avoids_the_origin():
+    for n in range(200):
+        text = build_package("F", realistic_trace(), SYMPTOM, f"inst{n}", avoid_calls=frozenset({1}))
+        assert _symptom_sources(text) == {0}, n
+
+
+def test_avoid_calls_is_not_printed():
+    with_avoid = build_package("F", realistic_trace(), SYMPTOM, "i1", avoid_calls=frozenset({1}))
+    assert "avoid" not in with_avoid.lower()
+
+
+def test_arm_d_and_e_use_d_hops():
+    one = build_package("D", persistent_trace(), SYMPTOM, "i1", d_hops=1)
+    assert one.count("-writes->") == 1 and "-reads->" not in one
+    assert build_package("D", persistent_trace(), SYMPTOM, "i1") == build_package(
+        "D", persistent_trace(), SYMPTOM, "i1", d_hops=2)
+    e_one = build_package("E", persistent_trace(), SYMPTOM, "i1", d_hops=1)
+    assert e_one.count("-writes->") == 1 and "-reads->" not in e_one
+
+
+def test_extra_forbidden_is_checked_in_addition():
+    trace = persistent_trace()
+    trace.instruction = "Pay ann via the Mercury gateway."
+    build_package("A", trace, SYMPTOM, "i1")
+    with pytest.raises(LeakageError):
+        build_package("A", trace, SYMPTOM, "i1", extra_forbidden=re.compile(r"mercury", re.IGNORECASE))
+
+
+def test_packages_do_not_depend_on_the_hash_seed():
+    root = Path(__file__).resolve().parents[1]
+    code = (
+        "import sys, hashlib\n"
+        f"sys.path[:0] = [{str(root / 'src')!r}, {str(root / 'tests')!r}]\n"
+        "from builders import persistent_trace\n"
+        "from rdr.packager import ARMS, build_package\n"
+        "text = ''.join(build_package(a, persistent_trace(), 'splitwise.expenses#77', 'i1', "
+        "avoid_calls=frozenset({1})) for a in ARMS)\n"
+        "print(hashlib.sha256(text.encode()).hexdigest())\n")
+    digests = []
+    for hash_seed in ("1", "2"):
+        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                             env={**os.environ, "PYTHONHASHSEED": hash_seed}, check=True)
+        digests.append(out.stdout.strip())
+    assert digests[0] == digests[1] and len(digests[0]) == 64
 
 
 def test_arm_g_has_the_log_and_the_full_graph():

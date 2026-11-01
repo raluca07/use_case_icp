@@ -175,20 +175,49 @@ def random_subgraph(graph: Graph, counts: dict[str, int], seed: int) -> Graph:
     return _restrict(graph, keep, [e for e in graph.edges if e in chosen])
 
 
-def rewire_writes(graph: Graph, seed: int) -> Graph:
+MIN_CHANGED_FRACTION = 0.5
+
+
+def _ancestors(graph: Graph, nodes: set[str]) -> set[str]:
+    """`nodes` and everything that reaches them over edges of any kind (reverse traversal)."""
+    parents: dict[str, set[str]] = {}
+    for edge in graph.edges:
+        parents.setdefault(edge.dst, set()).add(edge.src)
+    seen = set(nodes)
+    stack = list(nodes)
+    while stack:
+        for parent in parents.get(stack.pop(), ()):
+            if parent not in seen:
+                seen.add(parent)
+                stack.append(parent)
+    return seen
+
+
+def fake_writes(graph: Graph, symptom_node: str, avoid_nodes, seed: int) -> tuple[Graph, float]:
+    """Control graph for arm F: every writes edge gets a new, uniformly drawn source call.
+
+    Writes edges into the symptom record may not name any of `avoid_nodes`, the symptom's true writers, or
+    any ancestor of those writers, so the fake graph never points the symptom at the origin's chain.
+    Returns the graph and the fraction of the original writes edges that were replaced by a different edge.
+    """
     rng = random.Random(seed)
+    calls = sorted(graph.call_nodes, key=_node_key)
     writes = [e for e in graph.edges if e.kind == "writes"]
-    sources = [e.src for e in writes]
-    permuted = sources[:]
-    for _ in range(100):
-        rng.shuffle(permuted)
-        if all(new != old for new, old in zip(permuted, sources)):
-            break
-    replacements = iter(Edge(src, e.dst, "writes") for src, e in zip(permuted, writes))
-    edges = [next(replacements) if e.kind == "writes" else e for e in graph.edges]
-    if {e for e in edges if e.kind == "writes"} == set(writes):
-        raise ValueError("rewiring left the writes edges unchanged")
-    return Graph(dict(graph.call_nodes), list(graph.record_nodes), _dedupe(edges))
+    writers = {e.src for e in writes if e.dst == symptom_node}
+    banned = _ancestors(graph, writers) | set(avoid_nodes)
+    replaced: list[Edge] = []
+    for edge in writes:
+        pool = [c for c in calls if c != edge.src and (edge.dst != symptom_node or c not in banned)]
+        if not pool:
+            raise ValueError(f"no candidate writer for {edge.dst} once the origin and its ancestors are excluded")
+        replaced.append(Edge(rng.choice(pool), edge.dst, "writes"))
+    replacements = iter(replaced)
+    edges = _dedupe([next(replacements) if e.kind == "writes" else e for e in graph.edges])
+    original = set(writes)
+    fraction = len({e for e in replaced if e not in original}) / len(original) if original else 0.0
+    if fraction < MIN_CHANGED_FRACTION:
+        raise ValueError(f"fake graph changed only a fraction {fraction:.2f} of the writes edges")
+    return Graph(dict(graph.call_nodes), list(graph.record_nodes), edges), fraction
 
 
 def rewire_one(graph: Graph, record_node: str, decoy_node: str) -> Graph:

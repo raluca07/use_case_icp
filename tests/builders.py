@@ -54,3 +54,15 @@ def clean_trace():
     trace = persistent_trace()
     trace.calls.append(_settle(5, {"settled": True, "payment_ref": 101}, 201))
     return trace
+
+
+def realistic_trace():
+    """Realistic shape: login; one call writes a transaction, a notification and two user rows; a later settle
+    call reads the transaction and writes the symptom expense (splitwise.expenses#77)."""
+    pay = Call(1, "venmo", "send_money", {"receiver": "ann@x.com", "amount": 5}, {"transaction_id": 301}, [
+        Write("venmo.transactions#301", None, {"receiver": "ann@x.com", "amount": 5, "status": "completed"}),
+        Write("venmo.notifications#41", None, {"kind": "payment", "data": "paid ann@x.com"}),
+        Write("venmo.users#2", {"balance": 50}, {"balance": 45}),
+        Write("venmo.users#3", {"balance": 10}, {"balance": 15}),
+    ])
+    return Trace("t2", INSTRUCTION, "Paid and settled.", [_login(), pay, _settle(2, EXP77_BASE, 301)])
