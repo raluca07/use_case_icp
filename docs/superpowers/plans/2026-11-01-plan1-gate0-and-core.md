@@ -1692,4 +1692,6 @@ git commit -m "Add the live Haiku reviewer smoke test and record its findings" -
 
 ## Next: Plan 2 (written after this plan, from `docs/gate0_findings.md`)
 
-AppWorld adapter producing `Trace` objects with per-call writes; three fault templates (wrong recipient then refund with a stale derived record; wrong amount then correction with a stale derived record; duplicate action after a reported failure); non-persistent and clean-control variants; splicing of N unrelated actions; instance builder writing `trace.json`, `truth.json` and six packages per instance; freeze; the Haiku pilot driver (Gate 2, about 300 calls) and its pass-rule check.
+AppWorld adapter producing `Trace` objects with per-call writes; three fault templates (wrong recipient then refund with a stale derived record; wrong amount then correction with a stale derived record; duplicate action after a reported failure); non-persistent and clean-control variants; splicing of N unrelated actions; instance builder writing `trace.json`, `truth.json` and seven packages (arms A to G) per instance; freeze; the Haiku pilot driver (Gate 2, about 300 calls) and its pass-rule check.
+
+Plan 2 starts from `docs/plan2_carryover.md`: the decisions taken at the Plan 1 final review and the design items (created-row id alignment, side-effect rows, graph precision, matched clean-control symptoms) to settle in its first task, before any adapter code.
