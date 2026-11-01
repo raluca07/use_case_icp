@@ -4,7 +4,7 @@ from builders import clean_trace, gold_trace, nonpersistent_trace, persistent_tr
 from rdr.trace import Call, Trace, Write
 from rdr.truth import Truth, check_clean_control, choose_symptom, make_truth, stale_records
 
-REFUNDED = frozenset({"venmo.transactions#101"})
+REFUNDED = {"venmo.transactions#101": {"receiver": "bob@x.com", "amount": 5, "status": "refunded"}}
 
 
 def test_persistent_fault_leaves_only_the_derived_record_stale():
@@ -60,8 +60,43 @@ def test_make_truth_requires_origin_for_faulty_runs():
         make_truth("i3", persistent_trace(), gold_trace(), origin_index=None, neutralised=REFUNDED)
 
 
-def test_choose_symptom_prefers_first_stale_record():
-    assert choose_symptom("i4", ["b#2", "a#1"], persistent_trace()) == "a#1"
+def test_choose_symptom_picks_a_deterministic_stale_record():
+    stale = ["b#2", "a#1", "c#3"]
+    assert choose_symptom("i4", stale, persistent_trace()) in stale
+    assert choose_symptom("i4", stale, persistent_trace()) == choose_symptom("i4", stale, persistent_trace())
+    picks = {choose_symptom(f"inst{n}", stale, persistent_trace()) for n in range(30)}
+    assert len(picks) > 1
+
+
+def test_choose_symptom_raises_when_nothing_was_touched():
+    empty = Trace("t1", "x", "y", [])
+    with pytest.raises(ValueError, match="touched"):
+        choose_symptom("i5", [], empty)
+
+
+def test_neutralised_record_with_an_unexpected_final_value_raises():
+    wrong = {"venmo.transactions#101": {"receiver": "bob@x.com", "amount": 5, "status": "completed"}}
+    with pytest.raises(ValueError, match="repair did not neutralise venmo.transactions#101"):
+        stale_records(persistent_trace(), gold_trace(), wrong)
+
+
+def test_neutralised_expected_value_ignores_volatile_fields():
+    expected = {"venmo.transactions#101": {"receiver": "bob@x.com", "amount": 5, "status": "refunded",
+                                           "updated_at": "later"}}
+    assert stale_records(persistent_trace(), gold_trace(), expected, ignore_fields=("updated_at",)) == (
+        ["splitwise.expenses#77"], [])
+
+
+def test_min_stale_rejects_instances_with_too_few_stale_records():
+    with pytest.raises(ValueError, match="stale"):
+        make_truth("i6", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED, min_stale=2)
+    truth = make_truth("i6", persistent_trace(), gold_trace(), origin_index=1, neutralised=REFUNDED, min_stale=1)
+    assert truth.stale == ["splitwise.expenses#77"]
+
+
+def test_min_stale_does_not_apply_to_clean_controls():
+    truth = make_truth("i7", clean_trace(), gold_trace(), origin_index=None, neutralised=REFUNDED, min_stale=2)
+    assert truth.is_faulty is False
 
 
 def test_truth_round_trip(tmp_path):
