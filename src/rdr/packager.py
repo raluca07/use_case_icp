@@ -10,7 +10,9 @@ from rdr.graph import (build_graph, call_node, edge_counts, fake_writes, neighbo
 from rdr.trace import Trace
 
 ARMS = ("A", "B", "C", "D", "E", "F", "G")
-FORBIDDEN = re.compile(r"\b(inject\w*|fault\w*|stale|repair\w*|decoy\w*|gold|truth)\b", re.IGNORECASE)
+FORBIDDEN = re.compile(
+    r"(?<![a-z0-9])(inject[a-z]*|fault[a-z]*|stale|repair[a-z]*|decoy[a-z]*|gold|truth)(?![a-z])", re.IGNORECASE)
+_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])")
 
 
 class LeakageError(ValueError):
@@ -22,19 +24,24 @@ def seed_for(instance_id: str) -> int:
 
 
 def check_leakage(text: str, forbidden=FORBIDDEN, extra_forbidden: re.Pattern | None = None) -> None:
-    for pattern in (forbidden, extra_forbidden):
-        match = pattern.search(text) if pattern else None
+    """Raise on a forbidden word. With IGNORECASE the lookahead cannot see the end of `goldRun`, so the
+    forbidden pattern is also tried on the text with camelCase boundaries split (`gold Run`)."""
+    for candidate in (text, _CAMEL_BOUNDARY.sub(" ", text)):
+        match = forbidden.search(candidate)
         if match:
             raise LeakageError(match.group(0))
+    match = extra_forbidden.search(text) if extra_forbidden else None
+    if match:
+        raise LeakageError(match.group(0))
 
 
 def _header(trace: Trace, symptom: str) -> list[str]:
-    final = trace.final_values()
+    final = {record: strip_ignored(row) for record, row in trace.final_values().items()}
     lines = ["TASK", trace.instruction, "",
              "AGENT FINAL MESSAGE", trace.final_message, "",
              "USER REPORT", f"A user reports that record {symptom} looks wrong.", "",
              "FINAL STATE OF RECORDS THE AGENT CHANGED"]
-    lines += [f"{record} = {json.dumps(final[record], sort_keys=True)}" for record in sorted(final)]
+    lines += [f"{record} = {json.dumps(final[record], sort_keys=True, default=str)}" for record in sorted(final)]
     lines += ["", "CALLS MADE (index and API only)"]
     lines += [f"{call.index} {call.name}" for call in trace.calls]
     return lines

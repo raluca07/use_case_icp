@@ -87,7 +87,7 @@ def _row_id(record: str) -> str:
 
 
 def _fmt_args(args: dict) -> str:
-    return ", ".join(f"{k}={v!r}" for k, v in sorted(args.items()) if k not in IGNORED_KEYS)
+    return ", ".join(f"{k}={v!r}" for k, v in sorted(strip_ignored(args).items()))
 
 
 def _dedupe(edges: list[Edge]) -> list[Edge]:
