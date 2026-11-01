@@ -12,9 +12,15 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _included(root: Path, path: Path) -> bool:
+    relative = path.relative_to(root)
+    if relative.as_posix() == MANIFEST_NAME or path.name == ".DS_Store" or "__pycache__" in relative.parts:
+        return False
+    return path.is_file()
+
+
 def build_manifest(root: Path) -> dict[str, str]:
-    return {p.relative_to(root).as_posix(): _sha256(p)
-            for p in sorted(root.rglob("*")) if p.is_file() and p.name != MANIFEST_NAME}
+    return {p.relative_to(root).as_posix(): _sha256(p) for p in sorted(root.rglob("*")) if _included(root, p)}
 
 
 def write_manifest(root: Path) -> Path:
@@ -24,7 +30,10 @@ def write_manifest(root: Path) -> Path:
 
 
 def verify_manifest(root: Path) -> list[str]:
-    recorded = json.loads((root / MANIFEST_NAME).read_text())
+    manifest = root / MANIFEST_NAME
+    if not manifest.is_file():
+        return ["missing manifest"]
+    recorded = json.loads(manifest.read_text())
     current = build_manifest(root)
     problems = [f"changed: {k}" for k in sorted(recorded) if k in current and current[k] != recorded[k]]
     problems += [f"missing: {k}" for k in sorted(recorded) if k not in current]
