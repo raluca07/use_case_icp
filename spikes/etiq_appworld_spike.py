@@ -1,8 +1,8 @@
 """Gate 0 spike: does Etiq capture data flow of AppWorld agent code?
 
-Usage:
-  .venv/bin/python spikes/etiq_appworld_spike.py TASK_ID GOLD_CODE_PATH OUT_JSON --mode exec
-  .venv/bin/python spikes/etiq_appworld_spike.py TASK_ID GOLD_CODE_PATH OUT_JSON --mode inline --apis-expr "<Q11 expression>"
+Usage (needs a separate Etiq environment, not the project .venv; see Q12 in docs/gate0_findings.md):
+  <etiq-env>/bin/python spikes/etiq_appworld_spike.py TASK_ID GOLD_CODE_PATH OUT_JSON --mode exec
+  <etiq-env>/bin/python spikes/etiq_appworld_spike.py TASK_ID GOLD_CODE_PATH OUT_JSON --mode inline --apis-expr "<Q11 expression>"
 
 exec:   scanned source calls world.execute(gold_code); tests whether Etiq sees inside the shell.
 inline: scanned source binds `apis` from the Q11 expression and runs gold_code as top-level statements.
