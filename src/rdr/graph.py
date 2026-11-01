@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 
 from rdr.trace import Trace
 
-IGNORED_KEYS = frozenset({"access_token", "password"})
+IGNORED_KEYS = frozenset({"access_token", "refresh_token", "password", "api_key", "otp", "secret"})
 
 
 @dataclass(frozen=True)
@@ -40,24 +40,45 @@ def strip_ignored(obj):
     return obj
 
 
-def _scalars(obj) -> set[str]:
-    out: set[str] = set()
+def _is_id_key(key) -> bool:
+    return isinstance(key, str) and (key == "id" or key.endswith(("_id", "_ids", "_ref")))
+
+
+def _number_text(value) -> str:
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value)
+
+
+def _collect(obj, numbers_anywhere: bool, id_context: bool, out: set[str]) -> None:
     if isinstance(obj, dict):
         for key, value in obj.items():
             if key not in IGNORED_KEYS:
-                out |= _scalars(value)
+                _collect(value, numbers_anywhere, _is_id_key(key), out)
     elif isinstance(obj, (list, tuple)):
         for value in obj:
-            out |= _scalars(value)
+            _collect(value, numbers_anywhere, id_context, out)
     elif isinstance(obj, bool) or obj is None:
         pass
     elif isinstance(obj, str):
         if len(obj) >= 3:
             out.add(obj)
     elif isinstance(obj, (int, float)):
-        text = str(obj)
-        if len(text) >= 2:
-            out.add(text)
+        if numbers_anywhere or id_context:
+            out.add(_number_text(obj))
+
+
+def argument_values(args) -> set[str]:
+    """Strings of length >= 3 anywhere, numbers only under ID-like keys (`id`, `*_id`, `*_ids`, `*_ref`)."""
+    out: set[str] = set()
+    _collect(args, False, False, out)
+    return out
+
+
+def response_values(response) -> set[str]:
+    """Strings of length >= 3 and numbers of any length under any key."""
+    out: set[str] = set()
+    _collect(response, True, True, out)
     return out
 
 
@@ -82,21 +103,34 @@ def _dedupe(edges: list[Edge]) -> list[Edge]:
 def build_graph(trace: Trace) -> Graph:
     call_nodes = {call_node(c.index): f"{c.index} {c.name}({_fmt_args(c.args)})" for c in trace.calls}
     records = trace.touched_records()
+    created_at: dict[str, int] = {}
+    seen: set[str] = set()
+    for position, call in enumerate(trace.calls):
+        for write in call.writes:
+            if write.record not in seen:
+                seen.add(write.record)
+                if write.before is None:
+                    created_at[write.record] = position
+    arg_values = [argument_values(c.args) for c in trace.calls]
+    resp_values = [response_values(c.response) for c in trace.calls]
     edges: list[Edge] = []
     for call in trace.calls:
         for write in call.writes:
             edges.append(Edge(call_node(call.index), rec_node(write.record), "writes"))
-    for call in trace.calls:
-        arg_values = _scalars(call.args)
+    for position, call in enumerate(trace.calls):
         written = {w.record for w in call.writes}
         for record in records:
-            if record not in written and _row_id(record) in arg_values:
-                edges.append(Edge(rec_node(record), call_node(call.index), "reads"))
-    for position, later in enumerate(trace.calls):
-        later_args = _scalars(later.args)
-        for earlier in trace.calls[:position]:
-            if _scalars(earlier.response) & later_args:
-                edges.append(Edge(call_node(earlier.index), call_node(later.index), "feeds"))
+            if record in written or _row_id(record) not in arg_values[position]:
+                continue
+            if record in created_at and position <= created_at[record]:
+                continue
+            edges.append(Edge(rec_node(record), call_node(call.index), "reads"))
+    producers: dict[str, list[int]] = {}
+    for position, call in enumerate(trace.calls):
+        for earlier in sorted({p for value in arg_values[position] for p in producers.get(value, ())}):
+            edges.append(Edge(call_node(trace.calls[earlier].index), call_node(call.index), "feeds"))
+        for value in resp_values[position]:
+            producers.setdefault(value, []).append(position)
     return Graph(call_nodes, [rec_node(r) for r in records], _dedupe(edges))
 
 
@@ -152,10 +186,16 @@ def rewire_writes(graph: Graph, seed: int) -> Graph:
             break
     replacements = iter(Edge(src, e.dst, "writes") for src, e in zip(permuted, writes))
     edges = [next(replacements) if e.kind == "writes" else e for e in graph.edges]
+    if {e for e in edges if e.kind == "writes"} == set(writes):
+        raise ValueError("rewiring left the writes edges unchanged")
     return Graph(dict(graph.call_nodes), list(graph.record_nodes), _dedupe(edges))
 
 
 def rewire_one(graph: Graph, record_node: str, decoy_node: str) -> Graph:
+    if decoy_node not in graph.call_nodes:
+        raise ValueError(f"decoy {decoy_node} is not a call node of the graph")
+    if Edge(decoy_node, record_node, "writes") in graph.edges:
+        raise ValueError(f"decoy {decoy_node} already writes {record_node}")
     edges = [Edge(decoy_node, e.dst, "writes") if e.kind == "writes" and e.dst == record_node else e
              for e in graph.edges]
     return Graph(dict(graph.call_nodes), list(graph.record_nodes), _dedupe(edges))
