@@ -49,6 +49,7 @@ def gate_task(task_id: str, out_dir: Path) -> dict:
     if first.trace is not None:
         first.trace.save(task_dir / "trace.json")
         (task_dir / "evaluation.json").write_text(json.dumps(first.evaluation, indent=2, sort_keys=True))
+        (task_dir / "failed_calls.json").write_text(json.dumps(first.failed_calls))
     return {"task_id": task_id, **verdict}
 
 
