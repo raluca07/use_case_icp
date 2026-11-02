@@ -173,6 +173,37 @@ def test_replace_value_compares_numbers_and_numeric_strings_as_text():
     assert replace_value({"e": "a@b.c"}, "a@b.c", "z@b.c") == {"e": "z@b.c"}
 
 
+def test_held_value_is_substituted_until_the_repair():
+    plan = Plan(index=1, app="notes_app", api="create_note", arg="title", value="WRONG",
+                held={"api": "create_note", "arg": "title", "value": "c", "wrong": "WRONG", "mode": "equal"},
+                repair={"timing": "before_final", "app": "notes_app", "api": "update_note", "args": {"title": "c"},
+                        "id_param": "note_id", "id_table": "notes_app.notes", "id_match": {"title": "WRONG"}})
+    rec, _ = _recorder(plan)
+    rec("notes_app", "create_note", title="c")      # before the corrupted call: untouched
+    rec("notes_app", "create_note", title="c")      # corrupted call
+    rec("notes_app", "create_note", title="c")      # held: substituted
+    rec("notes_app", "create_note", title="other")  # different value: untouched
+    rec("supervisor", "complete_task", status="success")
+    titles = [c.args.get("title") for c in rec.calls]
+    assert titles == ["c", "WRONG", "WRONG", "other", "c", None] and rec.substituted == [2]
+
+
+def test_held_prefix_mode_and_repair_without_id_param():
+    plan = Plan(index=0, app="notes_app", api="create_note", arg="title", value="/b/x",
+                held={"api": "create_note", "arg": "title", "value": "/a/", "wrong": "/b/", "mode": "prefix"},
+                repair={"timing": "immediate", "app": "notes_app", "api": "update_note",
+                        "args": {"title": "/a/x", "note_id": 3}})
+    rec, _ = _recorder(plan)
+    rec("notes_app", "create_note", title="/a/x")
+    rec("notes_app", "create_note", title="/a/y")  # the immediate repair closed the window
+    assert [c.args["title"] for c in rec.calls] == ["/b/x", "/a/x", "/a/y"] and rec.substituted == []
+    no_repair = Plan(index=0, app="notes_app", api="create_note", arg="title", value="/b/x", held=plan.held)
+    rec, _ = _recorder(no_repair)
+    rec("notes_app", "create_note", title="/a/x")
+    rec("notes_app", "create_note", title="/a/y")
+    assert rec.calls[1].args["title"] == "/b/y"
+
+
 def test_plan_mismatch_raises():
     rec, _ = _recorder(Plan(index=0, app="notes_app", api="create_note", arg="title", value="x"))
     with pytest.raises(PlanMismatch):

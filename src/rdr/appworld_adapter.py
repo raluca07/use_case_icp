@@ -130,9 +130,14 @@ class Plan:
     """Optional corruption of one argument of call `index` and an optional repair call.
 
     `repair` keys: `timing` ("immediate": right after the corrupted call returns; "before_final": just before
-    the final `supervisor.complete_task` call), `app`, `api`, `args` (fixed arguments), `id_param` and
-    `id_table` (the repair targets the row of `id_table` that the corrupted call wrote and whose columns
-    match `id_match`).
+    the final `supervisor.complete_task` call), `app`, `api`, `args` (fixed arguments), and optionally
+    `id_param` and `id_table` (the repair targets the row of `id_table` that the corrupted call wrote and whose
+    columns match `id_match`); without `id_param` the fixed arguments address the row.
+
+    `held` keys: `api`, `arg`, `value`, `wrong`, `mode` ("equal" or "prefix"). After the corrupted call and
+    until the repair is issued (or to the end of the run when there is no repair), later calls of the same
+    app and API whose argument `arg` equals `value` (or starts with it, for "prefix") carry `wrong` instead:
+    the agent keeps using the wrong value it held when it made the corrupted call.
     """
     index: int | None = None
     app: str | None = None
@@ -141,6 +146,7 @@ class Plan:
     value: object = None
     repair: dict | None = None
     patch: dict | None = None  # {"index", "value", "replacement"}: what the code sees of that call's response
+    held: dict | None = None
 
     @classmethod
     def from_dict(cls, data: dict | None) -> "Plan":
@@ -161,6 +167,7 @@ class Recorder:
     system_writes: list[tuple[str, dict | None, dict | None]] = field(default_factory=list)
     failed: list[int] = field(default_factory=list)
     repair_index: int | None = None
+    substituted: list[int] = field(default_factory=list)
     _depth: int = 0
     _repaired: bool = False
 
@@ -175,12 +182,28 @@ class Recorder:
                 raise PlanMismatch(f"call {index} is {_app_name}.{_api_name}, plan expects "
                                    f"{self.plan.app}.{self.plan.api} with argument {self.plan.arg}")
             kwargs[self.plan.arg] = copy.deepcopy(self.plan.value)
+        elif self._held_open(index) and _app_name == self.plan.app and _api_name == self.plan.held["api"]:
+            self._substitute(kwargs)
         response = self._record(_app_name, _api_name, kwargs)
         if index == self.plan.index and self._repair_due("immediate"):
             self._issue_repair()
         if self.plan.patch and index == self.plan.patch["index"]:
             return replace_value(response, self.plan.patch["value"], self.plan.patch["replacement"])
         return response
+
+    def _held_open(self, index: int) -> bool:
+        return bool(self.plan.held) and self.plan.index is not None and index > self.plan.index \
+            and not self._repaired
+
+    def _substitute(self, kwargs: dict) -> None:
+        held = self.plan.held
+        current = kwargs.get(held["arg"])
+        if held["mode"] == "equal" and current == held["value"] and type(current) is type(held["value"]):
+            kwargs[held["arg"]] = copy.deepcopy(held["wrong"])
+            self.substituted.append(len(self.calls))
+        elif held["mode"] == "prefix" and isinstance(current, str) and current.startswith(held["value"]):
+            kwargs[held["arg"]] = held["wrong"] + current[len(held["value"]):]
+            self.substituted.append(len(self.calls))
 
     def _repair_due(self, timing: str) -> bool:
         repair = self.plan.repair
@@ -190,13 +213,15 @@ class Recorder:
     def _issue_repair(self) -> None:
         self._repaired = True
         repair = self.plan.repair
-        target = self.calls[self.plan.index]
-        prefix = f"{repair['id_table']}#"
-        rows = [w for w in target.writes if w.record.startswith(prefix) and w.after is not None
-                and all(w.after.get(k) == v for k, v in repair.get("id_match", {}).items())]
-        if len(rows) != 1:
-            raise PlanMismatch(f"repair target in {repair['id_table']} is ambiguous or absent ({len(rows)} rows)")
-        args = {**repair["args"], repair["id_param"]: rows[0].after["id"]}
+        args = dict(repair["args"])
+        if repair.get("id_param"):
+            target = self.calls[self.plan.index]
+            prefix = f"{repair['id_table']}#"
+            rows = [w for w in target.writes if w.record.startswith(prefix) and w.after is not None
+                    and all(w.after.get(k) == v for k, v in repair.get("id_match", {}).items())]
+            if len(rows) != 1:
+                raise PlanMismatch(f"repair target in {repair['id_table']} is ambiguous or absent ({len(rows)} rows)")
+            args[repair["id_param"]] = rows[0].after["id"]
         self.repair_index = len(self.calls)
         self._record(repair["app"], repair["api"], args)
 
@@ -323,7 +348,8 @@ def run_world(task_id: str, plan: Plan, experiment: str) -> dict:
         shutil.rmtree(APPWORLD_ROOT / "experiments" / "outputs" / experiment, ignore_errors=True)
     return {"trace": trace.to_dict(), "evaluation": _plain(evaluation), "digest": digest,
             "output": output, "succeeded": output.strip() == "Execution successful.",
-            "failed_calls": recorder.failed, "repair_index": recorder.repair_index}
+            "failed_calls": recorder.failed, "repair_index": recorder.repair_index,
+            "substituted": recorder.substituted}
 
 
 def _worker_main(argv=None) -> None:
@@ -388,13 +414,14 @@ class RunResult:
     failed_calls: list[int]
     repair_index: int | None = None
     plan_mismatch: str | None = None
+    substituted: list[int] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict) -> "RunResult":
         if "plan_mismatch" in data:
             return cls(None, None, None, False, "", [], None, data["plan_mismatch"])
         return cls(Trace.from_dict(data["trace"]), data["evaluation"], data["digest"], data["succeeded"],
-                   data["output"], data["failed_calls"], data.get("repair_index"))
+                   data["output"], data["failed_calls"], data.get("repair_index"), None, data.get("substituted", []))
 
 
 def run_task(task_id: str, plan: dict | None = None, timeout: int = 900) -> RunResult:
