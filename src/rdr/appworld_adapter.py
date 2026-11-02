@@ -310,7 +310,42 @@ def _worker_main(argv=None) -> None:
     Path(args.out).write_text(json.dumps(result, sort_keys=True))
 
 
+def dump_schema(path: str) -> None:
+    """Foreign-key and JSON columns of every app table (column names only, no data), for rdr.align.Schema."""
+    import importlib
+    import inspect
+
+    from appworld import update_root
+
+    update_root(str(APPWORLD_ROOT))
+    foreign_keys, json_columns = {}, {}
+    for app in ("amazon", "file_system", "gmail", "phone", "simple_note", "splitwise", "spotify", "todoist",
+                "venmo", "supervisor", "admin"):
+        module = importlib.import_module(f"appworld.apps.{app}.models")
+        for obj in vars(module).values():
+            table = getattr(obj, "__table__", None)
+            if not (inspect.isclass(obj) and table is not None and obj.__module__ == module.__name__):
+                continue
+            key = f"{app}.{table.name}"
+            foreign_keys[key] = {c.name: f"{app}." + next(iter(c.foreign_keys)).target_fullname.split(".")[0]
+                                 for c in table.columns if c.foreign_keys}
+            json_columns[key] = [c.name for c in table.columns if "JSON" in type(c.type).__name__.upper()]
+    Path(path).write_text(json.dumps({"foreign_keys": foreign_keys, "json_columns": json_columns},
+                                     indent=2, sort_keys=True))
+
+
 # ---------------------------------------------------------------- parent side
+
+def load_schema(path: Path):
+    """rdr.align.Schema for AppWorld, extracted once in a subprocess and cached at `path`."""
+    from rdr.align import Schema
+
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        env = {**os.environ, "PYTHONHASHSEED": "0", "PYTHONPATH": str(REPO / "src")}
+        subprocess.run([str(PYTHON), "-c", f"from rdr.appworld_adapter import dump_schema; dump_schema({str(path)!r})"],
+                       check=True, env=env, cwd=str(REPO), capture_output=True)
+    return Schema.from_dict(json.loads(path.read_text()))
 
 @dataclass
 class RunResult:

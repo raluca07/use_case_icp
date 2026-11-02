@@ -203,3 +203,12 @@ def test_gold_run_of_a_real_task_records_writes_and_passes():
     assert {w.record.split("#")[0] for w in writers[0].writes} == {"venmo.notifications", "venmo.transactions",
                                                                    "venmo.users"}
     assert result.trace.calls[-1].api == "complete_task" and result.trace.calls[-1].writes == []
+
+
+@pytest.mark.skipif(not (APPWORLD_ROOT / "data").exists(), reason="AppWorld data absent")
+def test_schema_lists_foreign_keys_and_json_columns(tmp_path):
+    from rdr.appworld_adapter import load_schema
+    schema = load_schema(tmp_path / "schema.json")
+    assert schema.foreign_keys["venmo.transactions"] == {"sender_id": "venmo.users", "receiver_id": "venmo.users"}
+    assert schema.json_columns["venmo.notifications"] == ["data"]
+    assert "spotify.playlist_songs" in schema.tables

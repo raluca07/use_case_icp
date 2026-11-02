@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import random
 import zlib
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from rdr.trace import Trace
@@ -19,6 +19,7 @@ class Truth:
     missing: list[str]
     symptom: str
     decoy_index: int | None = None
+    side_effect: list[str] = field(default_factory=list)
 
     def save(self, path: Path) -> None:
         path.write_text(json.dumps(asdict(self), indent=2, sort_keys=True))
@@ -26,6 +27,17 @@ class Truth:
     @classmethod
     def load(cls, path: Path) -> "Truth":
         return cls(**json.loads(path.read_text()))
+
+
+class Partial(dict):
+    """A neutralised expectation that checks only the listed fields (subset match), for repairs that restore
+    some fields of a row while others legitimately differ (carry-over I7)."""
+
+
+def _neutralised_ok(f_value: dict | None, expected, ignore_fields) -> bool:
+    if isinstance(expected, Partial):
+        return f_value is not None and all(f_value.get(k) == v for k, v in expected.items() if k not in ignore_fields)
+    return f_value == _strip(expected, ignore_fields)
 
 
 def _strip(row: dict | None, ignore_fields) -> dict | None:
@@ -38,8 +50,9 @@ def stale_records(faulty: Trace, gold: Trace, neutralised: dict[str, dict | None
                   ignore_fields=()) -> tuple[list[str], list[str]]:
     """Stale and missing records of the faulty run against gold.
 
-    `neutralised` maps a record to its expected final value after the repair. Such a record is excluded from
-    stale/missing, but only after checking that the repair really left that value.
+    `neutralised` maps a record to its expected final value after the repair (a full row, or a `Partial` of
+    some fields). Such a record is excluded from stale/missing, but only after checking that the repair really
+    left that value.
     """
     neutralised = neutralised or {}
     base = dict(gold.base_values())
@@ -54,7 +67,7 @@ def stale_records(faulty: Trace, gold: Trace, neutralised: dict[str, dict | None
     for record in sorted(set(faulty_final) | set(gold_final) | set(neutralised)):
         f_value = _strip(faulty_final.get(record, base.get(record)), ignore_fields)
         if record in neutralised:
-            if f_value != _strip(neutralised[record], ignore_fields):
+            if not _neutralised_ok(f_value, neutralised[record], ignore_fields):
                 raise ValueError(f"repair did not neutralise {record}")
             continue
         g_value = _strip(gold_final.get(record, base.get(record)), ignore_fields)
