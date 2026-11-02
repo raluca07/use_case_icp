@@ -8,6 +8,9 @@ from dataclasses import dataclass, field
 from rdr.trace import Trace
 
 IGNORED_KEYS = frozenset({"access_token", "refresh_token", "password", "api_key", "otp", "secret"})
+# A value returned by more than this many calls is too common to name a data flow (feeds edges skip it).
+# Set from the counterfactual audit on gold replays (docs/pilot_build.md): precision 0.82 at 2, 0.71 at 3.
+MAX_PRODUCERS = 2
 
 
 @dataclass(frozen=True)
@@ -50,36 +53,130 @@ def _number_text(value) -> str:
     return str(value)
 
 
-def _collect(obj, numbers_anywhere: bool, id_context: bool, out: set[str]) -> None:
+def _string_text(value: str) -> str:
+    """Numeric strings normalise like numbers, so "101" in one call matches 101 in another."""
+    stripped = value.strip()
+    if stripped.lstrip("-").isdigit():
+        return str(int(stripped))
+    return value
+
+
+def _collect(obj, id_context: bool, out: set[str]) -> None:
     if isinstance(obj, dict):
         for key, value in obj.items():
             if key not in IGNORED_KEYS:
-                _collect(value, numbers_anywhere, _is_id_key(key), out)
+                _collect(value, _is_id_key(key), out)
     elif isinstance(obj, (list, tuple)):
         for value in obj:
-            _collect(value, numbers_anywhere, id_context, out)
+            _collect(value, id_context, out)
     elif isinstance(obj, bool) or obj is None:
         pass
     elif isinstance(obj, str):
-        if len(obj) >= 3:
-            out.add(obj)
+        if id_context or len(obj) >= 3:
+            out.add(_string_text(obj))
     elif isinstance(obj, (int, float)):
-        if numbers_anywhere or id_context:
+        if id_context:
             out.add(_number_text(obj))
 
 
 def argument_values(args) -> set[str]:
-    """Strings of length >= 3 anywhere, numbers only under ID-like keys (`id`, `*_id`, `*_ids`, `*_ref`)."""
+    """Strings of length >= 3 anywhere; numbers and strings of any length under ID-like keys (`id`, `*_id`,
+    `*_ids`, `*_ref`). Numeric strings normalise to their number."""
     out: set[str] = set()
-    _collect(args, False, False, out)
+    _collect(args, False, out)
     return out
 
 
 def response_values(response) -> set[str]:
-    """Strings of length >= 3 and numbers of any length under any key."""
+    """As `argument_values`; a bare scalar response (a number or a string) counts whatever its length."""
+    if isinstance(response, bool) or response is None:
+        return set()
+    if isinstance(response, (int, float)):
+        return {_number_text(response)}
+    if isinstance(response, str):
+        return {_string_text(response)}
     out: set[str] = set()
-    _collect(response, True, True, out)
+    _collect(response, False, out)
     return out
+
+
+def _id_args(args) -> list[tuple[str, str]]:
+    """(key, normalised value) for every scalar under an ID-like key, lists included."""
+    pairs: list[tuple[str, str]] = []
+    for key, value in args.items():
+        if key in IGNORED_KEYS or not _is_id_key(key):
+            continue
+        for item in (value if isinstance(value, (list, tuple)) else [value]):
+            if isinstance(item, bool) or item is None:
+                continue
+            if isinstance(item, (int, float)):
+                pairs.append((key, _number_text(item)))
+            elif isinstance(item, str):
+                pairs.append((key, _string_text(item)))
+    return pairs
+
+
+def _singular_stem(key: str) -> str:
+    for suffix in ("_ids", "_id", "_ref"):
+        if key.endswith(suffix):
+            return key[: -len(suffix)]
+    return key
+
+
+def id_key_tables(api_docs: dict, tables, foreign_keys=None) -> dict[str, dict[str, str]]:
+    """Map each API's ID-like parameters to the table whose rows they name, from the AppWorld API docs.
+
+    `api_docs` is `{app: {api: doc}}` (doc has `path` and `parameters`), `tables` holds `app.table` names and
+    `foreign_keys` is `{app.table: {column: app.target}}`. Resolution order for parameter `k` of an API:
+    (1) `k` is a path parameter and the path segment before it is a table (or the unique table ending in
+    `_<segment>`); (2) a foreign-key column named `k` in the app points at one table; (3) `k` names a table
+    (`song_id` -> `songs`); (4) a unique table ends in `_<stem>s`, preferring the `user_` view when two match.
+    Unresolved keys get no reads edges. Returns `{"app.api": {k: "app.table"}}`.
+    """
+    tables = set(tables)
+    foreign_keys = foreign_keys or {}
+    result: dict[str, dict[str, str]] = {}
+    for app, docs in api_docs.items():
+        app_tables = sorted(t for t in tables if t.startswith(app + "."))
+        fk_targets: dict[str, set[str]] = {}
+        for table, columns in foreign_keys.items():
+            if table.startswith(app + "."):
+                for column, target in columns.items():
+                    fk_targets.setdefault(column, set()).add(target)
+        for api, doc in docs.items():
+            segments = doc["path"].strip("/").split("/")
+            mapping: dict[str, str] = {}
+            for parameter in doc["parameters"]:
+                key = parameter["name"]
+                if not _is_id_key(key):
+                    continue
+                table = None
+                if "{" + key + "}" in segments:
+                    segment = segments[segments.index("{" + key + "}") - 1].replace("-", "_")
+                    suffixed = [t for t in app_tables if t.endswith("_" + segment)]
+                    if f"{app}.{segment}" in tables:
+                        table = f"{app}.{segment}"
+                    elif len(suffixed) == 1:
+                        table = suffixed[0]
+                if table is None and len(fk_targets.get(key, ())) == 1:
+                    table = next(iter(fk_targets[key]))
+                stem = _singular_stem(key)
+                if table is None:
+                    for name in (stem + "s", stem + "es", stem[:-1] + "ies" if stem.endswith("y") else None):
+                        if name and f"{app}.{name}" in tables:
+                            table = f"{app}.{name}"
+                            break
+                if table is None:
+                    suffixed = [t for t in app_tables if t.endswith("_" + stem + "s")]
+                    users = [t for t in suffixed if t.split(".", 1)[1].startswith("user_")]
+                    if len(suffixed) == 1:
+                        table = suffixed[0]
+                    elif len(users) == 1:
+                        table = users[0]
+                if table is not None:
+                    mapping[key] = table
+            result[f"{app}.{api}"] = mapping
+    return result
 
 
 def _row_id(record: str) -> str:
@@ -100,7 +197,15 @@ def _dedupe(edges: list[Edge]) -> list[Edge]:
     return out
 
 
-def build_graph(trace: Trace) -> Graph:
+def build_graph(trace: Trace, id_tables: dict | None = None, max_producers: int = MAX_PRODUCERS) -> Graph:
+    """Call nodes, record nodes and writes/reads/feeds edges.
+
+    reads: a call reads a record another call wrote when an ID-like argument names it. With `id_tables`
+    (from `id_key_tables`) the argument must name the record's own table (`user_id=3` cannot read
+    `venmo.transactions#3`); without it any table with that row id matches (synthetic traces).
+    feeds: a call feeds a later call when a value from its response appears in the later call's arguments,
+    unless more than `max_producers` calls returned that value.
+    """
     call_nodes = {call_node(c.index): f"{c.index} {c.name}({_fmt_args(c.args)})" for c in trace.calls}
     records = trace.touched_records()
     created_at: dict[str, int] = {}
@@ -117,17 +222,30 @@ def build_graph(trace: Trace) -> Graph:
     for call in trace.calls:
         for write in call.writes:
             edges.append(Edge(call_node(call.index), rec_node(write.record), "writes"))
+    record_set = set(records)
     for position, call in enumerate(trace.calls):
         written = {w.record for w in call.writes}
-        for record in records:
-            if record in written or _row_id(record) not in arg_values[position]:
+        if id_tables is None:
+            named = [r for r in records if _row_id(r) in arg_values[position]]
+        else:
+            mapping = id_tables.get(call.name, {})
+            named = sorted({f"{mapping[key]}#{value}" for key, value in _id_args(call.args) if key in mapping}
+                           & record_set, key=records.index)
+        for record in named:
+            if record in written:
                 continue
             if record in created_at and position <= created_at[record]:
                 continue
             edges.append(Edge(rec_node(record), call_node(call.index), "reads"))
+    returned_by: dict[str, int] = {}
+    for values in resp_values:
+        for value in values:
+            returned_by[value] = returned_by.get(value, 0) + 1
     producers: dict[str, list[int]] = {}
     for position, call in enumerate(trace.calls):
-        for earlier in sorted({p for value in arg_values[position] for p in producers.get(value, ())}):
+        sources = {p for value in arg_values[position] if returned_by.get(value, 0) <= max_producers
+                   for p in producers.get(value, ())}
+        for earlier in sorted(sources):
             edges.append(Edge(call_node(trace.calls[earlier].index), call_node(call.index), "feeds"))
         for value in resp_values[position]:
             producers.setdefault(value, []).append(position)

@@ -161,6 +161,18 @@ def test_plan_immediate_repair_follows_the_corrupted_call():
     assert [c.api for c in rec.calls] == ["create_note", "update_note", "show_note"] and rec.repair_index == 1
 
 
+def test_patch_changes_what_the_code_sees_but_not_the_recorded_response():
+    rec, _ = _recorder(Plan(patch={"index": 0, "value": 3, "replacement": 9}))
+    seen = rec("notes_app", "create_note", title="c")
+    assert seen == {"note_id": 9} and rec.calls[0].response == {"note_id": 3}
+
+
+def test_replace_value_compares_numbers_and_numeric_strings_as_text():
+    from rdr.appworld_adapter import replace_value
+    assert replace_value({"a": [3, "3", 3.0, "x3"], "b": True}, 3, 10) == {"a": [10, "10", 10, "x3"], "b": True}
+    assert replace_value({"e": "a@b.c"}, "a@b.c", "z@b.c") == {"e": "z@b.c"}
+
+
 def test_plan_mismatch_raises():
     rec, _ = _recorder(Plan(index=0, app="notes_app", api="create_note", arg="title", value="x"))
     with pytest.raises(PlanMismatch):

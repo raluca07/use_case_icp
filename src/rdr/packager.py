@@ -57,11 +57,12 @@ def _action_log(trace: Trace) -> list[str]:
 
 
 def build_package(arm: str, trace: Trace, symptom: str, instance_id: str, avoid_calls=frozenset(),
-                  d_hops: int = 2, extra_forbidden: re.Pattern | None = None) -> str:
-    """`avoid_calls` (call indices) is never printed; arm F uses it to keep the fake graph off the origin."""
+                  d_hops: int = 2, extra_forbidden: re.Pattern | None = None, id_tables: dict | None = None) -> str:
+    """`avoid_calls` (call indices) is never printed; arm F uses it to keep the fake graph off the origin.
+    `id_tables` (graph.id_key_tables) restricts reads edges to the table an argument names."""
     if arm not in ARMS:
         raise ValueError(f"unknown arm {arm!r}")
-    graph = build_graph(trace)
+    graph = build_graph(trace, id_tables)
     seed = seed_for(instance_id)
     lines = _header(trace, symptom)
     if arm == "B":
@@ -83,8 +84,8 @@ def build_package(arm: str, trace: Trace, symptom: str, instance_id: str, avoid_
     return text
 
 
-def build_rewired_package(trace: Trace, symptom: str, decoy_index: int) -> str:
-    graph = rewire_one(build_graph(trace), rec_node(symptom), call_node(decoy_index))
+def build_rewired_package(trace: Trace, symptom: str, decoy_index: int, id_tables: dict | None = None) -> str:
+    graph = rewire_one(build_graph(trace, id_tables), rec_node(symptom), call_node(decoy_index))
     text = "\n".join([*_header(trace, symptom), "", "PROVENANCE GRAPH", render(graph)])
     check_leakage(text)
     return text

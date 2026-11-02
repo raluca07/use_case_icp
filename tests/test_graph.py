@@ -223,3 +223,66 @@ def test_render_orders_calls_numerically():
 
 def test_strip_ignored_is_recursive():
     assert strip_ignored({"a": 1, "access_token": "x", "b": [{"password": "p", "c": 2}]}) == {"a": 1, "b": [{"c": 2}]}
+
+
+# ---- carry-over I2: argument keys map to tables, tighter value matching
+
+from rdr.graph import MAX_PRODUCERS, id_key_tables, response_values  # noqa: E402
+
+DOCS = {"venmo": {
+    "show_transaction": {"path": "/venmo/transactions/{transaction_id}", "parameters": [{"name": "transaction_id"}]},
+    "show_user": {"path": "/venmo/users", "parameters": [{"name": "user_id"}]},
+    "update_comment": {"path": "/venmo/comments/{comment_id}", "parameters": [{"name": "comment_id"}]},
+    "draft": {"path": "/venmo/drafts", "parameters": [{"name": "belongs_to_thread_id"}]},
+    "show_message": {"path": "/venmo/messages/text/{text_message_id}", "parameters": [{"name": "text_message_id"}]},
+    "mystery": {"path": "/venmo/mystery", "parameters": [{"name": "widget_id"}, {"name": "amount"}]},
+}}
+TABLES = {"venmo.transactions", "venmo.users", "venmo.transaction_comments", "venmo.user_threads",
+          "venmo.drafts", "venmo.global_text_messages", "venmo.user_text_messages"}
+FKS = {"venmo.drafts": {"belongs_to_thread_id": "venmo.user_threads"}}
+
+
+def test_id_key_tables_resolves_by_path_suffix_foreign_key_name_and_user_view():
+    m = id_key_tables(DOCS, TABLES, FKS)
+    assert m["venmo.show_transaction"] == {"transaction_id": "venmo.transactions"}
+    assert m["venmo.show_user"] == {"user_id": "venmo.users"}
+    assert m["venmo.update_comment"] == {"comment_id": "venmo.transaction_comments"}
+    assert m["venmo.draft"] == {"belongs_to_thread_id": "venmo.user_threads"}
+    assert m["venmo.show_message"] == {"text_message_id": "venmo.user_text_messages"}
+    assert m["venmo.mystery"] == {}
+
+
+def test_with_id_tables_a_user_id_cannot_read_a_transaction_with_the_same_number():
+    trace = _trace(
+        Call(0, "venmo", "pay", {}, {"transaction_id": 3}, [Write("venmo.transactions#3", None, {"a": 1})]),
+        Call(1, "venmo", "show_user", {"user_id": 3}, {}),
+        Call(2, "venmo", "show_transaction", {"transaction_id": 3}, {}))
+    tables = id_key_tables(DOCS, TABLES, FKS)
+    assert _kinds(build_graph(trace, tables), "reads") == {Edge(rec_node("venmo.transactions#3"), "call:2", "reads")}
+    assert Edge(rec_node("venmo.transactions#3"), "call:1", "reads") in build_graph(trace).edges
+
+
+def test_numbers_in_responses_count_only_under_id_keys_except_bare_scalars():
+    assert response_values({"count": 101, "transaction_id": 7}) == {"7"}
+    assert response_values(101) == {"101"} and response_values("ab") == {"ab"}
+    g = build_graph(_trace(Call(0, "a", "count", {}, {"count": 101}),
+                           Call(1, "a", "show", {"transaction_id": 101}, {})))
+    assert not _kinds(g, "feeds")
+    g = build_graph(_trace(Call(0, "a", "make", {}, 101), Call(1, "a", "show", {"transaction_id": 101}, {})))
+    assert Edge("call:0", "call:1", "feeds") in g.edges
+
+
+def test_short_strings_under_id_keys_and_numeric_strings_match():
+    g = build_graph(_trace(Call(0, "a", "make", {}, {"code_id": "7"}), Call(1, "a", "use", {"code_id": 7}, {})))
+    assert Edge("call:0", "call:1", "feeds") in g.edges
+    g = build_graph(_trace(Call(0, "a", "make", {}, {"name": "ab"}), Call(1, "a", "use", {"name": "ab"}, {})))
+    assert not _kinds(g, "feeds")
+
+
+def test_values_returned_by_too_many_calls_do_not_feed():
+    common = [Call(i, "a", "list", {}, {"owner_id": 5}) for i in range(MAX_PRODUCERS + 1)]
+    g = build_graph(_trace(*common, Call(MAX_PRODUCERS + 1, "a", "use", {"owner_id": 5}, {})))
+    assert not _kinds(g, "feeds")
+    few = common[:MAX_PRODUCERS]
+    g = build_graph(_trace(*few, Call(MAX_PRODUCERS, "a", "use", {"owner_id": 5}, {})))
+    assert len(_kinds(g, "feeds")) == MAX_PRODUCERS

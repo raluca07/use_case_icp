@@ -26,6 +26,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -139,6 +140,7 @@ class Plan:
     arg: str | None = None
     value: object = None
     repair: dict | None = None
+    patch: dict | None = None  # {"index", "value", "replacement"}: what the code sees of that call's response
 
     @classmethod
     def from_dict(cls, data: dict | None) -> "Plan":
@@ -176,6 +178,8 @@ class Recorder:
         response = self._record(_app_name, _api_name, kwargs)
         if index == self.plan.index and self._repair_due("immediate"):
             self._issue_repair()
+        if self.plan.patch and index == self.plan.patch["index"]:
+            return replace_value(response, self.plan.patch["value"], self.plan.patch["replacement"])
         return response
 
     def _repair_due(self, timing: str) -> bool:
@@ -221,6 +225,33 @@ class Recorder:
         if error is not None:
             raise error
         return response
+
+
+def _text(value) -> str | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    if isinstance(value, float) and value.is_integer():
+        value = int(value)
+    if isinstance(value, str) and value.strip().lstrip("-").isdigit():
+        return str(int(value))
+    return str(value)
+
+
+def replace_value(obj, value, replacement):
+    """Deep copy of `obj` with every scalar equal to `value` (numbers and numeric strings compared as text)
+    replaced by `replacement`, keeping the scalar's type where it can (counterfactual oracle for feeds edges)."""
+    target = _text(value)
+    if isinstance(obj, dict):
+        return type(obj)((k, replace_value(v, value, replacement)) for k, v in obj.items())
+    if isinstance(obj, list):
+        return [replace_value(v, value, replacement) for v in obj]
+    if _text(obj) is not None and _text(obj) == target:
+        if isinstance(obj, str) and not isinstance(replacement, str):
+            return str(replacement)
+        if isinstance(obj, (int, float)) and isinstance(replacement, str) and replacement.lstrip("-").isdigit():
+            return int(replacement)
+        return replacement
+    return obj
 
 
 def end_state_digest(calls: list[Call], system_writes) -> str:
@@ -368,8 +399,7 @@ class RunResult:
 
 def run_task(task_id: str, plan: dict | None = None, timeout: int = 900) -> RunResult:
     """Run the task's gold code (with an optional plan) in a fresh subprocess world."""
-    key = hashlib.sha256(json.dumps([task_id, plan], sort_keys=True, default=str).encode()).hexdigest()[:12]
-    experiment = f"rdr_{key}_{os.getpid()}"
+    experiment = f"rdr_{uuid.uuid4().hex[:16]}"  # unique even for concurrent runs of one plan
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "out.json"
         cmd = [str(PYTHON), "-m", "rdr.appworld_adapter", task_id, "--out", str(out), "--experiment", experiment]
