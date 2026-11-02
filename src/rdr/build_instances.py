@@ -101,6 +101,8 @@ class Built:
 def _check_run(result, candidate: Candidate, gold_failed: int, variant: str) -> Trace:
     if result.plan_mismatch:
         raise Excluded("control flow reached a different call at W")
+    if getattr(result, "repair_error", None):
+        raise Excluded("corrupted call changed no row the repair could address")
     if not result.succeeded:
         raise Excluded("run raised an exception")
     if candidate.index in result.failed_calls:
@@ -269,40 +271,58 @@ class Builder:
 
 def select(persistent: list[Built], nonpersistent: list[Built], n_persistent: int, n_nonpersistent: int,
            cap: int = 2) -> tuple[list[Built], list[Built]]:
-    """Round-robin over generators, at most `cap` faulty instances per generator; persistent first, preferring
-    instances with a clean twin; non-persistent then fill generators with room, unused generators first."""
-    load: Counter = Counter()
-    by_gen: dict[str, list[Built]] = defaultdict(list)
+    """Fill as much generator capacity as possible (at most `cap` faulty instances per generator) while keeping
+    the persistent : non-persistent ratio near the requested one. Order: non-persistent from generators with
+    no persistent instance; one persistent per generator (instances with a clean twin first); a non-persistent
+    twin of the same wrong action where the generator has room; a second persistent; then any remaining room.
+    Within a generator, different tasks are used before a task repeats."""
+    p_by: dict[str, list[Built]] = defaultdict(list)
+    n_by: dict[str, list[Built]] = defaultdict(list)
     for b in sorted(persistent, key=lambda b: (not b.extra.get("has_twin"), b.instance_id)):
-        by_gen[b.candidate.generator].append(b)
-    chosen_p: list[Built] = []
-    while len(chosen_p) < n_persistent:
-        progress = False
-        for gen in sorted(by_gen, key=lambda g: (load[g], g)):
-            if by_gen[gen] and load[gen] < cap and len(chosen_p) < n_persistent:
-                taken = {b.candidate.task_id for b in chosen_p if b.candidate.generator == gen}
-                pool = sorted(by_gen[gen], key=lambda b: (b.candidate.task_id in taken, not b.extra.get("has_twin")))
-                pick = pool[0]
-                by_gen[gen].remove(pick)
-                chosen_p.append(pick)
-                load[gen] += 1
-                progress = True
-        if not progress:
-            break
-    used = set(load)
-    chosen_n: list[Built] = []
-    by_gen_n: dict[str, list[Built]] = defaultdict(list)
+        p_by[b.candidate.generator].append(b)
     for b in sorted(nonpersistent, key=lambda b: b.instance_id):
-        by_gen_n[b.candidate.generator].append(b)
-    while len(chosen_n) < n_nonpersistent:
+        n_by[b.candidate.generator].append(b)
+    gens = sorted(set(p_by) | set(n_by))
+    total = sum(min(cap, len(p_by[g]) + len(n_by[g])) for g in gens)
+    ratio = n_nonpersistent / (n_persistent + n_nonpersistent) if n_persistent + n_nonpersistent else 0
+    want_n = min(n_nonpersistent, sum(min(cap, len(n_by[g])) for g in gens), round(total * ratio))
+    want_p = min(n_persistent, total - want_n)
+    load: Counter = Counter()
+    chosen_p: list[Built] = []
+    chosen_n: list[Built] = []
+
+    def take(pool: list[Built], chosen: list[Built], prefer=None) -> None:
+        gen = pool[0].candidate.generator
+        tasks = {b.candidate.task_id for b in chosen_p + chosen_n if b.candidate.generator == gen}
+        ranked = sorted(pool, key=lambda b: (prefer is not None and b.candidate.key != prefer,
+                                             b.candidate.task_id in tasks))
+        pick = ranked[0]
+        pool.remove(pick)
+        chosen.append(pick)
+        load[gen] += 1
+
+    for _ in range(cap):
+        for g in gens:
+            if not p_by[g] and n_by[g] and load[g] < cap and len(chosen_n) < want_n:
+                take(n_by[g], chosen_n)
+    for g in gens:
+        if p_by[g] and load[g] < cap and len(chosen_p) < want_p:
+            take(p_by[g], chosen_p)
+    for b in list(chosen_p):
+        g = b.candidate.generator
+        if n_by[g] and load[g] < cap and len(chosen_n) < want_n:
+            take(n_by[g], chosen_n, prefer=b.candidate.key)
+    progress = True
+    while progress:
         progress = False
-        for gen in sorted(by_gen_n, key=lambda g: (g in used, load[g], g)):
-            if by_gen_n[gen] and load[gen] < cap and len(chosen_n) < n_nonpersistent:
-                chosen_n.append(by_gen_n[gen].pop(0))
-                load[gen] += 1
+        for g in gens:
+            if p_by[g] and load[g] < cap and len(chosen_p) < want_p:
+                take(p_by[g], chosen_p)
                 progress = True
-        if not progress:
-            break
+        for g in gens:
+            if n_by[g] and load[g] < cap and len(chosen_n) < want_n:
+                take(n_by[g], chosen_n)
+                progress = True
     return chosen_p, chosen_n
 
 

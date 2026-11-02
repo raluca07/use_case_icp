@@ -168,6 +168,7 @@ class Recorder:
     failed: list[int] = field(default_factory=list)
     repair_index: int | None = None
     substituted: list[int] = field(default_factory=list)
+    repair_error: str | None = None
     _depth: int = 0
     _repaired: bool = False
 
@@ -220,7 +221,8 @@ class Recorder:
             rows = [w for w in target.writes if w.record.startswith(prefix) and w.after is not None
                     and all(w.after.get(k) == v for k, v in repair.get("id_match", {}).items())]
             if len(rows) != 1:
-                raise PlanMismatch(f"repair target in {repair['id_table']} is ambiguous or absent ({len(rows)} rows)")
+                self.repair_error = f"repair target in {repair['id_table']} is ambiguous or absent ({len(rows)} rows)"
+                return
             args[repair["id_param"]] = rows[0].after["id"]
         self.repair_index = len(self.calls)
         self._record(repair["app"], repair["api"], args)
@@ -349,7 +351,7 @@ def run_world(task_id: str, plan: Plan, experiment: str) -> dict:
     return {"trace": trace.to_dict(), "evaluation": _plain(evaluation), "digest": digest,
             "output": output, "succeeded": output.strip() == "Execution successful.",
             "failed_calls": recorder.failed, "repair_index": recorder.repair_index,
-            "substituted": recorder.substituted}
+            "substituted": recorder.substituted, "repair_error": recorder.repair_error}
 
 
 def _worker_main(argv=None) -> None:
@@ -415,13 +417,15 @@ class RunResult:
     repair_index: int | None = None
     plan_mismatch: str | None = None
     substituted: list[int] = field(default_factory=list)
+    repair_error: str | None = None
 
     @classmethod
     def from_dict(cls, data: dict) -> "RunResult":
         if "plan_mismatch" in data:
             return cls(None, None, None, False, "", [], None, data["plan_mismatch"])
         return cls(Trace.from_dict(data["trace"]), data["evaluation"], data["digest"], data["succeeded"],
-                   data["output"], data["failed_calls"], data.get("repair_index"), None, data.get("substituted", []))
+                   data["output"], data["failed_calls"], data.get("repair_index"), None, data.get("substituted", []),
+                   data.get("repair_error"))
 
 
 def run_task(task_id: str, plan: dict | None = None, timeout: int = 900) -> RunResult:

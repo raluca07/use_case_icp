@@ -185,8 +185,13 @@ def _primary_row(call: Call, key: str, value) -> tuple[str, str] | None:
 
 
 def _relocation(app_docs: dict, key: str, gold_value, wrong, call: Call):
+    """The app's move API (W's own API first): copying would leave the wrong file behind."""
     noun = key.removeprefix("destination_").removeprefix("source_")
-    for name, doc in sorted(app_docs.items()):
+    names = sorted(app_docs, key=lambda n: (n != call.api, not n.startswith("move_"), n))
+    for name in names:
+        if name != call.api and not name.startswith("move_"):
+            continue
+        doc = app_docs[name]
         params = {p["name"] for p in doc["parameters"]}
         if {f"source_{noun}", f"destination_{noun}"} <= params:
             args = {f"source_{noun}": wrong, f"destination_{noun}": gold_value}
@@ -217,15 +222,18 @@ def find_repair(call: Call, key: str, gold_value, wrong, row: tuple[str, str] | 
         if field_name is None:
             continue
         segments = doc["path"].strip("/").split("/")
-        id_param = next((p for p in params if "{" + p + "}" in segments
-                         and id_tables.get(f"{call.app}.{name}", {}).get(p) == table), None)
+        mapping = id_tables.get(f"{call.app}.{name}", {})
+        path_params = [p for p in params if "{" + p + "}" in segments]
+        if any(mapping.get(p) not in (None, table) for p in path_params):
+            continue  # the API addresses rows of another table
+        id_param = next((p for p in path_params if mapping.get(p) == table), None)
         args = {field_name: gold_value}
         addressed = id_param is not None
         unsatisfied = False
         for p, spec in params.items():
             if p in (field_name, id_param, "access_token") or not spec.get("required"):
                 continue
-            if p in call.args and p != key:
+            if p in call.args and p != key and mapping.get(p) in (None, table):
                 args[p] = call.args[p]
                 addressed = True
             else:

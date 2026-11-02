@@ -152,3 +152,13 @@ def test_spread_keeps_first_second_middle_and_last_positions():
     cands = [Candidate("t_1", i, "a", "b", "c", 1, 2, None, None, {}, None) for i in range(10)]
     assert [c.index for c in spread(cands, 4)] == [0, 1, 5, 9]
     assert [c.index for c in spread(cands, 2)] == [0, 1]
+
+
+def test_select_approaches_the_requested_ratio_and_pairs_twins_of_the_same_wrong_action():
+    persistent = [_fake(g, t, n=n) for g in ("g1", "g2", "g3") for t in (1, 2) for n in range(2)]
+    twins = [_fake(g, 1, "nonpersistent", n=0) for g in ("g1", "g2", "g3")]
+    for twin, p in zip(twins, [b for b in persistent if b.candidate.task_id.endswith("_1") and b.candidate.index == 0]):
+        twin.candidate = p.candidate
+    chosen_p, chosen_n = select(persistent, twins, 20, 10)
+    assert len(chosen_p) + len(chosen_n) == 6 and len(chosen_n) == 2
+    assert {b.candidate.key for b in chosen_n} <= {b.candidate.key for b in chosen_p}

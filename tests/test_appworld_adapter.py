@@ -204,6 +204,15 @@ def test_held_prefix_mode_and_repair_without_id_param():
     assert rec.calls[1].args["title"] == "/b/y"
 
 
+def test_absent_repair_target_is_recorded_not_raised():
+    plan = Plan(index=0, app="notes_app", api="show_note", arg="note_id", value=2,
+                repair={"timing": "immediate", "app": "notes_app", "api": "update_note", "args": {"title": "c"},
+                        "id_param": "note_id", "id_table": "notes_app.notes", "id_match": {}})
+    rec, _ = _recorder(plan)
+    rec("notes_app", "show_note", note_id=1)
+    assert rec.repair_index is None and "absent" in rec.repair_error and len(rec.calls) == 1
+
+
 def test_plan_mismatch_raises():
     rec, _ = _recorder(Plan(index=0, app="notes_app", api="create_note", arg="title", value="x"))
     with pytest.raises(PlanMismatch):

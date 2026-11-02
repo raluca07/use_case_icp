@@ -4,6 +4,9 @@ from rdr.trace import Call, Trace, Write
 
 DOCS = {
     "music": {
+        "update_album_review": {"method": "PATCH", "path": "/music/album_reviews/{review_id}",
+                                "parameters": [{"name": "review_id", "required": True},
+                                               {"name": "rating", "required": False}]},
         "review_song": {"method": "POST", "path": "/music/songs/{song_id}/reviews",
                         "parameters": [{"name": "song_id", "required": True}, {"name": "rating", "required": True},
                                        {"name": "access_token", "required": True}]},
@@ -15,6 +18,9 @@ DOCS = {
                       "parameters": [{"name": "song_id", "required": True}]},
     },
     "files": {
+        "copy_file": {"method": "POST", "path": "/files/file/copy",
+                      "parameters": [{"name": "source_file_path", "required": True},
+                                     {"name": "destination_file_path", "required": True}]},
         "move_file": {"method": "POST", "path": "/files/file/move",
                       "parameters": [{"name": "source_file_path", "required": True},
                                      {"name": "destination_file_path", "required": True},
@@ -22,6 +28,7 @@ DOCS = {
     },
 }
 ID_TABLES = {"music.update_song_review": {"review_id": "music.song_reviews"},
+             "music.update_album_review": {"review_id": "music.album_reviews"},
              "music.review_song": {"song_id": "music.songs"}, "music.like_song": {"song_id": "music.songs"}}
 
 
@@ -118,3 +125,12 @@ def test_wrong_value_by_type():
 def test_candidate_round_trips_to_a_dict():
     c = _by(find_candidates(_gold(), DOCS, ID_TABLES), 2, "rating")
     assert Candidate(**c.to_dict()) == c and c.template == "music.review_song:rating" and c.generator == "abc1234"
+
+
+def test_update_of_an_existing_review_skips_apis_that_address_another_table():
+    gold = _gold()
+    gold.calls.insert(4, Call(4, "music", "update_song_review", {"review_id": 101, "rating": 3, "access_token": "t"},
+                              {}, [Write("music.song_reviews#101", {"id": 101, "song_id": 11, "rating": 5},
+                                         {"id": 101, "song_id": 11, "rating": 3})]))
+    c = _by(find_candidates(gold, DOCS, ID_TABLES), 4, "rating")
+    assert c.repair["api"] == "update_song_review" and c.repair["id_param"] == "review_id"
