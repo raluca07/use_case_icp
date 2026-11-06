@@ -118,7 +118,7 @@ def test_arm_g_has_the_log_and_the_full_graph():
     assert "tok-abc" not in text
 
 
-def test_arm_list_includes_g():
+def test_main_arm_list_is_a_to_g():
     assert ARMS == ("A", "B", "C", "D", "E", "F", "G")
 
 

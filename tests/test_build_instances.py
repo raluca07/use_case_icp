@@ -118,7 +118,7 @@ def test_write_instance_is_atomic_and_complete(tmp_path):
     path = write_instance(tmp_path, built, _gold())
     assert sorted(p.name for p in path.iterdir()) == ["gold_trace.json", "meta.json", "packages", "trace.json",
                                                       "truth.json"]
-    assert sorted(p.name for p in (path / "packages").iterdir()) == [f"{a}.txt" for a in "ABCDEFG"]
+    assert sorted(p.name for p in (path / "packages").iterdir()) == [f"{a}.txt" for a in "ABCDEFGHIJKLM"]
     assert not list(tmp_path.glob(".staging-*"))
 
 

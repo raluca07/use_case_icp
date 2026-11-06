@@ -27,7 +27,7 @@ from pathlib import Path
 
 from rdr.align import (check_aligned_clean_control, compare, make_aligned_truth, matched_symptom)
 from rdr.inject import Candidate, find_candidates, repaired_record
-from rdr.packager import ARMS, LeakageError, build_package
+from rdr.packager import ALL_ARMS, ARMS, LeakageError, build_package
 from rdr.trace import Trace
 from rdr.truth import Partial, Truth
 
@@ -164,7 +164,7 @@ def evaluate_variant(candidate: Candidate, variant: str, result, gold: Trace, sc
 
 def packages_for(trace: Trace, truth: Truth, instance_id: str, avoid: int, id_tables: dict) -> dict[str, str]:
     out = {}
-    for arm in ARMS:
+    for arm in ALL_ARMS:
         try:
             out[arm] = build_package(arm, trace, truth.symptom, instance_id, avoid_calls=frozenset({avoid}),
                                      id_tables=id_tables)

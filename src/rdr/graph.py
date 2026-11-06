@@ -283,14 +283,52 @@ def neighbourhood(graph: Graph, center: str, hops: int) -> Graph:
     return _restrict(graph, keep)
 
 
-def random_subgraph(graph: Graph, counts: dict[str, int], seed: int) -> Graph:
+def random_subgraph(graph: Graph, counts: dict[str, int], seed: int, required=()) -> Graph:
+    """Random edges matched on `counts` per kind. `required` edges are always kept and count against their kind;
+    with none required the draw is the same as before the parameter existed."""
+    required = set(required)
+    if not required <= set(graph.edges):
+        raise ValueError("a required edge is not in the graph")
     rng = random.Random(seed)
-    chosen: set[Edge] = set()
+    chosen: set[Edge] = set(required)
     for kind in sorted(counts):
-        pool = [e for e in graph.edges if e.kind == kind]
-        chosen |= set(rng.sample(pool, min(counts[kind], len(pool))))
+        fixed = sum(1 for e in required if e.kind == kind)
+        if fixed > counts[kind]:
+            raise ValueError(f"{fixed} required {kind} edges exceed the matched count {counts[kind]}")
+        pool = [e for e in graph.edges if e.kind == kind and e not in required]
+        chosen |= set(rng.sample(pool, min(counts[kind] - fixed, len(pool))))
+    if any(e.kind not in counts for e in required):
+        raise ValueError("a required edge has a kind with no matched count")
     keep = {e.src for e in chosen} | {e.dst for e in chosen}
     return _restrict(graph, keep, [e for e in graph.edges if e in chosen])
+
+
+def incident_edges(graph: Graph, node: str) -> list[Edge]:
+    return [e for e in graph.edges if node in (e.src, e.dst)]
+
+
+def with_node(graph: Graph, part: Graph, node: str) -> Graph:
+    """`part` (a subgraph of `graph`) plus `node`, every edge of `graph` touching it, and those edges' ends."""
+    if node not in graph.call_nodes and node not in graph.record_nodes:
+        raise ValueError(f"{node} is not a node of the graph")
+    added = incident_edges(graph, node)
+    keep = set(part.call_nodes) | set(part.record_nodes) | {node} | {e.src for e in added} | {e.dst for e in added}
+    edges = set(part.edges) | set(added)
+    return _restrict(graph, keep, [e for e in graph.edges if e in edges])
+
+
+def without_node(graph: Graph, node: str) -> Graph:
+    """`graph` with `node` and every edge touching it removed."""
+    if node not in graph.call_nodes and node not in graph.record_nodes:
+        raise ValueError(f"{node} is not a node of the graph")
+    keep = (set(graph.call_nodes) | set(graph.record_nodes)) - {node}
+    return _restrict(graph, keep)
+
+
+def without_arguments(graph: Graph) -> Graph:
+    """Call labels cut to index and API name, so only the structure carries information."""
+    labels = {node: label.partition("(")[0] for node, label in graph.call_nodes.items()}
+    return Graph(labels, list(graph.record_nodes), list(graph.edges))
 
 
 MIN_CHANGED_FRACTION = 0.5
