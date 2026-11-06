@@ -93,14 +93,15 @@ def failed_path(path: Path) -> Path:
 # ---------------------------------------------------------------- running
 
 def run(instances_dir: Path, reviews_dir: Path, log_path: Path, claude_cmd=("claude",), model: str = MODEL,
-        effort: str = EFFORT, sleep_fn=time.sleep, waits=(60, 300, 1800)) -> dict:
-    """Run every planned review. Stops cleanly when the runner's backoff cannot outlast a usage limit."""
+        effort: str = EFFORT, sleep_fn=time.sleep, waits=(60, 300, 1800), jobs=None) -> dict:
+    """Run every planned review (or the given `jobs`). Stops cleanly when the runner's backoff cannot outlast a
+    usage limit."""
     problems = verify_manifest(instances_dir)
     if problems:
         raise RuntimeError(f"freeze check failed: {problems[:5]}")
     instances = load_instances(instances_dir)
     by_id = {i["id"]: i for i in instances}
-    jobs = plan_jobs(instances)
+    jobs = plan_jobs(instances) if jobs is None else jobs
     log_path.parent.mkdir(parents=True, exist_ok=True)
     session = {"event": "session_start", "t": time.time(), "planned": len(jobs)}
     summary = {"planned": len(jobs), "done": 0, "resumed": 0, "failed": 0, "stopped": None}
