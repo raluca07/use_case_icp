@@ -98,13 +98,13 @@ def control_jobs(instances: list[dict]) -> list[tuple[str, str, int]]:
     return [(i["id"], arm, 0) for i in instances for arm in CONTROL_ARMS]
 
 
-def score_rows(instances: list[dict], pilot_reviews: Path, control_reviews: Path) -> dict[tuple[str, str], dict]:
-    """Main review of every arm A to M, intention to treat (a missing or failed review is a miss)."""
+def score_rows(instances: list[dict], reviews_for: dict[str, Path]) -> dict[tuple[str, str], dict]:
+    """Main review of every arm in `reviews_for` (arm -> reviews directory), intention to treat (a missing or failed
+    review is a miss)."""
     rows = {}
     for inst in instances:
         truth = inst["truth"]
-        for arm in ARMS + CONTROL_ARMS:
-            reviews = pilot_reviews if arm in ARMS else control_reviews
+        for arm, reviews in reviews_for.items():
             record = _load_record(review_path(reviews, inst["id"], arm, 0))
             if record is None:
                 rows[(inst["id"], arm)] = {"failed": True, "detection_correct": False,
@@ -118,46 +118,63 @@ def score_rows(instances: list[dict], pilot_reviews: Path, control_reviews: Path
     return rows
 
 
-def analyse(instances_dir: Path, pilot_reviews: Path, control_reviews: Path, report_path: Path) -> dict:
-    instances = load_instances(instances_dir)
-    rows = score_rows(instances, pilot_reviews, control_reviews)
+def groups_of(instances: list[dict]) -> dict[str, list[str]]:
     ids = [i["id"] for i in instances]
     variant = {i["id"]: i["variant"] for i in instances}
+    return {"all": ids, "faulty": [i for i in ids if variant[i] != "clean"],
+            "persistent": [i for i in ids if variant[i] == "persistent"],
+            "nonpersistent": [i for i in ids if variant[i] == "nonpersistent"],
+            "clean": [i for i in ids if variant[i] == "clean"]}
+
+
+def summarise(rows: dict, instances: list[dict], arms) -> dict[str, dict]:
+    groups = groups_of(instances)
     generator = {i["id"]: i["generator"] for i in instances}
-    faulty = [i for i in ids if variant[i] != "clean"]
-    groups = {"faulty": faulty, "persistent": [i for i in ids if variant[i] == "persistent"],
-              "nonpersistent": [i for i in ids if variant[i] == "nonpersistent"],
-              "clean": [i for i in ids if variant[i] == "clean"]}
 
     def hits(arm: str, group: list[str], field: str = "origin_hit") -> tuple[int, int]:
         return sum(1 for i in group if rows[(i, arm)][field]), len(group)
 
     table = {}
-    for arm in ARMS + CONTROL_ARMS:
+    for arm in arms:
         per: dict[str, list[int]] = {}
-        for i in faulty:
+        for i in groups["faulty"]:
             cell = per.setdefault(generator[i], [0, 0])
             cell[0] += 1 if rows[(i, arm)]["origin_hit"] else 0
             cell[1] += 1
         table[arm] = {
-            "origin": hits(arm, faulty), "origin_p": hits(arm, groups["persistent"]),
-            "origin_n": hits(arm, groups["nonpersistent"]), "detect": hits(arm, ids, "detection_correct"),
+            "origin": hits(arm, groups["faulty"]), "origin_p": hits(arm, groups["persistent"]),
+            "origin_n": hits(arm, groups["nonpersistent"]), "detect": hits(arm, groups["all"], "detection_correct"),
             "false_stale_inst": sum(1 for i in groups["clean"] if (rows[(i, arm)]["false_stale_count"] or 0) > 0),
-            "precision": [rows[(i, arm)]["stale_precision"] for i in faulty
+            "precision": [rows[(i, arm)]["stale_precision"] for i in groups["faulty"]
                           if rows[(i, arm)]["stale_precision"] is not None],
-            "failed": sum(1 for i in ids if rows[(i, arm)]["failed"]),
+            "failed": sum(1 for i in groups["all"] if rows[(i, arm)]["failed"]),
             "ci": cluster_bootstrap({g: (a, b) for g, (a, b) in per.items()}),
         }
-    contrasts = []
-    for x, y, question in CONTRASTS:
+    return table
+
+
+def paired(rows: dict, groups: dict, pairs) -> list[dict]:
+    """Origin-hit contrasts for (X, Y, question) pairs on the faulty, persistent and non-persistent groups."""
+    out = []
+    for x, y, question in pairs:
         for name in ("faulty", "persistent", "nonpersistent"):
             xs = [bool(rows[(i, x)]["origin_hit"]) for i in groups[name]]
             ys = [bool(rows[(i, y)]["origin_hit"]) for i in groups[name]]
             b = sum(1 for a, c in zip(xs, ys) if a and not c)
             c = sum(1 for a, c_ in zip(xs, ys) if c_ and not a)
-            contrasts.append({"pair": f"{x} vs {y}", "group": name, "n": len(xs), "x": sum(xs), "y": sum(ys),
-                              "x_only": b, "y_only": c, "p": sign_test_p(b, c), "question": question})
-    report = render(table, contrasts, groups, len(ids))
+            out.append({"pair": f"{x} vs {y}", "group": name, "n": len(xs), "x": sum(xs), "y": sum(ys),
+                        "x_only": b, "y_only": c, "p": sign_test_p(b, c), "question": question})
+    return out
+
+
+def analyse(instances_dir: Path, pilot_reviews: Path, control_reviews: Path, report_path: Path) -> dict:
+    instances = load_instances(instances_dir)
+    reviews_for = {**{a: pilot_reviews for a in ARMS}, **{a: control_reviews for a in CONTROL_ARMS}}
+    rows = score_rows(instances, reviews_for)
+    groups = groups_of(instances)
+    table = summarise(rows, instances, ARMS + CONTROL_ARMS)
+    contrasts = paired(rows, groups, CONTRASTS)
+    report = render(table, contrasts, groups, len(groups["all"]))
     report_path.write_text(report)
     return {"table": table, "contrasts": contrasts, "report": report}
 
@@ -167,7 +184,33 @@ ARM_NAMES = {
     "E": "random slice matched to D", "F": "fake graph", "G": "log + graph",
     "H": "log + fake graph", "I": "call inputs only", "J": "graph without arguments",
     "K": "neighbourhood + source", "L": "random slice + source, matched to K", "M": "graph without the source",
+    "N": "step by step from the symptom, may stop early", "O": "step by step, all expansions used",
 }
+
+
+def table_lines(table: dict, groups: dict) -> list[str]:
+    lines = ["| Arm | Evidence | Origin hit (faulty) | 95% CI (generator bootstrap) | Persistent | Non-persistent | "
+             "Detection (all) | Stale precision | Clean twins with false-stale claims | Failed |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
+    for arm, t in table.items():
+        lo, hi = t["ci"]
+        lines.append(f"| {arm} | {ARM_NAMES[arm]} | {_pct(*t['origin'])} | {100 * lo:.0f}% to {100 * hi:.0f}% | "
+                     f"{_pct(*t['origin_p'])} | {_pct(*t['origin_n'])} | {_pct(*t['detect'])} | "
+                     f"{_mean(t['precision'])} | {_pct(t['false_stale_inst'], len(groups['clean']))} | "
+                     f"{t['failed']} |")
+    return lines
+
+
+def contrast_lines(contrasts: list[dict]) -> list[str]:
+    lines = ["Exact two-sided sign test on the discordant pairs, paired by instance. Descriptive only: n is tiny, "
+             "instances within a generator are not independent, and nothing is corrected for multiplicity.", "",
+             "| Contrast | Question | Group | X rate | Y rate | X only right | Y only right | Sign test p |",
+             "|---|---|---|---|---|---|---|---|"]
+    for c in contrasts:
+        lines.append(f"| {c['pair']} | {c['question'] if c['group'] == 'faulty' else ''} | {c['group']} | "
+                     f"{_pct(c['x'], c['n'])} | {_pct(c['y'], c['n'])} | {c['x_only']} | {c['y_only']} | "
+                     f"{c['p']:.3f} |")
+    return lines
 
 
 def render(table: dict, contrasts: list[dict], groups: dict, n_all: int) -> str:
@@ -185,25 +228,11 @@ def render(table: dict, contrasts: list[dict], groups: dict, n_all: int) -> str:
     w("")
     w("## 1. Origin hit by arm")
     w("")
-    w("| Arm | Evidence | Origin hit (faulty) | 95% CI (generator bootstrap) | Persistent | Non-persistent | "
-      "Detection (all) | Stale precision | Clean twins with false-stale claims | Failed |")
-    w("|---|---|---|---|---|---|---|---|---|---|")
-    for arm, t in table.items():
-        lo, hi = t["ci"]
-        w(f"| {arm} | {ARM_NAMES[arm]} | {_pct(*t['origin'])} | {100 * lo:.0f}% to {100 * hi:.0f}% | "
-          f"{_pct(*t['origin_p'])} | {_pct(*t['origin_n'])} | {_pct(*t['detect'])} | {_mean(t['precision'])} | "
-          f"{_pct(t['false_stale_inst'], len(groups['clean']))} | {t['failed']} |")
+    L.extend(table_lines(table, groups))
     w("")
     w("## 2. Paired contrasts on origin hit")
     w("")
-    w("Exact two-sided sign test on the discordant pairs, paired by instance. Descriptive only: n is tiny, "
-      "instances within a generator are not independent, and nothing is corrected for multiplicity.")
-    w("")
-    w("| Contrast | Question | Group | X rate | Y rate | X only right | Y only right | Sign test p |")
-    w("|---|---|---|---|---|---|---|---|")
-    for c in contrasts:
-        w(f"| {c['pair']} | {c['question'] if c['group'] == 'faulty' else ''} | {c['group']} | "
-          f"{_pct(c['x'], c['n'])} | {_pct(c['y'], c['n'])} | {c['x_only']} | {c['y_only']} | {c['p']:.3f} |")
+    L.extend(contrast_lines(contrasts))
     w("")
     return "\n".join(L)
 

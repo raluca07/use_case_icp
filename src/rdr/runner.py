@@ -32,15 +32,19 @@ class ReviewError(RuntimeError):
     pass
 
 
-def build_command(model: str, effort: str, claude_cmd=("claude",)) -> list[str]:
+def build_command(model: str, effort: str, claude_cmd=("claude",), system_prompt: str | None = None,
+                  schema: dict | None = None) -> list[str]:
+    """None means the reviewer's answer prompt and schema, read at call time."""
+    system_prompt = SYSTEM_PROMPT if system_prompt is None else system_prompt
+    schema = ANSWER_SCHEMA if schema is None else schema
     return [*claude_cmd, "-p",
             "--model", model,
             "--effort", effort,
             "--tools", "",
             "--setting-sources", "",
             "--strict-mcp-config",
-            "--system-prompt", SYSTEM_PROMPT,
-            "--json-schema", json.dumps(ANSWER_SCHEMA, sort_keys=True),
+            "--system-prompt", system_prompt,
+            "--json-schema", json.dumps(schema, sort_keys=True),
             "--no-session-persistence",
             "--output-format", "json"]
 
@@ -84,11 +88,12 @@ def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def _command_sha256(model: str, effort: str) -> str:
-    return _sha256(json.dumps(build_command(model, effort)[1:]))
+def _command_sha256(model: str, effort: str, system_prompt: str | None = None, schema: dict | None = None) -> str:
+    return _sha256(json.dumps(build_command(model, effort, system_prompt=system_prompt, schema=schema)[1:]))
 
 
-def _load_saved(out_path: Path, package_sha256: str, model: str, effort: str) -> dict:
+def _load_saved(out_path: Path, package_sha256: str, model: str, effort: str, system_prompt: str | None = None,
+                schema: dict | None = None) -> dict:
     try:
         saved = json.loads(out_path.read_text())
     except (OSError, ValueError) as err:
@@ -96,7 +101,7 @@ def _load_saved(out_path: Path, package_sha256: str, model: str, effort: str) ->
     if not isinstance(saved, dict):
         raise ReviewError(f"saved review is unreadable: {out_path}: not an object")
     current = {"package_sha256": package_sha256, "model_requested": model, "effort": effort,
-               "command_sha256": _command_sha256(model, effort)}
+               "command_sha256": _command_sha256(model, effort, system_prompt, schema)}
     differing = sorted(k for k, v in current.items() if saved.get(k) != v)
     if differing:
         raise ReviewError(f"cannot resume {out_path}: saved review differs in {differing}")
@@ -116,15 +121,18 @@ def _write_atomic(out_path: Path, record: dict) -> None:
 
 
 def review(package_text: str, out_path: Path, model: str, effort: str, workdir: Path,
-           claude_cmd=("claude",), timeout: int = 900) -> dict:
+           claude_cmd=("claude",), timeout: int = 900, system_prompt: str | None = None,
+           schema: dict | None = None, validate=validate_answer) -> dict:
+    """One isolated call. `system_prompt`, `schema` and `validate` default to the reviewer's answer; the
+    step-by-step arm (rdr.stepwise) passes its own for the exploration rounds."""
     package_sha256 = _sha256(package_text)
     if out_path.exists():
-        return _load_saved(out_path, package_sha256, model, effort)
+        return _load_saved(out_path, package_sha256, model, effort, system_prompt, schema)
     started = time.monotonic()
     try:
         if any(workdir.iterdir()):
             raise ReviewError(f"workdir must be empty: {workdir}")
-        proc = subprocess.run(build_command(model, effort, claude_cmd), input=package_text,
+        proc = subprocess.run(build_command(model, effort, claude_cmd, system_prompt, schema), input=package_text,
                               capture_output=True, text=True, cwd=workdir, timeout=timeout)
     except FileNotFoundError as err:
         raise ReviewError(f"cannot run reviewer: {err}") from err
@@ -132,27 +140,27 @@ def review(package_text: str, out_path: Path, model: str, effort: str, workdir: 
         raise ReviewError(f"reviewer timed out after {timeout}s") from err
     wall_seconds = time.monotonic() - started
     try:
-        record = _check_run(proc, model)
+        record = _check_run(proc, model, validate)
     except ReviewError as err:
         _write_atomic(out_path.with_name(out_path.stem + ".failed.json"), {
             "stdout": proc.stdout, "stderr": proc.stderr, "reason": str(err), "model": model, "effort": effort,
             "package_sha256": package_sha256, "wall_seconds": wall_seconds})
         raise
     record.update(model_requested=model, effort=effort, package_sha256=package_sha256,
-                  command_sha256=_command_sha256(model, effort), wall_seconds=wall_seconds,
+                  command_sha256=_command_sha256(model, effort, system_prompt, schema), wall_seconds=wall_seconds,
                   stdout_sha256=_sha256(proc.stdout))
     _write_atomic(out_path, record)
     return record
 
 
-def _check_run(proc, model: str) -> dict:
+def _check_run(proc, model: str, validate=validate_answer) -> dict:
     if proc.returncode != 0:
         raise ReviewError("\n".join(part for part in (proc.stderr, proc.stdout) if part)[-2000:])
     record = parse_output(proc.stdout)
     if record["is_error"]:
         raise ReviewError(f"reviewer reported an error: {proc.stdout[-500:]}")
     try:
-        validate_answer(record["answer"])
+        validate(record["answer"])
     except ValueError as err:
         raise ReviewError(f"malformed answer: {err}") from err
     served = record["served_models"]

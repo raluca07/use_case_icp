@@ -3,6 +3,8 @@
 FAKE_MODE: result | structured | fenced | fail | fail_stdout | error_envelope | malformed | garbage | sleep.
 FAKE_SERVED overrides the served model; FAKE_SERVED_EXTRA adds a second served model.
 FAKE_ERR sets the failure text. FAKE_COUNT_FILE gets one line appended per invocation.
+When the schema asks for an `action` (a step-by-step exploration round), the reply is a step: FAKE_STEP_NODE
+names the node to expand, or with it unset the step says it is ready to answer.
 The envelope's usage reports the stdin it actually read: input_chars and input_sha256.
 """
 import hashlib
@@ -35,6 +37,9 @@ if mode == "garbage":
     print("this is not json")
     sys.exit(0)
 answer = {"anything_wrong": True, "origin_call": 1, "still_wrong_records": ["splitwise.expenses#77"]}
+if '"action"' in args[args.index("--json-schema") + 1]:
+    node = os.environ.get("FAKE_STEP_NODE")
+    answer = {"action": "expand" if node else "answer", "node": node, "note": "looking at the payment"}
 if mode == "malformed":
     answer = {"anything_wrong": "yes", "origin_call": 1}
 served = {os.environ.get("FAKE_SERVED", model): {}}
