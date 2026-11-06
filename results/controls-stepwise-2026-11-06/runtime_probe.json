@@ -1,0 +1,27 @@
+{
+  "candidate_generators": 13,
+  "candidates": 130,
+  "outcomes": {
+    "a later call failed": 70,
+    "final state equals gold": 2,
+    "one stale row": 6,
+    "only missing records": 16,
+    "run raised an exception": 5,
+    "two or more stale rows": 31
+  },
+  "tasks": 141,
+  "units_at_cap_2": 14,
+  "units_at_cap_2_outside_pilot": 12,
+  "usable_generators": 8,
+  "usable_generators_outside_pilot": 7,
+  "usable_per_generator": [
+    7,
+    7,
+    6,
+    3,
+    3,
+    3,
+    1,
+    1
+  ]
+}
