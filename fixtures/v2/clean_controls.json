@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "selection_seed": 20261108,
+  "selected_before_reviewer_outputs": true,
+  "variants": [
+    {"id": "cc01", "amount_offset": 0.00, "memo_suffix": " alpha"},
+    {"id": "cc02", "amount_offset": 0.10, "memo_suffix": " beta"},
+    {"id": "cc03", "amount_offset": 0.20, "memo_suffix": " gamma"},
+    {"id": "cc04", "amount_offset": 0.30, "memo_suffix": " delta"},
+    {"id": "cc05", "amount_offset": 0.40, "memo_suffix": " epsilon"},
+    {"id": "cc06", "amount_offset": 0.50, "memo_suffix": " zeta"},
+    {"id": "cc07", "amount_offset": 0.60, "memo_suffix": " eta"},
+    {"id": "cc08", "amount_offset": 0.70, "memo_suffix": " theta"},
+    {"id": "cc09", "amount_offset": 0.80, "memo_suffix": " iota"},
+    {"id": "cc10", "amount_offset": 0.90, "memo_suffix": " kappa"}
+  ]
+}

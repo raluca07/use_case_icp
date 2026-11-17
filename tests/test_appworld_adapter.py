@@ -165,6 +165,7 @@ def test_patch_changes_what_the_code_sees_but_not_the_recorded_response():
     rec, _ = _recorder(Plan(patch={"index": 0, "value": 3, "replacement": 9}))
     seen = rec("notes_app", "create_note", title="c")
     assert seen == {"note_id": 9} and rec.calls[0].response == {"note_id": 3}
+    assert rec.observed_responses[0] == {"note_id": 9}
 
 
 def test_replace_value_compares_numbers_and_numeric_strings_as_text():

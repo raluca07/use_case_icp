@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import inspect
 import json
 import os
 import re
@@ -26,6 +27,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -130,7 +132,8 @@ class Plan:
     """Optional corruption of one argument of call `index` and an optional repair call.
 
     `repair` keys: `timing` ("immediate": right after the corrupted call returns; "before_final": just before
-    the final `supervisor.complete_task` call), `app`, `api`, `args` (fixed arguments), and optionally
+    the final `supervisor.complete_task` call), `app`,
+    `api`, `args` (fixed arguments), and optionally
     `id_param` and `id_table` (the repair targets the row of `id_table` that the corrupted call wrote and whose
     columns match `id_match`); without `id_param` the fixed arguments address the row.
 
@@ -147,6 +150,7 @@ class Plan:
     repair: dict | None = None
     patch: dict | None = None  # {"index", "value", "replacement"}: what the code sees of that call's response
     held: dict | None = None
+    repair_only: bool = False
 
     @classmethod
     def from_dict(cls, data: dict | None) -> "Plan":
@@ -169,6 +173,8 @@ class Recorder:
     repair_index: int | None = None
     substituted: list[int] = field(default_factory=list)
     repair_error: str | None = None
+    source_contexts: dict[int, dict] = field(default_factory=dict)
+    observed_responses: dict[int, object] = field(default_factory=dict)
     _depth: int = 0
     _repaired: bool = False
 
@@ -178,6 +184,23 @@ class Recorder:
         if (_app_name, _api_name) == FINAL_API and self._repair_due("before_final"):
             self._issue_repair()
         index = len(self.calls)
+        patch = self.plan.patch if self.plan.patch and index == self.plan.patch.get("index") else None
+        if patch and patch.get("operation") == "delay":
+            time.sleep(float(patch["seconds"]))
+        if patch and patch.get("operation") == "raise_before":
+            self._record_failure(_app_name, _api_name, kwargs, patch.get("message", "timeout before commit"))
+            raise TimeoutError(patch.get("message", "timeout before commit"))
+        if patch and patch.get("operation") == "resource_exhaustion":
+            self._record_failure(_app_name, _api_name, kwargs, "bounded local resource exhaustion")
+            raise MemoryError("bounded local resource exhaustion")
+        if patch and patch.get("operation") == "invalid_token":
+            kwargs[patch.get("arg", "access_token")] = "invalid-local-token"
+        if patch and patch.get("operation") == "partial_file":
+            content = kwargs.get("content", "")
+            kwargs["content"] = content[: max(1, len(content) // 2)]
+        if patch and patch.get("operation") == "concurrent_update":
+            self._concurrent_update(patch)
+            index = len(self.calls)
         if self.plan.index is not None and index == self.plan.index:
             if (_app_name, _api_name) != (self.plan.app, self.plan.api) or self.plan.arg not in kwargs:
                 raise PlanMismatch(f"call {index} is {_app_name}.{_api_name}, plan expects "
@@ -188,9 +211,49 @@ class Recorder:
         response = self._record(_app_name, _api_name, kwargs)
         if index == self.plan.index and self._repair_due("immediate"):
             self._issue_repair()
-        if self.plan.patch and index == self.plan.patch["index"]:
-            return replace_value(response, self.plan.patch["value"], self.plan.patch["replacement"])
-        return response
+        observed = response
+        if patch and patch.get("operation") not in {
+            "delay", "invalid_token", "partial_file", "concurrent_update", "raise_after",
+            "resource_exhaustion",
+        }:
+            observed = transform_response(response, patch)
+        if patch and patch.get("operation") == "raise_after":
+            observed = {"error": patch.get("message", "acknowledgement lost after commit"),
+                        "committed": True}
+            self.observed_responses[index] = _plain(observed)
+            raise TimeoutError(patch.get("message", "acknowledgement lost after commit"))
+        self.observed_responses[index] = _plain(observed)
+        return observed
+
+    def _record_failure(self, app: str, api: str, kwargs: dict, message: str) -> None:
+        index = len(self.calls)
+        response = {"error": message, "service_called": False}
+        args = {key: value for key, value in kwargs.items() if key not in _REQUEST_OPTIONS}
+        self.calls.append(Call(index, app, api, _plain(args), _plain(response), []))
+        self.source_contexts[index] = _source_context()
+        self.observed_responses[index] = _plain(response)
+        self.failed.append(index)
+
+    def _concurrent_update(self, patch: dict) -> None:
+        prefix = "venmo.payment_requests#"
+        candidate = next(
+            ((call, write) for call in reversed(self.calls) for write in call.writes
+             if write.record.startswith(prefix) and write.after is not None),
+            None,
+        )
+        if candidate is None:
+            raise PlanMismatch("concurrent update has no prior payment request")
+        call, write = candidate
+        self._record(
+            "venmo",
+            "update_payment_request",
+            {
+                "payment_request_id": write.after["id"],
+                "amount": patch["amount"],
+                "description": write.after["description"],
+                "access_token": call.args["access_token"],
+            },
+        )
 
     def _held_open(self, index: int) -> bool:
         return bool(self.plan.held) and self.plan.index is not None and index > self.plan.index \
@@ -208,26 +271,57 @@ class Recorder:
 
     def _repair_due(self, timing: str) -> bool:
         repair = self.plan.repair
-        return bool(repair) and repair["timing"] == timing and not self._repaired and self.plan.index is not None \
-            and len(self.calls) > self.plan.index
+        target_seen = self.plan.repair_only and bool(self.calls)
+        if self.plan.index is not None:
+            target_seen = len(self.calls) > self.plan.index
+        return bool(repair) and repair["timing"] == timing and not self._repaired and target_seen
 
     def _issue_repair(self) -> None:
         self._repaired = True
-        repair = self.plan.repair
+        repairs = [self.plan.repair, *self.plan.repair.get("additional", [])]
+        for repair in repairs:
+            self._issue_one_repair(repair)
+
+    def _issue_one_repair(self, repair: dict) -> None:
         args = dict(repair["args"])
+        args.pop("additional", None)
+        target = None
+        if repair.get("copy_from"):
+            selector = repair["copy_from"]
+            matches = [call for call in self.calls
+                       if call.app == selector["app"] and call.api == selector["api"]]
+            occurrence = selector.get("occurrence", 0)
+            if occurrence >= len(matches):
+                self.repair_error = (f"repair copy_from has no occurrence {occurrence} of "
+                                     f"{selector['app']}.{selector['api']}")
+                return
+            target = matches[occurrence]
         if repair.get("id_param"):
-            target = self.calls[self.plan.index]
             prefix = f"{repair['id_table']}#"
-            rows = [w for w in target.writes if w.record.startswith(prefix) and w.after is not None
-                    and all(w.after.get(k) == v for k, v in repair.get("id_match", {}).items())]
+            candidates = self.calls if self.plan.repair_only or self.plan.index is None else [self.calls[self.plan.index]]
+            matches = [(candidate, write) for candidate in candidates for write in candidate.writes
+                       if write.record.startswith(prefix) and write.after is not None
+                       and all(write.after.get(k) == v for k, v in repair.get("id_match", {}).items())]
+            rows = [write for _, write in matches]
             if len(rows) != 1:
                 self.repair_error = f"repair target in {repair['id_table']} is ambiguous or absent ({len(rows)} rows)"
                 return
+            target = matches[0][0]
             args[repair["id_param"]] = rows[0].after["id"]
-        self.repair_index = len(self.calls)
+        if repair.get("copy_args"):
+            if target is None:
+                target = self.calls[self.plan.index] if self.plan.index is not None else None
+            if target is None:
+                self.repair_error = "repair copy_args has no target call"
+                return
+            for key in repair["copy_args"]:
+                args[key] = copy.deepcopy(target.args[key])
+        if self.repair_index is None:
+            self.repair_index = len(self.calls)
         self._record(repair["app"], repair["api"], args)
 
     def _record(self, app: str, api: str, kwargs: dict):
+        context = _source_context()
         args = {k: v for k, v in kwargs.items() if k not in _REQUEST_OPTIONS}
         self.capture.begin()
         self._depth += 1
@@ -247,11 +341,45 @@ class Recorder:
                 writes.append(Write(label, before, after))
         index = len(self.calls)
         self.calls.append(Call(index, app, api, _plain(args), _plain(response), writes))
+        self.source_contexts[index] = context
+        self.observed_responses[index] = _plain(response)
         if error is not None or status != 200:
             self.failed.append(index)
         if error is not None:
             raise error
         return response
+
+
+def _source_context() -> dict:
+    """Capture non-semantic location/stack metadata without changing the v1 Call schema."""
+    frames = []
+    frame = inspect.currentframe()
+    while frame is not None:
+        frames.append(frame)
+        frame = frame.f_back
+    workflow = next((frame for frame in frames
+                     if frame.f_code.co_filename.startswith("<") and frame.f_code.co_name != "<module>"), None)
+    if workflow is None:
+        workflow = next((frame for frame in frames if frame.f_code.co_filename.endswith("solution.py")), None)
+    span = None if workflow is None else f"workflow.py:{workflow.f_lineno}"
+    stack = [frame.f_code.co_name for frame in reversed(frames)
+             if frame.f_code.co_name not in {"_source_context", "_record", "__call__"}
+             and (frame.f_code.co_filename.startswith("<") or frame.f_code.co_filename.endswith("solution.py"))]
+    iteration = {}
+    if workflow is not None:
+        for key in ("invoice_id", "email_thread_id", "thread_id", "page_index"):
+            value = workflow.f_locals.get(key)
+            if isinstance(value, (str, int)):
+                iteration[key] = value
+        invoice = workflow.f_locals.get("invoice")
+        if isinstance(invoice, dict) and isinstance(invoice.get("invoice_id"), str):
+            iteration["invoice_id"] = invoice["invoice_id"]
+        payload = workflow.f_locals.get("payload")
+        if isinstance(payload, dict) and isinstance(payload.get("invoice_id"), str):
+            iteration["invoice_id"] = payload["invoice_id"]
+    identity = hashlib.sha256(json.dumps(iteration, sort_keys=True).encode()).hexdigest()[:12] if iteration else None
+    return {"source_span": span, "invocation_stack": stack[-12:], "iteration": iteration,
+            "invocation_id": identity}
 
 
 def _text(value) -> str | None:
@@ -279,6 +407,55 @@ def replace_value(obj, value, replacement):
             return int(replacement)
         return replacement
     return obj
+
+
+def transform_response(response, patch: dict):
+    """Return the response observed by workflow code; the recorded raw response is unchanged."""
+    operation = patch.get("operation", "replace")
+    value = copy.deepcopy(response)
+    if operation == "replace":
+        return replace_value(value, patch["value"], patch["replacement"])
+    if operation == "replace_text":
+        return replace_text(value, str(patch["value"]), str(patch["replacement"]))
+    if operation == "reverse":
+        if not isinstance(value, list):
+            raise PlanMismatch("response reverse requires a list")
+        return list(reversed(value))
+    if operation == "drop_last":
+        if not isinstance(value, list):
+            raise PlanMismatch("response drop_last requires a list")
+        return value[:-1]
+    if operation == "duplicate_first":
+        if not isinstance(value, list) or not value:
+            raise PlanMismatch("response duplicate_first requires a non-empty list")
+        return [*value, copy.deepcopy(value[0])]
+    if operation == "omit_field":
+        if not isinstance(value, dict) or patch["field"] not in value:
+            raise PlanMismatch(f"response field is absent: {patch['field']}")
+        value.pop(patch["field"])
+        return value
+    if operation == "rename_field":
+        if not isinstance(value, dict) or patch["field"] not in value:
+            raise PlanMismatch(f"response field is absent: {patch['field']}")
+        value[patch["replacement"]] = value.pop(patch["field"])
+        return value
+    if operation == "set_field_each":
+        if not isinstance(value, list) or not all(isinstance(item, dict) for item in value):
+            raise PlanMismatch("set_field_each requires a list of objects")
+        for item in value:
+            item[patch["field"]] = copy.deepcopy(patch["value"])
+        return value
+    raise PlanMismatch(f"unknown response transform: {operation}")
+
+
+def replace_text(value, old: str, new: str):
+    if isinstance(value, dict):
+        return type(value)((key, replace_text(item, old, new)) for key, item in value.items())
+    if isinstance(value, list):
+        return [replace_text(item, old, new) for item in value]
+    if isinstance(value, str):
+        return value.replace(old, new)
+    return value
 
 
 def end_state_digest(calls: list[Call], system_writes) -> str:

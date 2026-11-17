@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rdr://schemas/v2/appworld_execution.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "graph_kind", "run_id", "source_sha256", "trace_sha256", "calls", "nodes", "edges", "counts", "manifest"],
+  "properties": {
+    "schema_version": {"const": "2.1.0"},
+    "graph_kind": {"const": "appworld_execution"},
+    "run_id": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trace_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "calls": {"type": "array", "items": {"type": "object"}},
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "counts": {"type": "object"},
+    "manifest": {"$ref": "#/$defs/manifest"}
+  },
+  "$defs": {
+    "node": {
+      "type": "object", "required": ["id", "kind"],
+      "properties": {"id": {"type": "string"}, "kind": {"type": "string"}}
+    },
+    "edge": {
+      "type": "object", "additionalProperties": false, "required": ["src", "kind", "dst"],
+      "properties": {
+        "src": {"type": "string"}, "dst": {"type": "string"},
+        "kind": {"enum": ["contains", "executed_by", "observed_as", "reads", "writes", "feeds"]}
+      }
+    },
+    "manifest": {
+      "type": "object", "required": ["builder", "content_sha256", "node_count", "edge_count", "run_id"],
+      "properties": {"content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+    }
+  }
+}

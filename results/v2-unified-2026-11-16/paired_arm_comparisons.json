@@ -1,0 +1,3970 @@
+[
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "B",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 1,
+    "right": "C",
+    "right_wins": 5,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 1,
+    "right": "D",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 1,
+    "right": "E",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "F",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "G",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "H",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 2,
+    "right": "I",
+    "right_wins": 4,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "J",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 1,
+    "right": "K",
+    "right_wins": 3,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "L",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "M",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 1,
+    "right": "T",
+    "right_wins": 4,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "W",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "X",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 14,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 12,
+    "right": "Z",
+    "right_wins": 1,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 16,
+    "right": "STATE_CALLS",
+    "right_wins": 1,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 12,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 1,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 4,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 4,
+    "ties": 34
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 13,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 1,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "A",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 1,
+    "right": "C",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 5,
+    "right": "D",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 4,
+    "right": "E",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "F",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 1,
+    "right": "G",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "H",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 3,
+    "right": "I",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 3,
+    "right": "J",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 3,
+    "right": "K",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 2,
+    "right": "L",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 3,
+    "right": "M",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "B",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 5,
+    "right": "D",
+    "right_wins": 1,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 4,
+    "right": "E",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "F",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 1,
+    "right": "G",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "H",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 2,
+    "right": "I",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 3,
+    "right": "J",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 3,
+    "right": "K",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 2,
+    "right": "L",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 3,
+    "right": "M",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 18,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 1,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 1,
+    "ties": 21
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 1,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 1,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 1,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "C",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 1,
+    "right": "E",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "F",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 1,
+    "right": "G",
+    "right_wins": 5,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "H",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 2,
+    "right": "I",
+    "right_wins": 4,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "J",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "K",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "L",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "M",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 5,
+    "ties": 35
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "W",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "X",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 14,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 12,
+    "right": "Z",
+    "right_wins": 1,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 15,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 12,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 1,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 5,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 5,
+    "ties": 32
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 13,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 1,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "D",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "F",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "G",
+    "right_wins": 4,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "H",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 3,
+    "right": "I",
+    "right_wins": 4,
+    "ties": 35
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "J",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "K",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "L",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "M",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 4,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "W",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "X",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 15,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 13,
+    "right": "Z",
+    "right_wins": 1,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 17,
+    "right": "STATE_CALLS",
+    "right_wins": 1,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 13,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 1,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 4,
+    "ties": 33
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 14,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 1,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "N",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "E",
+    "left_wins": 1,
+    "right": "O",
+    "right_wins": 3,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 1,
+    "right": "G",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "H",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 3,
+    "right": "I",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 3,
+    "right": "J",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 3,
+    "right": "K",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 2,
+    "right": "L",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 3,
+    "right": "M",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "F",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "H",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 2,
+    "right": "I",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 3,
+    "right": "J",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 3,
+    "right": "K",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 2,
+    "right": "L",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 3,
+    "right": "M",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 1,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 18,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 1,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 1,
+    "ties": 21
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 1,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 1,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 4,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 1,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "G",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 3,
+    "right": "I",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 3,
+    "right": "J",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 3,
+    "right": "K",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 2,
+    "right": "L",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 3,
+    "right": "M",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "H",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 3,
+    "right": "J",
+    "right_wins": 3,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 2,
+    "right": "K",
+    "right_wins": 2,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 2,
+    "right": "L",
+    "right_wins": 3,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 3,
+    "right": "M",
+    "right_wins": 3,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 1,
+    "right": "T",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 3,
+    "ties": 35
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 3,
+    "ties": 35
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 16,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 3,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 19,
+    "right": "STATE_CALLS",
+    "right_wins": 2,
+    "ties": 21
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 3,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 3,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 4,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 2,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 3,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 3,
+    "ties": 35
+  },
+  {
+    "denominator": 42,
+    "left": "I",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 3,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 1,
+    "right": "K",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "L",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 1,
+    "right": "M",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 3,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 1,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 1,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 16,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 13,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 17,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 13,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 3,
+    "ties": 34
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 14,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 1,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "J",
+    "left_wins": 1,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "L",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 1,
+    "right": "M",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 3,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 2,
+    "right": "W",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 2,
+    "right": "X",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 16,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 14,
+    "right": "Z",
+    "right_wins": 1,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 17,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 14,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 1,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 1,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 3,
+    "ties": 34
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 15,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 1,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 2,
+    "right": "N",
+    "right_wins": 1,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "K",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 3,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 1,
+    "right": "M",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 2,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 2,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 2,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 17,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 14,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 18,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 14,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 1,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 2,
+    "ties": 35
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 15,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 2,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "L",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 0,
+    "right": "P",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 3,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 1,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 1,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 16,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 13,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 17,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 13,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 1,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 1,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 3,
+    "ties": 34
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 14,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 1,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "M",
+    "left_wins": 1,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 0,
+    "right": "Q",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "P",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 0,
+    "right": "R",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "Q",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 0,
+    "right": "S",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "R",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 2,
+    "right": "T",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "S",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 0,
+    "right": "U",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 2,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 2,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 17,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 2,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 2,
+    "ties": 20
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 2,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 2,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 4,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 1,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 16,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 1,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 2,
+    "ties": 36
+  },
+  {
+    "denominator": 42,
+    "left": "T",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 0,
+    "right": "V",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "U",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 4,
+    "right": "W",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 4,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 19,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 16,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 20,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 16,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 3,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 0,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "V",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 0,
+    "right": "X",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 15,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 12,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 30
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 16,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 12,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 30
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 4,
+    "ties": 33
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 13,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "W",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 15,
+    "right": "Y",
+    "right_wins": 0,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 12,
+    "right": "Z",
+    "right_wins": 0,
+    "ties": 30
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 16,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 12,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 30
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 1,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 4,
+    "ties": 33
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 13,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "X",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 7,
+    "right": "Z",
+    "right_wins": 10,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 7,
+    "right": "STATE_CALLS",
+    "right_wins": 6,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 7,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 10,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 16,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 19,
+    "ties": 23
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 1,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 15,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 7,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 9,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 15,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "Y",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 17,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 4,
+    "right": "STATE_CALLS",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 0,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 0,
+    "ties": 42
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 13,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 16,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 2,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 13,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 1,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 12,
+    "ties": 30
+  },
+  {
+    "denominator": 42,
+    "left": "Z",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 14,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS",
+    "left_wins": 0,
+    "right": "STATE_CALLS_SOURCE",
+    "right_wins": 4,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 17,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 20,
+    "ties": 22
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS",
+    "left_wins": 1,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 16,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS",
+    "left_wins": 1,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 4,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 16,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 18,
+    "ties": 24
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS_SOURCE",
+    "left_wins": 0,
+    "right": "ETIQ_CODE_LINEAGE",
+    "right_wins": 13,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS_SOURCE",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 16,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS_SOURCE",
+    "left_wins": 2,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 13,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS_SOURCE",
+    "left_wins": 1,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS_SOURCE",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 12,
+    "ties": 30
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_CALLS_SOURCE",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 14,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "ETIQ_CODE_LINEAGE",
+    "left_wins": 0,
+    "right": "APPWORLD_ETIQ_COMPOSITE",
+    "right_wins": 3,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "ETIQ_CODE_LINEAGE",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 3,
+    "ties": 34
+  },
+  {
+    "denominator": 42,
+    "left": "ETIQ_CODE_LINEAGE",
+    "left_wins": 14,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 28
+  },
+  {
+    "denominator": 42,
+    "left": "ETIQ_CODE_LINEAGE",
+    "left_wins": 1,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 41
+  },
+  {
+    "denominator": 42,
+    "left": "ETIQ_CODE_LINEAGE",
+    "left_wins": 1,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 39
+  },
+  {
+    "denominator": 42,
+    "left": "APPWORLD_ETIQ_COMPOSITE",
+    "left_wins": 5,
+    "right": "STATE_APPWORLD_GRAPH",
+    "right_wins": 0,
+    "ties": 37
+  },
+  {
+    "denominator": 42,
+    "left": "APPWORLD_ETIQ_COMPOSITE",
+    "left_wins": 17,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 0,
+    "ties": 25
+  },
+  {
+    "denominator": 42,
+    "left": "APPWORLD_ETIQ_COMPOSITE",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 0,
+    "ties": 38
+  },
+  {
+    "denominator": 42,
+    "left": "APPWORLD_ETIQ_COMPOSITE",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 0,
+    "ties": 40
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_APPWORLD_GRAPH",
+    "left_wins": 14,
+    "right": "STATE_ETIQ_GRAPH",
+    "right_wins": 2,
+    "ties": 26
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_APPWORLD_GRAPH",
+    "left_wins": 4,
+    "right": "N",
+    "right_wins": 5,
+    "ties": 33
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_APPWORLD_GRAPH",
+    "left_wins": 2,
+    "right": "O",
+    "right_wins": 5,
+    "ties": 35
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_ETIQ_GRAPH",
+    "left_wins": 0,
+    "right": "N",
+    "right_wins": 13,
+    "ties": 29
+  },
+  {
+    "denominator": 42,
+    "left": "STATE_ETIQ_GRAPH",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 15,
+    "ties": 27
+  },
+  {
+    "denominator": 42,
+    "left": "N",
+    "left_wins": 0,
+    "right": "O",
+    "right_wins": 2,
+    "ties": 40
+  }
+]

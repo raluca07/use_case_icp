@@ -1,0 +1,5 @@
+# Isolated pilot only. Do not install into the AppWorld or prior Etiq environments.
+# Each versioned pilot manifest records the complete resolved environment freeze.
+etiq-copilot==2.3.2
+pydot==4.0.1
+pytest==9.0.2

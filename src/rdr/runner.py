@@ -148,7 +148,9 @@ def review(package_text: str, out_path: Path, model: str, effort: str, workdir: 
         raise
     record.update(model_requested=model, effort=effort, package_sha256=package_sha256,
                   command_sha256=_command_sha256(model, effort, system_prompt, schema), wall_seconds=wall_seconds,
-                  stdout_sha256=_sha256(proc.stdout))
+                  stdout_sha256=_sha256(proc.stdout), package_characters=len(package_text),
+                  package_utf8_bytes=len(package_text.encode()), package_lines=len(package_text.splitlines()),
+                  package_reviewer_tokens=len(re.findall(r"\w+|[^\w\s]", package_text, re.UNICODE)))
     _write_atomic(out_path, record)
     return record
 

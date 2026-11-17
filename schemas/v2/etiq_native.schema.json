@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rdr://schemas/v2/etiq_native.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "graph_kind", "status", "producer", "native_export", "manifest"],
+  "properties": {
+    "schema_version": {"const": "2.3.0"},
+    "graph_kind": {"const": "etiq_native"},
+    "status": {"enum": ["available", "unavailable"]},
+    "producer": {"type": ["string", "null"]},
+    "native_export": {"type": ["object", "null"]},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nodes": {"type": "array", "items": {"type": "object"}},
+    "edges": {"type": "array", "items": {"type": "object"}},
+    "counts": {"type": "object"},
+    "reason": {"type": "string"},
+    "private": {"type": "boolean"},
+    "manifest": {"type": "object", "required": ["builder", "content_sha256"]}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "unavailable"}}},
+     "then": {"required": ["reason"], "properties": {"producer": {"const": null}, "native_export": {"const": null}}}},
+    {"if": {"properties": {"status": {"const": "available"}}},
+     "then": {
+       "required": ["source_sha256", "nodes", "edges", "counts"],
+       "properties": {
+         "private": {"const": false},
+         "producer": {"type": "string"},
+         "native_export": {"type": "object"},
+         "nodes": {"minItems": 1},
+         "edges": {"minItems": 1}
+       }
+     }}
+  ]
+}

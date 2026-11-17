@@ -1,4 +1,13 @@
 .venv/
+.env
+.env.*
+!.env.example
+.netrc
+.npmrc
+.pypirc
+*.pem
+*.p12
+*.pfx
 __pycache__/
 *.egg-info/
 appworld_root/
@@ -6,3 +15,25 @@ runs/
 tests/fixtures/appworld/
 .superpowers/
 .venv-etiq/
+.venv-etiq-pilot/
+.venv-reviewer/
+.python/
+.pytest_cache/
+.agents/
+.codex/
+
+# Local coordination material. Public methods and results live in the
+# explicitly tracked V2 documents instead.
+docs/*brief*.md
+docs/*handoff*.md
+docs/*prompt*.md
+docs/v2_runbook.md
+docs/v2_launch_report.md
+docs/v2_final_experiment_readiness_report.md
+docs/v2_etiq_final_integration_report.md
+docs/v2_etiq_pilot_report.md
+docs/v2_unified_results_draft.md
+docs/v2_arm_packages_and_localization_results.md
+docs/v2_fault_catalogue_and_results.md
+docs/plan2_carryover.md
+docs/superpowers/

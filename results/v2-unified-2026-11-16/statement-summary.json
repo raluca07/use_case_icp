@@ -1,0 +1,592 @@
+{
+  "arms": 32,
+  "definition": "Source locations match when they resolve to the same smallest enclosing Python AST statement. Runtime-event indices remain exact.",
+  "evaluations": 1024,
+  "faulty_instances": 32,
+  "grouped_by_arm": {
+    "A": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 2
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 8,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 8
+    },
+    "APPWORLD_ETIQ_COMPOSITE": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 15,
+      "exact_root_cause": 8,
+      "exact_source_lines": 8,
+      "source_statements": 14,
+      "statement_root_cause": 12
+    },
+    "B": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 12,
+      "exact_root_cause": 12,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 12
+    },
+    "C": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 5
+        }
+      },
+      "denominator": 32,
+      "exact_events": 11,
+      "exact_root_cause": 11,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 11
+    },
+    "D": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 2
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 8,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 8
+    },
+    "E": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 3
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 9,
+      "exact_root_cause": 9,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 9
+    },
+    "ETIQ_CODE_LINEAGE": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 3
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 9,
+      "exact_root_cause": 9,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 9
+    },
+    "F": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 12,
+      "exact_root_cause": 12,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 12
+    },
+    "G": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 12,
+      "exact_root_cause": 12,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 12
+    },
+    "H": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 12,
+      "exact_root_cause": 12,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 12
+    },
+    "I": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 12,
+      "exact_root_cause": 12,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 12
+    },
+    "J": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 3
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 9,
+      "exact_root_cause": 9,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 9
+    },
+    "K": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 4
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 10,
+      "exact_root_cause": 10,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 10
+    },
+    "L": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 5
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 11,
+      "exact_root_cause": 11,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 11
+    },
+    "M": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 3
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 9,
+      "exact_root_cause": 9,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 9
+    },
+    "N": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 2
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 8,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 8
+    },
+    "O": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 4
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 10,
+      "exact_root_cause": 10,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 10
+    },
+    "P": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 10
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 10
+        }
+      },
+      "denominator": 32,
+      "exact_events": 20,
+      "exact_root_cause": 20,
+      "exact_source_lines": 29,
+      "source_statements": 32,
+      "statement_root_cause": 20
+    },
+    "Q": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 8
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 8
+        }
+      },
+      "denominator": 32,
+      "exact_events": 16,
+      "exact_root_cause": 16,
+      "exact_source_lines": 32,
+      "source_statements": 32,
+      "statement_root_cause": 16
+    },
+    "R": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 8
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 8
+        }
+      },
+      "denominator": 32,
+      "exact_events": 16,
+      "exact_root_cause": 16,
+      "exact_source_lines": 31,
+      "source_statements": 32,
+      "statement_root_cause": 16
+    },
+    "S": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 12,
+      "exact_root_cause": 12,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 12
+    },
+    "STATE_APPWORLD_GRAPH": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 13,
+      "exact_root_cause": 11,
+      "exact_source_lines": 11,
+      "source_statements": 16,
+      "statement_root_cause": 12
+    },
+    "STATE_CALLS": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 0
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 9,
+      "exact_root_cause": 6,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 6
+    },
+    "STATE_CALLS_SOURCE": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 3
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 10
+        }
+      },
+      "denominator": 32,
+      "exact_events": 13,
+      "exact_root_cause": 12,
+      "exact_source_lines": 27,
+      "source_statements": 30,
+      "statement_root_cause": 13
+    },
+    "STATE_ETIQ_GRAPH": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 0
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 0
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 0,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 0
+    },
+    "T": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 6
+        }
+      },
+      "denominator": 32,
+      "exact_events": 12,
+      "exact_root_cause": 12,
+      "exact_source_lines": 12,
+      "source_statements": 13,
+      "statement_root_cause": 12
+    },
+    "U": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 10
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 10
+        }
+      },
+      "denominator": 32,
+      "exact_events": 20,
+      "exact_root_cause": 20,
+      "exact_source_lines": 31,
+      "source_statements": 32,
+      "statement_root_cause": 20
+    },
+    "V": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 11
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 9
+        }
+      },
+      "denominator": 32,
+      "exact_events": 20,
+      "exact_root_cause": 15,
+      "exact_source_lines": 18,
+      "source_statements": 32,
+      "statement_root_cause": 20
+    },
+    "W": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 0
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 0
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 0,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 0
+    },
+    "X": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 4
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 3
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 6,
+      "exact_source_lines": 29,
+      "source_statements": 31,
+      "statement_root_cause": 7
+    },
+    "Y": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 0
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 0
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 0,
+      "exact_source_lines": 12,
+      "source_statements": 12,
+      "statement_root_cause": 0
+    },
+    "Z": {
+      "by_repair": {
+        "repaired": {
+          "denominator": 16,
+          "statement_root_cause": 3
+        },
+        "unrepaired": {
+          "denominator": 16,
+          "statement_root_cause": 4
+        }
+      },
+      "denominator": 32,
+      "exact_events": 8,
+      "exact_root_cause": 5,
+      "exact_source_lines": 27,
+      "source_statements": 29,
+      "statement_root_cause": 7
+    }
+  },
+  "inputs": {
+    "base_n_manifest_sha256": "e59714c71423ddf15b5bfa29f5b4631e385efbe8d6108d235290a85a5cf205af",
+    "base_one_shot_manifest_sha256": "1ecf9242858b74ec225544b076a036d7094514d2f9ec341e3ae3340142d87298",
+    "build_manifest_sha256": "7648666bf57808643892f3a7ea7b88dae048f743b231d4f95575e7d3a6989575",
+    "corrected_o_reviews_manifest_sha256": "67cc9701437b57d9656397f9aca53ed34778e11a4f03eeb4aa9d73bbdd28700c",
+    "private_roots_published": false
+  },
+  "schema_version": 1
+}

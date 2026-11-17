@@ -1,0 +1,41 @@
+{
+  "fixture_id": "invoice-v1",
+  "task_id": "rdrinv01_1",
+  "carrier_task_id": "3c13f5a_1",
+  "directory": "~/Documents/payment_requests",
+  "account_password": "local-fixture-password",
+  "invoices": [
+    {
+      "sender_first_name": "Alex",
+      "sender_last_name": "Invoice",
+      "sender_email": "alex.invoice.v2@example.com",
+      "amount_usd": 12.5,
+      "memo": "Design review",
+      "invoice_id": "INV-V2-001",
+      "subject_suffix": "design review"
+    },
+    {
+      "sender_first_name": "Blair",
+      "sender_last_name": "Invoice",
+      "sender_email": "blair.invoice.v2@example.com",
+      "amount_usd": 37.25,
+      "memo": "Research materials",
+      "invoice_id": "INV-V2-002",
+      "subject_suffix": "research materials"
+    }
+  ],
+  "unmatched_invoice": {
+    "sender_first_name": "Casey",
+    "sender_last_name": "NoVenmo",
+    "sender_email": "casey.no-venmo.v2@example.com",
+    "amount_usd": 8.75,
+    "memo": "Local delivery",
+    "invoice_id": "INV-V2-003",
+    "subject_suffix": "local delivery"
+  },
+  "similar_nonmatch": {
+    "first_name": "Alex",
+    "last_name": "Invoicer",
+    "email": "alex.invoicer.v2@example.com"
+  }
+}

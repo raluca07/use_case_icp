@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rdr://schemas/v2/codex_authoring.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "graph_kind", "private", "run_id", "requested_model", "served_model", "requested_effort", "served_effort", "final_source_sha256", "nodes", "edges", "manifest"],
+  "properties": {
+    "schema_version": {"const": "2.1.0"},
+    "graph_kind": {"const": "codex_authoring"},
+    "private": {"const": true},
+    "run_id": {"type": "string"},
+    "requested_model": {"type": "string"}, "served_model": {"type": "string"},
+    "requested_effort": {"type": "string"}, "served_effort": {"type": "string"},
+    "cli_version": {"type": ["string", "null"]},
+    "task_sha256": {"type": "string"}, "api_inventory_sha256": {"type": "string"},
+    "elapsed_seconds": {"type": ["number", "null"]}, "usage": {"type": ["object", "null"]},
+    "final_source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "counts": {"type": "object"},
+    "manifest": {"$ref": "#/$defs/manifest"}
+  },
+  "$defs": {
+    "node": {"type": "object", "required": ["id", "kind"], "properties": {"id": {"type": "string"}, "kind": {"type": "string"}}},
+    "edge": {"type": "object", "additionalProperties": false, "required": ["src", "kind", "dst"], "properties": {"src": {"type": "string"}, "kind": {"type": "string"}, "dst": {"type": "string"}}},
+    "manifest": {"type": "object", "required": ["builder", "content_sha256", "node_count", "edge_count", "run_id"]}
+  }
+}
